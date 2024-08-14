@@ -8,7 +8,7 @@ import Layout from '../../layouts/layout.astro'
   </section>
 
   <footer>
-    <button id="back" class="secondary">Back</button>
+    <a href="/tabata" class="secondary">Back</a>
   </footer>
 </Layout>
 
@@ -23,9 +23,3 @@ import Layout from '../../layouts/layout.astro'
     min-width: 10em;
   }
 </style>
-
-<script>
-  document
-    .getElementById('back')
-    ?.addEventListener('click', () => (window.location.href = '/tabata'))
-</script>

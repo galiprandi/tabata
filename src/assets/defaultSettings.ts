@@ -2,8 +2,8 @@ export const defaultSettings = {
   prepDuration: 10,
   workDuration: 15,
   restDuration: 15,
-  labelPrep: 'Iniciando',
-  labelRest: 'Descanso y Preparación',
+  labelPrep: 'Staring session...',
+  labelRest: 'Resting...',
   workouts: [
     'Saltar la soga',
     '6 x 6',

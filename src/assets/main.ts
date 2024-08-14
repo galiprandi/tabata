@@ -2,6 +2,12 @@ import { defaultSettings } from './defaultSettings'
 
 export const storageKey = 'settings'
 
+declare global {
+  interface Window {
+    timer: number
+  }
+}
+
 // Get settings from local storage
 export function getSettings() {
   let storageConfig = localStorage.getItem(storageKey)
@@ -15,4 +21,18 @@ export function getSettings() {
 // Update settings in local storage
 export function updateSettings(settings: typeof defaultSettings) {
   localStorage.setItem(storageKey, JSON.stringify(settings))
+}
+
+// Change container class function
+export function switchBodyClass(className: string) {
+  const container = document.body
+  if (!container) return
+  container.className = `${className}`
+}
+
+// Sleep function and remove all timers
+export function delaySeconds(seconds: number) {
+  return new Promise(
+    resolve => (window.timer = setTimeout(resolve, seconds * 1000))
+  )
 }

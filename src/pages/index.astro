@@ -4,179 +4,27 @@ import Layout from '../layouts/layout.astro'
 
 <Layout>
   <section class="display">
-    <div id="subtitle">You are</div>
     <div id="title">Wellcome</div>
   </section>
-  <section class="timer">
-    <progress id="progress" value="100" max="100"></progress>
-  </section>
 
-  <footer>
-    <button id="start">Start</button>
+  <footer class="columns">
+    <button id="go">Go</button>
     <a href="/tabata/settings" class="secondary">Settings</a>
   </footer>
   <audio id="beep" src="/tabata/beep.mp3"></audio>
 </Layout>
 
 <style>
-  .rest #title {
-    opacity: 0.5;
-  }
-
-  #subtitle {
-    font-size: 3vw;
-    font-weight: bold;
-  }
-
   #title {
-    font-size: 8vw;
+    font-size: 10vw;
     font-weight: bold;
-  }
-
-  footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
   }
 </style>
 
 <script>
-  import { getSettings } from '../assets/main'
-
-  declare global {
-    interface Window {
-      timer: number
-    }
-  }
-
-  // Get button element
-  function buttonElement() {
-    return document.getElementById('start') as HTMLButtonElement | null
-  }
-
-  // Get audio element
-  function audioElement() {
-    return document.getElementById('beep') as HTMLAudioElement | null
-  }
-
-  // Get progress element
-  function progressElement() {
-    return document.getElementById('progress') as HTMLProgressElement | null
-  }
-
-  // Get Title element
-  function titleElement() {
-    return document.getElementById('title') as HTMLTitleElement | null
-  }
-
-  // Get Subtitle element
-  function subtitleElement() {
-    return document.getElementById('subtitle') as HTMLTitleElement | null
-  }
-
-  // Sleep function and remove all timers
-  function delaySeconds(seconds: number) {
-    return new Promise(
-      resolve => (window.timer = setTimeout(resolve, seconds * 1000))
-    )
-  }
-
-  // Change container class function
-  function switchBodyClass(className: string) {
-    const container = document.body
-    if (!container) return
-    container.className = `${className}`
-  }
-
-  // Show exercise function
-  function displayContent(title: string, content?: string) {
-    const subEl = subtitleElement()
-    const titleEl = titleElement()
-    if (titleEl) titleEl.textContent = title
-    if (subEl) subEl.textContent = content ?? ''
-  }
-
-  // Show time function & beep sound when time is up
-  function renderTime(time: number, totlaTime: number) {
-    const progressEl = progressElement()
-    if (progressEl) progressEl.value = (time / totlaTime) * 100
-    // Play beep sound when time is up
-    if (time <= 3) playBeep()
-  }
-
-  // Display preparation time
-  async function displayPrepTime(time: number) {
-    const { labelPrep } = getSettings()
-    switchBodyClass('prep')
-    displayContent(labelPrep)
-    for (let i = time; i > 0; i--) {
-      renderTime(i, time)
-      await delaySeconds(1)
-    }
-  }
-
-  // Start workout/rest circuit
-  async function startWorkout() {
-    const settings = getSettings()
-    let { prepDuration, workDuration, restDuration, workouts, labelRest } =
-      settings
-    let currentExercise = 0
-
-    // Set preparation time
-    await displayPrepTime(prepDuration)
-
-    // Loop through workouts
-    for (const workout of workouts) {
-      switchBodyClass('workout')
-      displayContent(workout, `${workouts.length - currentExercise}`)
-
-      // Work time
-      for (let timeLeft = workDuration; timeLeft > 0; timeLeft--) {
-        renderTime(timeLeft, workDuration)
-        await delaySeconds(1)
-      }
-
-      // Update current exercise
-      currentExercise = currentExercise + 1
-
-      // Show rest time
-      if (currentExercise < workouts.length) {
-        const nextWorkout = workouts[currentExercise]
-        switchBodyClass('rest')
-        displayContent(nextWorkout, labelRest)
-
-        for (let j = restDuration; j > 0; j--) {
-          renderTime(j, restDuration)
-          await delaySeconds(1)
-        }
-      } else location.href = '/tabata/end'
-    }
-  }
-
-  // Play beep sound function
-  function playBeep() {
-    const audio = new Audio('/tabata/beep.mp3')
-    audio.play()
-  }
-
-  function init() {
-    clearTimeout(window.timer)
-    const mainButton = document.getElementById('start')
-    if (mainButton) mainButton.textContent = 'Start'
-
-    mainButton?.addEventListener('click', () => {
-      playBeep()
-      const buttonText = mainButton?.textContent
-      if (buttonText === 'Reset')
-        confirm('Are you sure you want to reset?') && location.reload()
-      else {
-        startWorkout()
-
-        mainButton.textContent = 'Reset'
-      }
-    })
-  }
-
   // Initialize app
-  document.addEventListener('DOMContentLoaded', init)
+  document.addEventListener('DOMContentLoaded', () => {
+    const goButton = document.getElementById('go')
+    goButton?.addEventListener('click', () => (location.href = '/tabata/start'))
+  })
 </script>

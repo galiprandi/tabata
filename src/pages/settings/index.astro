@@ -3,34 +3,30 @@ import Layout from '../../layouts/layout.astro'
 ---
 
 <Layout>
-  <section class="display">
-    <h3>Workouts</h3>
+  <section class="display constent">
+    <h1>Workouts</h1>
     <aside>
       <ul id="workout-list"></ul>
     </aside>
   </section>
 
   <footer>
-    <button id="save">Save</button>
-    <br />
-    <div class="options">
-      <button id="back" class="secondary">Back</button>
-      <button id="deleteAll">Delete All</button>
-      <button id="restore">Restore</button>
+    <div role="group">
+      <button id="save">Save</button>
+      <button id="restore" class="secondary">Restore</button>
+      <button id="clear">Clear All</button>
     </div>
+
+    <a href="/tabata" class="secondary">Back</a>
   </footer>
 </Layout>
 
 <style>
-  * {
-    color: white;
-  }
-
   button#start {
     min-width: 10em;
   }
 
-  #restore {
+  #clear {
     border-color: var(--color-work);
     background-color: var(--color-work);
   }
@@ -42,10 +38,12 @@ import Layout from '../../layouts/layout.astro'
     gap: 1em;
   }
 
-  .options button {
-    min-width: unset !important;
-    border: 0 !important;
-    background: 0 !important;
+  [role='group'] {
+    margin: 1em 0;
+
+    & button {
+      min-width: unset !important;
+    }
   }
 </style>
 
@@ -98,13 +96,7 @@ import Layout from '../../layouts/layout.astro'
     .getElementById('restore')
     ?.addEventListener('click', restoreDefaultSettings)
 
-  document
-    .getElementById('back')
-    ?.addEventListener('click', () => (window.location.href = '/tabata'))
-
-  document
-    .getElementById('deleteAll')
-    ?.addEventListener('click', deleteAllWorkouts)
+  document.getElementById('clear')?.addEventListener('click', deleteAllWorkouts)
 
   document.addEventListener('DOMContentLoaded', Init)
 </script>
