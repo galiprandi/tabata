@@ -13,6 +13,7 @@ import Layout from '../layouts/layout.astro'
 
   <footer>
     <button id="start">Start</button>
+    <a href="/tabata/settings" class="secondary">Settings</a>
   </footer>
   <audio id="beep" src="/tabata/beep.mp3"></audio>
 </Layout>
@@ -31,37 +32,16 @@ import Layout from '../layouts/layout.astro'
     font-size: 8vw;
     font-weight: bold;
   }
+
+  footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
 </style>
 
 <script>
-  const defaultSettings = {
-    prepDuration: 10,
-    workDuration: 15,
-    restDuration: 15,
-    labelPrep: 'Iniciando',
-    labelRest: 'Descanso y Preparación',
-    workouts: [
-      'Saltar la soga',
-      '6 x 6',
-      '6 x 6 con cambio',
-      'Medio Burpee',
-      'Aperturas veloces',
-      'Garrote a estocada',
-      '6 x 6',
-      'Plancha con bastón vertical',
-      '6 x 6',
-      'Varilla',
-      'Medio Burpee',
-      'Bicicleta',
-      '6 x 6',
-      'Burpee combinado',
-      '6 x 6',
-      'Medio Burpee',
-      'Push up',
-    ],
-  }
-
-  const storageKey = 'settings'
+  import { getSettings } from '../assets/main'
 
   declare global {
     interface Window {
@@ -92,21 +72,6 @@ import Layout from '../layouts/layout.astro'
   // Get Subtitle element
   function subtitleElement() {
     return document.getElementById('subtitle') as HTMLTitleElement | null
-  }
-
-  // Get settings from local storage
-  function getSettings() {
-    let storageConfig = localStorage.getItem(storageKey)
-    if (!storageConfig) {
-      localStorage.setItem(storageKey, JSON.stringify(defaultSettings))
-      storageConfig = JSON.stringify(defaultSettings)
-    }
-    return JSON.parse(storageConfig) as typeof defaultSettings
-  }
-
-  // Update settings in local storage
-  function updateSettings(settings: typeof defaultSettings) {
-    localStorage.setItem(storageKey, JSON.stringify(settings))
   }
 
   // Sleep function and remove all timers

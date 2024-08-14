@@ -1,0 +1,110 @@
+---
+import Layout from '../../layouts/layout.astro'
+---
+
+<Layout>
+  <section class="display">
+    <h3>Workouts</h3>
+    <aside>
+      <ul id="workout-list"></ul>
+    </aside>
+  </section>
+
+  <footer>
+    <button id="save">Save</button>
+    <br />
+    <div class="options">
+      <button id="back" class="secondary">Back</button>
+      <button id="deleteAll">Delete All</button>
+      <button id="restore">Restore</button>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  * {
+    color: white;
+  }
+
+  button#start {
+    min-width: 10em;
+  }
+
+  #restore {
+    border-color: var(--color-work);
+    background-color: var(--color-work);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+  }
+
+  .options button {
+    min-width: unset !important;
+    border: 0 !important;
+    background: 0 !important;
+  }
+</style>
+
+<script>
+  import { getSettings, updateSettings } from '../../assets/main'
+  import { defaultSettings } from '../../assets/defaultSettings'
+
+  function Init() {
+    const settings = getSettings()
+    const workoutList = document.getElementById('workout-list')
+    if (!workoutList) return
+
+    settings.workouts.forEach(workout => {
+      const li = document.createElement('li')
+      li.innerText = workout
+      workoutList.appendChild(li)
+    })
+  }
+
+  // Delete all workouts
+  function deleteAllWorkouts() {
+    if (!confirm('Are you sure you want to delete all workouts?')) return
+    const settings = getSettings()
+    updateSettings({ ...settings, workouts: [] })
+    location.reload()
+  }
+
+  function updateWorkout(workout: string) {
+    const index = defaultSettings.workouts.findIndex(w => w === workout)
+    console.log({ index })
+  }
+
+  // Save the default settings to the local storage
+  function restoreDefaultSettings() {
+    if (!confirm('Are you sure you want to restore the default settings?'))
+      return
+    localStorage.setItem('settings', JSON.stringify(defaultSettings))
+    location.reload()
+  }
+
+  // Add event listener to all li elements
+  document.querySelectorAll('li').forEach(li => {
+    li.addEventListener('click', e => {
+      const workout = (e.target as HTMLElement).innerText
+      updateWorkout(workout)
+    })
+  })
+
+  document
+    .getElementById('restore')
+    ?.addEventListener('click', restoreDefaultSettings)
+
+  document
+    .getElementById('back')
+    ?.addEventListener('click', () => (window.location.href = '/tabata'))
+
+  document
+    .getElementById('deleteAll')
+    ?.addEventListener('click', deleteAllWorkouts)
+
+  document.addEventListener('DOMContentLoaded', Init)
+</script>
