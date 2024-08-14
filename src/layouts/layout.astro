@@ -1,0 +1,73 @@
+<html lang="en">
+  <head>
+    <title>Tabata</title>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.pumpkin.min.css"
+    />
+    <link rel="manifest" href="/manifest.json" />
+  </head>
+  <body class="prep">
+    <main class="container">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --color--prep: #052940;
+    --color-work: #a83410;
+    --color-res: #6a6a6a;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+    height: 100dvh;
+    width: 100dvw;
+    text-align: center;
+    color: white;
+  }
+
+  .prep {
+    background-color: var(--color--prep);
+  }
+
+  .workout {
+    background-color: var(--color-work);
+  }
+
+  .rest {
+    background-color: var(--color-res);
+  }
+
+  main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  main > section {
+    margin: 0;
+  }
+
+  button {
+    min-width: 10em !important;
+  }
+</style>

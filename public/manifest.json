@@ -1,0 +1,31 @@
+{
+    "background_color": "#052940",
+    "dir": "auto",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "sizes": "192x192",
+            "src": "favicon.svg",
+            "type": "image/svg+xml"
+        },
+        {
+            "sizes": "512x512",
+            "src": "icon-512x512.png",
+            "type": "image/png"
+        }
+    ],
+    "lang": "en",
+    "name": "Tabata",
+    "orientation": "landscape",
+    "screenshots": [
+        {
+            "form_factor": "narrow",
+            "sizes": "1792x828",
+            "src": "screenshot-1.png",
+            "type": "image/png"
+        }
+    ],
+    "short_name": "Tabata",
+    "start_url": "/",
+    "theme_color": "#052940"
+}

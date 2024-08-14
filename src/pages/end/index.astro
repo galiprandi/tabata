@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/layout.astro'
+---
+
+<Layout>
+  <section class="display">
+    <h1>🎉 Congrats 🎉</h1>
+  </section>
+
+  <footer>
+    <button id="back" class="secondary">Back</button>
+  </footer>
+</Layout>
+
+<style>
+  h1 {
+    color: white;
+    font-size: 8vw;
+    font-weight: bold;
+  }
+
+  button#start {
+    min-width: 10em;
+  }
+</style>
+
+<script>
+  document
+    .getElementById('back')
+    ?.addEventListener('click', () => (window.location.href = '/'))
+</script>
