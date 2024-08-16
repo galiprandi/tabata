@@ -41,7 +41,7 @@ const { labelPrep } = defaultSettings
   }
 
   // Initialize app
-  document.addEventListener('DOMContentLoaded', init)
+  document.addEventListener('DOMContentLoaded', startWorkout)
 
   // Play beep sound function
   function playBeep() {
@@ -57,7 +57,7 @@ const { labelPrep } = defaultSettings
     let currentExercise = 0
 
     // Set preparation time
-    await displayPrepTime(prepDuration)
+    // await displayPrepTime(prepDuration)
 
     // Loop through workouts
     for (const workout of workouts) {
@@ -77,7 +77,10 @@ const { labelPrep } = defaultSettings
       if (currentExercise < workouts.length) {
         const nextWorkout = workouts[currentExercise]
         switchBodyClass('rest')
-        displayContent(nextWorkout, labelRest)
+        displayContent(
+          nextWorkout,
+          `Remaining: ${workouts.length - currentExercise}`
+        )
 
         for (let j = restDuration; j > 0; j--) {
           renderTime(j, restDuration)
@@ -134,9 +137,14 @@ const { labelPrep } = defaultSettings
   #title {
     font-size: 8vw;
     font-weight: bold;
+    line-height: 1;
   }
 
   #subtitle {
     font-size: 3vw;
+  }
+
+  #progress {
+    color: var(--color-acent);
   }
 </style>
