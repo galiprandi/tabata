@@ -1,0 +1,60 @@
+---
+const { seconds } = Astro.props
+---
+
+<div
+  id="progress-bar"
+  class="container"
+  style={`--animation-duration: ${seconds}s;`}
+>
+  <div class="progress2 progress-moved">
+    <div class="progress-bar2"></div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --height: 1em;
+  }
+  .container {
+    text-align: center;
+  }
+
+  .progress2 {
+    padding: 6px;
+    min-width: var(--height);
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 1px 2px rgba(0, 0, 0, 0.25),
+      0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .progress-bar2 {
+    margin: auto;
+    height: var(--height);
+    border-radius: 30px;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.05)
+    );
+    transition: 0.4s linear;
+    transition-property: width, background-color;
+  }
+
+  .progress-moved .progress-bar2 {
+    width: 100%;
+    background-color: var(--pico-progress-color);
+    animation: progressAnimation var(--animation-duration, 6s) linear;
+  }
+
+  @keyframes progressAnimation {
+    0% {
+      width: 100%;
+    }
+    100% {
+      width: var(--height);
+    }
+  }
+</style>

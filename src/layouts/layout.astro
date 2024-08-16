@@ -26,7 +26,7 @@
     --color-work: #44aa99;
     --color-rest: #cc6677;
     --color-win: #332288;
-    --color-acent: #f7c179;
+    --color-accent: #f7c179;
     --pico-color: white !important;
     --pico-h1-color: white !important;
     --color-links: white;
@@ -99,5 +99,18 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
+  }
+
+  progress {
+    height: 1.2em;
+    padding: 3px;
+    margin: 0;
+    max-width: 90%;
+    border-radius: 8px;
+    background-color: hsla(0, 0%, 0%, 0.3);
+  }
+  progress[value]::-webkit-progress-value {
+    margin: auto;
+    border-radius: 5px;
   }
 </style>

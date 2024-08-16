@@ -2,6 +2,7 @@
 import Layout from '../../layouts/layout.astro'
 import TimerIcon from '../../components/TimerIcon.astro'
 import Working from '../../components/Working.astro'
+import Progress from '../../components/Progress.astro'
 ---
 
 <Layout>
@@ -56,8 +57,12 @@ import Working from '../../components/Working.astro'
 
     // Show preparation time
     displayContent(workouts[0], 'Preparation Time')
-    await delaySeconds(prepDuration)
     play('beep')
+    for (let i = prepDuration; i > 0; i--) {
+      renderTime(i, prepDuration)
+      await delaySeconds(1)
+    }
+    // await delaySeconds(prepDuration)
 
     // Loop through workouts
     for (const workout of workouts) {
@@ -173,13 +178,6 @@ import Working from '../../components/Working.astro'
     align-items: center;
     justify-content: center;
     gap: 0.3em;
-  }
-
-  #progress {
-    max-width: 50ch;
-    color: var(--color-accent);
-    margin: 0;
-    height: 0.7em;
   }
 
   /* Screens less than 300px */
