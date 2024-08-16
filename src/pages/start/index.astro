@@ -151,7 +151,7 @@ import Working from '../../components/Working.astro'
 
 <style>
   #subtitle {
-    font-size: 1.4em;
+    font-size: 3vw;
   }
 
   #title {
@@ -180,5 +180,20 @@ import Working from '../../components/Working.astro'
     color: var(--color-accent);
     margin: 0;
     height: 0.7em;
+  }
+
+  /* Screens less than 300px */
+  @media (width <= 450px) {
+    #subtitle {
+      font-size: 1.5em;
+    }
+
+    #title {
+      font-size: 3em;
+    }
+
+    #info {
+      font-size: 2em;
+    }
   }
 </style>
