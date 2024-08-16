@@ -4,7 +4,7 @@ export const storageKey = 'settings'
 
 declare global {
   interface Window {
-    timer: NodeJS.Timeout
+    timer: any
   }
 }
 
