@@ -9,9 +9,20 @@ import BackToHome from '../../components/button.home.astro'
   </section>
 
   <footer>
-    <BackToHome />
+    <div class="columns">
+      <button id="startAgaig">Start Again</button>
+      <BackToHome />
+    </div>
   </footer>
 </Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startAgaig')?.addEventListener('click', () => {
+      location.href = '/tabata/start'
+    })
+  })
+</script>
 
 <style>
   h1 {
