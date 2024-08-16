@@ -1,44 +1,37 @@
 ---
 import Layout from '../../layouts/layout.astro'
-import { defaultSettings } from '../../assets/defaultSettings'
-const { labelPrep } = defaultSettings
+import WorkoutIcon from '../../components/WorkoutIcon.astro'
+import TimeIcon from '../../components/TimeIcon.astro'
 ---
 
 <Layout>
-  <section class="titles">
-    <div id="title">Tabata timer</div>
+  <section>
     <div id="subtitle">Press start to begin</div>
   </section>
-  <section class="restTime">
+  <section>
+    <div id="title">Tabata timer</div>
+  </section>
+  <section>
     <progress id="progress" value="100" max="100"></progress>
   </section>
+  <section id="info">
+    <div>
+      <TimeIcon />
+      <span id="time-left"></span>
+    </div>
+    <div>
+      <WorkoutIcon />
+      <span id="exercise-left"></span>
+    </div>
+  </section>
   <footer class="columns">
-    <button id="start">Start</button>
     <a href="/tabata" class="secondary">Back</a>
+    <audio id="beep" src="/tabata/beep.mp3"></audio>
   </footer>
-  <audio id="beep" src="/tabata/beep.mp3"></audio>
 </Layout>
 
 <script>
   import { getSettings, switchBodyClass, delaySeconds } from '../../assets/main'
-
-  function init() {
-    clearTimeout(window.timer)
-    const mainButton = document.getElementById('start')
-    if (mainButton) mainButton.textContent = 'Start'
-
-    mainButton?.addEventListener('click', () => {
-      playBeep()
-      const buttonText = mainButton?.textContent
-      if (buttonText === 'Reset')
-        confirm('Are you sure you want to reset?') && location.reload()
-      else {
-        startWorkout()
-
-        mainButton.textContent = 'Reset'
-      }
-    })
-  }
 
   // Initialize app
   document.addEventListener('DOMContentLoaded', startWorkout)
@@ -50,19 +43,28 @@ const { labelPrep } = defaultSettings
   }
 
   // Start workout/rest circuit
-  async function startWorkout() {
-    const settings = getSettings()
-    let { prepDuration, workDuration, restDuration, workouts, labelRest } =
-      settings
-    let currentExercise = 0
+  const settings = getSettings()
+  let { workDuration, restDuration, workouts, prepDuration } = settings
 
-    // Set preparation time
-    // await displayPrepTime(prepDuration)
+  async function startWorkout() {
+    let currentExercise = 0
+    let remainingWorkouts = workouts.length
+    const totalRoutineTime =
+      remainingWorkouts * (workDuration / 60 + restDuration / 60)
+
+    // Update screen
+    updateExerciseLeft(workouts.length)
+    updateRutineTimeLeft(totalRoutineTime)
+
+    // Show preparation time
+    displayContent(workouts[0], 'Preparation Time')
+    await delaySeconds(prepDuration)
+    playBeep()
 
     // Loop through workouts
     for (const workout of workouts) {
       switchBodyClass('workout')
-      displayContent(workout, `${workouts.length - currentExercise}`)
+      displayContent(workout, 'Work Time')
 
       // Work time
       for (let timeLeft = workDuration; timeLeft > 0; timeLeft--) {
@@ -72,32 +74,22 @@ const { labelPrep } = defaultSettings
 
       // Update current exercise
       currentExercise = currentExercise + 1
+      remainingWorkouts--
+
+      updateRutineTimeLeft(calculateTimeLeft(remainingWorkouts))
+      updateExerciseLeft(remainingWorkouts)
 
       // Show rest time
       if (currentExercise < workouts.length) {
         const nextWorkout = workouts[currentExercise]
         switchBodyClass('rest')
-        displayContent(
-          nextWorkout,
-          `Remaining: ${workouts.length - currentExercise}`
-        )
+        displayContent(nextWorkout, 'Rest Time')
 
         for (let j = restDuration; j > 0; j--) {
           renderTime(j, restDuration)
           await delaySeconds(1)
         }
       } else location.href = '/tabata/end'
-    }
-  }
-
-  // Display preparation time
-  async function displayPrepTime(time: number) {
-    const { labelPrep } = getSettings()
-    switchBodyClass('prep')
-    displayContent(labelPrep)
-    for (let i = time; i > 0; i--) {
-      renderTime(i, time)
-      await delaySeconds(1)
     }
   }
 
@@ -117,6 +109,22 @@ const { labelPrep } = defaultSettings
     if (time <= 3) playBeep()
   }
 
+  // Update exercise left
+  const updateExerciseLeft = (exercise: number) => {
+    const exerciseLeftEl = exerciseLeftElement()
+    if (exerciseLeftEl) exerciseLeftEl.textContent = exercise.toString()
+  }
+
+  // Update rutine time left
+  function updateRutineTimeLeft(time: number) {
+    const timeLeftEl = timeLeftElement()
+    if (timeLeftEl) timeLeftEl.textContent = `${time.toFixed(1).toString()}m`
+  }
+
+  // Calculate time left
+  const calculateTimeLeft = (remainingWorkouts: number) =>
+    remainingWorkouts * (workDuration / 60 + restDuration / 60)
+
   // Get progress element
   function progressElement() {
     return document.getElementById('progress') as HTMLProgressElement | null
@@ -131,6 +139,16 @@ const { labelPrep } = defaultSettings
   function subtitleElement() {
     return document.getElementById('subtitle') as HTMLTitleElement | null
   }
+
+  // Get exercise left element
+  function exerciseLeftElement() {
+    return document.getElementById('exercise-left') as HTMLSpanElement | null
+  }
+
+  // Get time left element
+  function timeLeftElement() {
+    return document.getElementById('time-left') as HTMLSpanElement | null
+  }
 </script>
 
 <style>
@@ -144,7 +162,17 @@ const { labelPrep } = defaultSettings
     font-size: 3vw;
   }
 
+  #info {
+    font-size: 5vw;
+    display: flex;
+    justify-content: center;
+    gap: 3em;
+  }
+
   #progress {
-    color: var(--color-acent);
+    width: 50ch;
+    color: var(--color-accent);
+    margin: 0;
+    height: 0.7em;
   }
 </style>

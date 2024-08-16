@@ -11,7 +11,7 @@
     <link rel="manifest" href="/tabata/manifest.json" />
   </head>
   <body class="prep">
-    <main class="container">
+    <main class="main">
       <slot />
     </main>
   </body>
@@ -26,7 +26,7 @@
     --color-acent: #f7c179;
     --pico-color: white !important;
     --pico-h1-color: white !important;
-    --color-links: #424b6b;
+    --color-links: white;
   }
 
   html,
@@ -51,7 +51,7 @@
     text-decoration-color: var(--color-links);
   }
 
-  .container {
+  .main {
     min-height: 100dvh;
   }
 
@@ -74,6 +74,7 @@
   main {
     width: 100%;
     height: 100%;
+    padding: 1.5em;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

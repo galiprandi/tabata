@@ -1,29 +1,63 @@
 ---
 import Layout from '../../layouts/layout.astro'
 import BackToHome from '../../components/button.home.astro'
+import WorkoutIcon from '../../components/WorkoutIcon.astro'
+import TimeIcon from '../../components/TimeIcon.astro'
 ---
 
 <Layout>
-  <section class="display constent">
-    <h1>Workouts</h1>
-    <aside>
-      <div id="workout-list"></div>
-    </aside>
-
-    <footer>
-      <div role="group">
-        <button id="save">Save</button>
-        <button id="restore" class="secondary">Restore</button>
-        <button id="clear">Clear All</button>
-      </div>
-
-      <BackToHome />
-    </footer>
+  <header>
+    <h1>Settings</h1>
+  </header>
+  <section class="data">
+    <div>
+      <TimeIcon />
+      <span class="total-time">30:00</span>
+    </div>
+    <div>
+      <WorkoutIcon />
+      <span class="total-workouts"></span>
+    </div>
   </section>
+  <section class="options">
+    <div id="prepDur">
+      <label>
+        <span>
+          <TimeIcon /> Preparation
+        </span>
+        <input type="number" id="prepDuration" />
+      </label>
+    </div>
+    <div id="workDur">
+      <label>
+        <span>
+          <TimeIcon /> Workout
+        </span>
+        <input type="number" id="workDuration" />
+      </label>
+    </div>
+    <div id="restDur">
+      <label>
+        <span>
+          <TimeIcon /> Rest
+        </span>
+        <input type="number" id="restDuration" />
+      </label>
+    </div>
+  </section>
+  <section id="workout-list"></section>
 
+  <footer>
+    <div class="columns">
+      <button id="restore" class="secondary">Restore</button>
+      <button id="clear">Clear All</button>
+      <BackToHome />
+    </div>
+  </footer>
   <style>
-    button#start {
-      min-width: 10em;
+    section {
+      font-size: 1.5em;
+      margin-bottom: 1.5em;
     }
 
     #clear {
@@ -33,9 +67,9 @@ import BackToHome from '../../components/button.home.astro'
 
     .options {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 1em;
+      gap: 2em;
     }
 
     [role='group'] {
@@ -45,6 +79,35 @@ import BackToHome from '../../components/button.home.astro'
         min-width: unset !important;
       }
     }
+
+    .data {
+      font-size: 2.5vw;
+      display: flex;
+      gap: 1.5em;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .data > div {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+
+    label {
+      display: grid;
+      place-items: center;
+    }
+
+    input {
+      width: 8ch;
+      text-align: center;
+      margin: 0;
+    }
+
+    #workout-list {
+      /* font-size: 1.5em; */
+    }
   </style>
 
   <script>
@@ -52,11 +115,77 @@ import BackToHome from '../../components/button.home.astro'
     import { defaultSettings } from '../../assets/defaultSettings'
 
     function Init() {
-      const settings = getSettings()
+      const prepDurationEl = document.getElementById(
+        'prepDuration'
+      ) as HTMLInputElement
+      const workoutDurationEl = document.getElementById(
+        'workDuration'
+      ) as HTMLInputElement
+      const restDurationEl = document.getElementById(
+        'restDuration'
+      ) as HTMLInputElement
+      const totalWorkoutsEl = document.querySelector('.total-workouts')
+      const totalTimeEl = document.querySelector('.total-time')
+      const { workouts, prepDuration, workDuration, restDuration } =
+        getSettings()
       const workoutList = document.getElementById('workout-list')
+      const totalWorkouts = workouts.length
+      const routineMinutes = (
+        (totalWorkouts * (workDuration + restDuration)) /
+        60
+      ).toFixed(1)
+
+      // Set the preparation duration
+      if (prepDurationEl) prepDurationEl.value = prepDuration.toString()
+
+      // Set the workout duration
+      if (workoutDurationEl) workoutDurationEl.value = workDuration.toString()
+
+      // Set the rest duration
+      if (restDurationEl) restDurationEl.value = restDuration.toString()
+
+      // Set the total workouts
+      if (totalWorkoutsEl)
+        totalWorkoutsEl.textContent = totalWorkouts.toString()
+
+      // Set the total time
+      if (totalTimeEl) totalTimeEl.textContent = `${routineMinutes}m`
+
+      // Save the settings
+      prepDurationEl?.addEventListener('change', e => {
+        const value = parseInt((e.target as HTMLInputElement).value)
+        updateSettings({ ...getSettings(), prepDuration: +value })
+        if (totalTimeEl)
+          totalTimeEl.textContent = `${(
+            (totalWorkouts * (workDuration + restDuration)) /
+            60
+          ).toFixed(1)}m`
+      })
+
+      workoutDurationEl?.addEventListener('change', e => {
+        const value = parseInt((e.target as HTMLInputElement).value)
+        updateSettings({ ...getSettings(), workDuration: +value })
+        if (totalTimeEl)
+          totalTimeEl.textContent = `${(
+            (totalWorkouts * (value + restDuration)) /
+            60
+          ).toFixed(1)}m`
+      })
+
+      restDurationEl?.addEventListener('change', e => {
+        const value = parseInt((e.target as HTMLInputElement).value)
+        updateSettings({ ...getSettings(), restDuration: +value })
+        if (totalTimeEl)
+          totalTimeEl.textContent = `${(
+            (totalWorkouts * (workDuration + value)) /
+            60
+          ).toFixed(1)}m`
+      })
+
       if (!workoutList) return
 
-      settings.workouts.forEach(workout => {
+      // Set the total workouts
+      workouts.forEach(workout => {
         const item = document.createElement('div')
         item.innerText = workout
         workoutList.appendChild(item)
