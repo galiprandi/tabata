@@ -57,9 +57,6 @@ import PrepareIcon from '../components/PrepareIcon.astro'
     const bodyClasses = document.body.classList
     const state = document.getElementById('workout-state') as HTMLElement
     const stateClasses = state.classList
-    const work = document.getElementsByClassName('icon-work')[0] as HTMLElement
-    const rest = document.getElementsByClassName('icon-rest')[0] as HTMLElement
-    const prep = document.getElementsByClassName('icon-prep')[0] as HTMLElement
 
     if (!bodyClasses.contains('workout')) return
 
