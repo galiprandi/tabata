@@ -20,21 +20,12 @@ import Layout from '../layouts/layout.astro'
 </style>
 
 <script>
-  import { play } from '../assets/main'
-
   document.addEventListener('DOMContentLoaded', () => {
     // Add event listener to go button
     const goButton = document.getElementById('go')
+
     goButton?.addEventListener('click', () => {
       location.href = '/tabata/start'
-    })
-
-    // Add tap sound to all elements with class .tap
-    const tapButtons = document.querySelectorAll('.tap')
-    tapButtons.forEach(button => {
-      button.addEventListener('click', async () => {
-        await play('tap')
-      })
     })
   })
 </script>

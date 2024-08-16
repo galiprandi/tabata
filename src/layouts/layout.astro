@@ -15,9 +15,6 @@ import CloseIcon from '../components/CloseIcon.astro'
     <link rel="manifest" href="/tabata/manifest.json" />
   </head>
   <body class="prep">
-    <button id="closeApp">
-      <CloseIcon />
-    </button>
     <main class="main">
       <slot />
       <audio id="player">
@@ -26,12 +23,6 @@ import CloseIcon from '../components/CloseIcon.astro'
     </main>
   </body>
 </html>
-
-<script>
-  document.getElementById('closeApp')?.addEventListener('click', () => {
-    window.close()
-  })
-</script>
 
 <style is:global>
   :root {
@@ -64,18 +55,6 @@ import CloseIcon from '../components/CloseIcon.astro'
     text-align: center;
     color: white;
     transition: background-color 0.5s;
-  }
-
-  #closeApp {
-    position: absolute;
-    top: -0.3em;
-    right: 0em;
-    background: none;
-    color: white;
-    border: none;
-    padding: 0.5em;
-    font-size: 1.5em;
-    min-width: unset !important;
   }
 
   a {

@@ -2,6 +2,9 @@
     "background_color": "#052940",
     "dir": "auto",
     "display": "fullscreen",
+    "display_override": [
+        "window-controls-overlay"
+    ],
     "icons": [
         {
             "sizes": "192x192",

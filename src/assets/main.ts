@@ -8,6 +8,22 @@ declare global {
   }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  // Add tap sound to all elements with class .tap
+  const tapButtons = document.querySelectorAll('.tap')
+  tapButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      await play('tap')
+    })
+  })
+})
+
+// Listen for wake lock release
+const wakeLock = await navigator.wakeLock.request()
+wakeLock.addEventListener('release', () => {
+  console.log(`Screen Wake Lock released: ${wakeLock.released}`)
+})
+
 // Get settings from local storage
 export function getSettings() {
   let storageConfig = localStorage.getItem(storageKey)
@@ -41,7 +57,7 @@ export function delaySeconds(seconds: number) {
 export const play = async (src: Sound) => {
   const playerEl = document.getElementById('player')
   if (!playerEl) return
-  await new Audio(`/tabata/sounds/${src}.mp3`).play()
+  await new Audio(`/sounds/${src}.mp3`).play()
 }
 
 // Update innerHTML of element
