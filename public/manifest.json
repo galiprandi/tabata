@@ -16,7 +16,7 @@
     ],
     "lang": "en",
     "name": "Tabata",
-    "orientation": "landscape",
+    "orientation": "landscape-primary",
     "screenshots": [
         {
             "form_factor": "narrow",
