@@ -44,4 +44,10 @@ export const play = async (src: Sound) => {
   await new Audio(`/tabata/sounds/${src}.mp3`).play()
 }
 
+// Update innerHTML of element
+export const updateText = (query: string, text: string) => {
+  const el = document.querySelector(query)
+  if (el) el.innerHTML = text
+}
+
 type Sound = 'beep' | 'tap'

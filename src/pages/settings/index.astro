@@ -43,12 +43,10 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       </label>
     </div>
   </section>
-  <section id="workout-list"></section>
 
   <footer>
     <div class="columns">
-      <button id="restore" class="secondary">Restore</button>
-      <button id="clear">Clear All</button>
+      <button id="routine" class="secondary">Modify Routine</button>
       <BackToHome />
     </div>
   </footer>
@@ -70,14 +68,6 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       gap: 2em;
     }
 
-    [role='group'] {
-      margin: 1em 0;
-
-      & button {
-        min-width: unset !important;
-      }
-    }
-
     .data {
       font-size: 2.9vw;
       display: flex;
@@ -91,17 +81,22 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       align-items: center;
       gap: 1em;
     }
+    label {
+      & svg {
+        transform: translateX(1.7em);
+      }
 
-    input {
-      width: 8ch;
-      text-align: center;
-      margin: 0;
+      & input {
+        width: 7em;
+        text-align: center;
+        margin: 0;
+        padding-left: 3em;
+      }
     }
   </style>
 
   <script>
     import { getSettings, updateSettings } from '../../assets/main'
-    import { defaultSettings } from '../../assets/defaultSettings'
 
     function Init() {
       const prepDurationEl = document.getElementById(
@@ -113,11 +108,12 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       const restDurationEl = document.getElementById(
         'restDuration'
       ) as HTMLInputElement
+
       const totalWorkoutsEl = document.querySelector('.total-workouts')
       const totalTimeEl = document.querySelector('.total-time')
       const { workouts, prepDuration, workDuration, restDuration } =
         getSettings()
-      const workoutList = document.getElementById('workout-list')
+
       const totalWorkouts = workouts.length
       const routineMinutes = (
         (totalWorkouts * (workDuration + restDuration)) /
@@ -170,53 +166,11 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
             60
           ).toFixed(1)}m`
       })
-
-      if (!workoutList) return
-
-      // Set the total workouts
-      workouts.forEach(workout => {
-        const item = document.createElement('div')
-        item.innerText = workout
-        workoutList.appendChild(item)
-      })
     }
 
-    // Delete all workouts
-    function deleteAllWorkouts() {
-      if (!confirm('Are you sure you want to delete all workouts?')) return
-      const settings = getSettings()
-      updateSettings({ ...settings, workouts: [] })
-      location.reload()
-    }
-
-    function updateWorkout(workout: string) {
-      const index = defaultSettings.workouts.findIndex(w => w === workout)
-      console.log({ index })
-    }
-
-    // Save the default settings to the local storage
-    function restoreDefaultSettings() {
-      if (!confirm('Are you sure you want to restore the default settings?'))
-        return
-      localStorage.setItem('settings', JSON.stringify(defaultSettings))
-      location.reload()
-    }
-
-    // Add event listener to all li elements
-    document.querySelectorAll('li').forEach(li => {
-      li.addEventListener('click', e => {
-        const workout = (e.target as HTMLElement).innerText
-        updateWorkout(workout)
-      })
+    document.getElementById('routine')?.addEventListener('click', () => {
+      location.href = '/tabata/settings/routine'
     })
-
-    document
-      .getElementById('restore')
-      ?.addEventListener('click', restoreDefaultSettings)
-
-    document
-      .getElementById('clear')
-      ?.addEventListener('click', deleteAllWorkouts)
 
     document.addEventListener('DOMContentLoaded', Init)
   </script>
