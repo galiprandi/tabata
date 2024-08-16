@@ -1,8 +1,11 @@
 ---
 import Layout from '../../layouts/layout.astro'
 import BackToHome from '../../components/button.home.astro'
-import WorkoutIcon from '../../components/WorkoutIcon.astro'
-import TimeIcon from '../../components/TimeIcon.astro'
+import PrepareIcon from '../../components/PrepareIcon.astro'
+import WorkoutIcon from '../../components/ExerciseWork.astro'
+import TimerIcon from '../../components/TimerIcon.astro'
+import ExerciseWork from '../../components/ExerciseWork.astro'
+import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
 ---
 
 <Layout>
@@ -11,8 +14,8 @@ import TimeIcon from '../../components/TimeIcon.astro'
   </header>
   <section class="data">
     <div>
-      <TimeIcon />
-      <span class="total-time">30:00</span>
+      <TimerIcon />
+      <span class="total-time"></span>
     </div>
     <div>
       <WorkoutIcon />
@@ -22,26 +25,21 @@ import TimeIcon from '../../components/TimeIcon.astro'
   <section class="options">
     <div id="prepDur">
       <label>
-        <span>
-          <TimeIcon /> Preparation
-        </span>
-        <input type="number" id="prepDuration" />
+        <PrepareIcon />
+
+        <input type="number" id="prepDuration" class="prep" />
       </label>
     </div>
     <div id="workDur">
       <label>
-        <span>
-          <TimeIcon /> Workout
-        </span>
-        <input type="number" id="workDuration" />
+        <ExerciseWork />
+        <input type="number" id="workDuration" class="workout" />
       </label>
     </div>
     <div id="restDur">
       <label>
-        <span>
-          <TimeIcon /> Rest
-        </span>
-        <input type="number" id="restDuration" />
+        <ExerciseRestIcon />
+        <input type="number" id="restDuration" class="rest" />
       </label>
     </div>
   </section>
@@ -94,19 +92,10 @@ import TimeIcon from '../../components/TimeIcon.astro'
       gap: 1em;
     }
 
-    label {
-      display: grid;
-      place-items: center;
-    }
-
     input {
       width: 8ch;
       text-align: center;
       margin: 0;
-    }
-
-    #workout-list {
-      /* font-size: 1.5em; */
     }
   </style>
 

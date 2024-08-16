@@ -8,10 +8,9 @@ import Layout from '../layouts/layout.astro'
   </section>
 
   <footer class="columns">
-    <button id="go">Go</button>
-    <a href="/tabata/settings">Settings</a>
+    <button id="go" class="tap">Go</button>
+    <a href="/tabata/settings" class="tap">Settings</a>
   </footer>
-  <audio id="beep" src="/tabata/beep.mp3"></audio>
 </Layout>
 
 <style>
@@ -22,9 +21,21 @@ import Layout from '../layouts/layout.astro'
 </style>
 
 <script>
-  // Initialize app
+  import { play } from '../assets/main'
+
   document.addEventListener('DOMContentLoaded', () => {
+    // Add event listener to go button
     const goButton = document.getElementById('go')
-    goButton?.addEventListener('click', () => (location.href = '/tabata/start'))
+    goButton?.addEventListener('click', () => {
+      location.href = '/tabata/start'
+    })
+
+    // Add tap sound to all elements with class .tap
+    const tapButtons = document.querySelectorAll('.tap')
+    tapButtons.forEach(button => {
+      button.addEventListener('click', async () => {
+        await play('tap')
+      })
+    })
   })
 </script>

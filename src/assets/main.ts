@@ -4,7 +4,7 @@ export const storageKey = 'settings'
 
 declare global {
   interface Window {
-    timer: number
+    timer: NodeJS.Timeout
   }
 }
 
@@ -36,3 +36,12 @@ export function delaySeconds(seconds: number) {
     resolve => (window.timer = setTimeout(resolve, seconds * 1000))
   )
 }
+
+// Play sound function
+export const play = async (src: Sound) => {
+  const playerEl = document.getElementById('player')
+  if (!playerEl) return
+  await new Audio(`/tabata/sounds/${src}.mp3`).play()
+}
+
+type Sound = 'beep' | 'tap'

@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/layout.astro'
-import WorkoutIcon from '../../components/WorkoutIcon.astro'
-import TimeIcon from '../../components/TimeIcon.astro'
+import TimerIcon from '../../components/TimerIcon.astro'
+import Working from '../../components/Working.astro'
 ---
 
 <Layout>
@@ -16,31 +16,29 @@ import TimeIcon from '../../components/TimeIcon.astro'
   </section>
   <section id="info">
     <div>
-      <TimeIcon />
+      <TimerIcon />
       <span id="time-left"></span>
     </div>
     <div>
-      <WorkoutIcon />
+      <Working />
       <span id="exercise-left"></span>
     </div>
   </section>
   <footer class="columns">
     <a href="/tabata" class="secondary">Back</a>
-    <audio id="beep" src="/tabata/beep.mp3"></audio>
   </footer>
 </Layout>
 
 <script>
-  import { getSettings, switchBodyClass, delaySeconds } from '../../assets/main'
+  import {
+    play,
+    getSettings,
+    switchBodyClass,
+    delaySeconds,
+  } from '../../assets/main'
 
   // Initialize app
   document.addEventListener('DOMContentLoaded', startWorkout)
-
-  // Play beep sound function
-  function playBeep() {
-    const audio = new Audio('/tabata/beep.mp3')
-    audio.play()
-  }
 
   // Start workout/rest circuit
   const settings = getSettings()
@@ -59,11 +57,11 @@ import TimeIcon from '../../components/TimeIcon.astro'
     // Show preparation time
     displayContent(workouts[0], 'Preparation Time')
     await delaySeconds(prepDuration)
-    playBeep()
+    play('beep')
 
     // Loop through workouts
     for (const workout of workouts) {
-      switchBodyClass('workout')
+      switchBodyClass(`workout`)
       displayContent(workout, 'Work Time')
 
       // Work time
@@ -106,7 +104,7 @@ import TimeIcon from '../../components/TimeIcon.astro'
     const progressEl = progressElement()
     if (progressEl) progressEl.value = (time / totlaTime) * 100
     // Play beep sound when time is up
-    if (time <= 3) playBeep()
+    if (time <= 3) play('beep')
   }
 
   // Update exercise left
@@ -152,14 +150,15 @@ import TimeIcon from '../../components/TimeIcon.astro'
 </script>
 
 <style>
+  #subtitle {
+    font-size: 1.4em;
+  }
+
   #title {
     font-size: 8vw;
     font-weight: bold;
     line-height: 1;
-  }
-
-  #subtitle {
-    font-size: 3vw;
+    margin: 0.2em;
   }
 
   #info {
@@ -169,8 +168,15 @@ import TimeIcon from '../../components/TimeIcon.astro'
     gap: 3em;
   }
 
+  #info div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+  }
+
   #progress {
-    width: 50ch;
+    max-width: 50ch;
     color: var(--color-accent);
     margin: 0;
     height: 0.7em;

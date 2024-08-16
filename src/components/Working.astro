@@ -1,0 +1,43 @@
+---
+import ExerciseWork from './ExerciseWork.astro'
+import ExerciseRestIcon from './ExerciseRestIcon.astro'
+---
+
+<span>
+  <ExerciseWork class:list={'icon-work'} />
+  <ExerciseRestIcon class:list={'icon-rest'} />
+</span>
+
+<style>
+  span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .icon-work {
+    display: none;
+  }
+</style>
+
+<script>
+  // Toggle Icon visibility
+  function toggleIcon() {
+    // get body class
+    const classes = document.body.classList
+    if (!classes.contains('workout')) return
+    const work = document.getElementsByClassName('icon-work')[0] as HTMLElement
+    const rest = document.getElementsByClassName('icon-rest')[0] as HTMLElement
+
+    if (!work || !rest) return
+    if (work.style.display === 'none') {
+      work.style.display = 'block'
+      rest.style.display = 'none'
+    } else {
+      work.style.display = 'none'
+      rest.style.display = 'block'
+    }
+  }
+
+  // Switch between workout and rest each second
+  setInterval(toggleIcon, 500)
+</script>
