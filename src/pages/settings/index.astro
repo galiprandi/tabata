@@ -27,30 +27,33 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       <label>
         <PrepareIcon />
 
-        <input type="number" id="prepDuration" class="prep" />
+        <input type="number" id="prepDuration" class="prep" min="0" />
       </label>
     </div>
     <div id="workDur">
       <label>
         <ExerciseWork />
-        <input type="number" id="workDuration" class="workout" />
+        <input type="number" id="workDuration" class="workout" min="0" />
       </label>
     </div>
     <div id="restDur">
       <label>
         <ExerciseRestIcon />
-        <input type="number" id="restDuration" class="rest" />
+        <input type="number" id="restDuration" class="rest" min="0" />
       </label>
     </div>
   </section>
 
   <footer>
     <div class="columns">
-      <button id="routine" class="secondary">Modify Routine</button>
+      <button id="routine" class="secondary">Update Routine</button>
       <BackToHome />
     </div>
   </footer>
   <style>
+    h1 {
+      margin: 0;
+    }
     section {
       font-size: 1.5em;
     }
@@ -82,8 +85,13 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
       gap: 0.3em;
     }
     label {
+      position: relative;
+      margin: 0;
+
       & svg {
-        transform: translateX(1.7em);
+        position: absolute;
+        top: 50%;
+        transform: translate(10px, -50%);
       }
 
       & input {
