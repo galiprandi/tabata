@@ -6,13 +6,18 @@ import Layout from '../layouts/layout.astro'
   <section class="display">
     <div id="title">Wellcome</div>
   </section>
-  <footer class="columns">
+  <footer>
+    <button id="routine" class="tap secondary">Routine</button>
     <button id="go" class="tap">Go</button>
-    <a href="/tabata/settings" class="tap">Update Routine</a>
   </footer>
 </Layout>
 
 <style>
+  footer {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+  }
   #title {
     font-size: 10vw;
     font-weight: bold;
@@ -21,11 +26,15 @@ import Layout from '../layouts/layout.astro'
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Add event listener to go button
     const goButton = document.getElementById('go')
+    const routineButton = document.getElementById('routine')
 
     goButton?.addEventListener('click', () => {
       location.href = '/tabata/start'
+    })
+
+    routineButton?.addEventListener('click', () => {
+      location.href = '/tabata/settings'
     })
   })
 </script>
