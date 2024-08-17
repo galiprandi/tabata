@@ -1,5 +1,9 @@
 {
     "background_color": "#052940",
+    "categories": [
+        "health",
+        "fitness"
+    ],
     "dir": "auto",
     "display": "fullscreen",
     "display_override": [
