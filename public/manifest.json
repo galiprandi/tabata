@@ -7,23 +7,56 @@
     ],
     "icons": [
         {
-            "sizes": "192x192",
-            "src": "favicon.svg",
+            "purpose": "maskable",
+            "sizes": "512x512",
+            "src": "icon512_maskable.png",
             "type": "image/svg+xml"
         },
         {
+            "purpose": "any",
             "sizes": "512x512",
-            "src": "icon-512x512.png",
+            "src": "public/icon512_rounded.png",
             "type": "image/png"
         }
     ],
+    "id": "/tabata",
     "lang": "en",
     "name": "Tabata",
     "screenshots": [
         {
             "form_factor": "narrow",
-            "sizes": "1792x828",
+            "sizes": "2960x1440",
             "src": "screenshot-1.png",
+            "type": "image/png"
+        },
+        {
+            "form_factor": "narrow",
+            "sizes": "2960x1440",
+            "src": "screenshot-2.png",
+            "type": "image/png"
+        },
+        {
+            "form_factor": "narrow",
+            "sizes": "2960x1440",
+            "src": "/tabata/screenshot-3.png",
+            "type": "image/png"
+        },
+        {
+            "form_factor": "narrow",
+            "sizes": "1440x2960",
+            "src": "/tabata/screenshot-4.png",
+            "type": "image/png"
+        },
+        {
+            "form_factor": "narrow",
+            "sizes": "2732x2048",
+            "src": "/tabata/screenshot-5.png",
+            "type": "image/png"
+        },
+        {
+            "form_factor": "narrow",
+            "sizes": "1574x726",
+            "src": "/tabata/screenshot-6.png",
             "type": "image/png"
         }
     ],
