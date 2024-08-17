@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // Listen for wake lock release
 
 async function wakeLock() {
-  const wakeLock = await navigator.wakeLock.request()
-  wakeLock.addEventListener('release', () => {
+  const wakeLock = await navigator?.wakeLock?.request()
+  wakeLock?.addEventListener('release', () => {
     console.log(`Screen Wake Lock released: ${wakeLock.released}`)
   })
 }
@@ -59,10 +59,10 @@ export function delaySeconds(seconds: number) {
 }
 
 // Play sound function
-export const play = async (src: Sound) => {
+export const play = async (src: Sound, cb?: () => void) => {
   const playerEl = document.getElementById('player')
   if (!playerEl) return
-  await new Audio(`/tabata/sounds/${src}.mp3`).play()
+  await new Audio(`/tabata/sounds/${src}.mp3`).play().then(cb)
 }
 
 // Update innerHTML of element
@@ -71,4 +71,4 @@ export const updateText = (query: string, text: string) => {
   if (el) el.innerHTML = text
 }
 
-type Sound = 'beep' | 'tap'
+type Sound = 'beep' | 'tap' | 'end'

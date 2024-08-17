@@ -25,7 +25,7 @@ import Working from '../../components/Working.astro'
     </div>
   </section>
   <footer class="columns">
-    <a href="/tabata" class="secondary">Cancel</a>
+    <a href="/tabata" class="secondary">Abort Session</a>
   </footer>
 </Layout>
 
@@ -56,7 +56,7 @@ import Working from '../../components/Working.astro'
 
     // Show preparation time
     displayContent(workouts[0], 'Preparation Time')
-    play('beep')
+    await play('beep')
     for (let i = prepDuration; i > 0; i--) {
       renderTime(i, prepDuration)
       await delaySeconds(1)
@@ -91,7 +91,11 @@ import Working from '../../components/Working.astro'
           renderTime(j, restDuration)
           await delaySeconds(1)
         }
-      } else location.href = '/tabata/end'
+      } else {
+        play('end')
+        await delaySeconds(3)
+        location.href = '/tabata/end'
+      }
     }
   }
 
