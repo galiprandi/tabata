@@ -14,21 +14,21 @@ Tabata is a free, user-friendly exercise routine app designed to help you create
 To run the app locally, follow these steps:
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/galiprandi/tabata.git
-    ```
+   ```bash
+   git clone https://github.com/galiprandi/tabata.git
+   ```
 2. Navigate to the project directory:
-    ```bash
-    cd tabata
-    ```
+   ```bash
+   cd tabata
+   ```
 3. Install dependencies:
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 4. Start the development server:
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
 The app will be running on `http://localhost:4321`.
 
@@ -45,17 +45,17 @@ Contributions are welcome! Please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch:
-    ```bash
-    git checkout -b feature-name
-    ```
+   ```bash
+   git checkout -b feature-name
+   ```
 3. Make your changes and commit them:
-    ```bash
-    git commit -m '✨ Add feature'
-    ```
+   ```bash
+   git commit -m '✨ Add feature'
+   ```
 4. Push to the branch:
-    ```bash
-    git push origin feature-name
-    ```
+   ```bash
+   git push origin feature-name
+   ```
 5. Open a pull request.
 
 ## 👤 Author
