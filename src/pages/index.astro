@@ -1,5 +1,14 @@
 ---
 import Layout from '../layouts/layout.astro'
+
+const date = new Date()
+  .toLocaleDateString('es-AR')
+  .split('/')
+  .map(n => n.padStart(2, '0'))
+  .reverse()
+  .join('')
+const version = `v${date}`
+console.log(version)
 ---
 
 <Layout>
@@ -10,6 +19,7 @@ import Layout from '../layouts/layout.astro'
     <a href="/tabata/settings" class="button secondary">Settings</a>
     <a href="/tabata/start" class="button">Go</a>
   </footer>
+  <small id="version">{version}</small>
 </Layout>
 
 <style>
@@ -18,8 +28,17 @@ import Layout from '../layouts/layout.astro'
     justify-content: center;
     gap: 2em;
   }
+
   #title {
     font-size: 10vw;
     font-weight: bold;
+  }
+
+  #version {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 0.7em;
+    padding: 0.5em;
   }
 </style>
