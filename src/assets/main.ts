@@ -61,12 +61,13 @@ export function delaySeconds(seconds: number) {
 const audioEnable = () => !!localStorage.getItem('audioEnable')
 
 // Play sound function
-export const play = async (src: Sound) => {
-  if (!audioEnable()) return
+export const play = async (src: Sound, force = false) => {
+  if (!force && !audioEnable()) return
   try {
     document.getElementById('player') as HTMLAudioElement
     await new Audio(`/tabata/sounds/${src}.mp3`).play()
   } catch (error) {
+    console.error(error)
     localStorage.removeItem('audioEnable')
   }
 }

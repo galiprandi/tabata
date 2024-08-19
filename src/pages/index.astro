@@ -16,8 +16,8 @@ console.log(version)
     <div id="title">Wellcome</div>
   </section>
   <footer>
-    <a href="/tabata/settings" class="button secondary">Settings</a>
-    <a href="/tabata/start" class="button">Go</a>
+    <button id="settings" class="secondary">Settings</button>
+    <button id="go">Go</button>
   </footer>
   <small id="version">{version}</small>
 </Layout>
@@ -45,9 +45,19 @@ console.log(version)
 
 <script>
   import { play } from '../assets/main'
-  document.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      play('tap')
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const settings = document.getElementById('settings') as HTMLButtonElement
+    const go = document.getElementById('go') as HTMLButtonElement
+
+    settings.addEventListener('click', async () => {
+      await play('tap', true)
+      location.href = '/tabata/settings'
+    })
+
+    go.addEventListener('click', async () => {
+      await play('tap', true)
+      location.href = '/tabata/start'
     })
   })
 </script>
