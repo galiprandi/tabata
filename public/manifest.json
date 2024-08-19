@@ -12,6 +12,18 @@
     "icons": [
         {
             "purpose": "maskable",
+            "sizes": "96x96",
+            "src": "icon96_maskable.png",
+            "type": "image/svg+xml"
+        },
+        {
+            "purpose": "any",
+            "sizes": "96x96",
+            "src": "public/icon96_rounded.png",
+            "type": "image/png"
+        },
+        {
+            "purpose": "maskable",
             "sizes": "192x192",
             "src": "icon192_maskable.png",
             "type": "image/svg+xml"
@@ -60,24 +72,50 @@
         },
         {
             "form_factor": "narrow",
-            "sizes": "1440x2960",
+            "sizes": "2960x1440",
             "src": "/tabata/screenshot-4.png",
             "type": "image/png"
         },
         {
             "form_factor": "narrow",
-            "sizes": "2732x2048",
+            "sizes": "2960x1440",
             "src": "/tabata/screenshot-5.png",
             "type": "image/png"
         },
         {
             "form_factor": "narrow",
-            "sizes": "1574x726",
+            "sizes": "2960x1440",
             "src": "/tabata/screenshot-6.png",
             "type": "image/png"
         }
     ],
     "short_name": "Tabata",
+    "shortcuts": [
+        {
+            "description": "Start your workout with the Tabata app",
+            "icons": [
+                {
+                    "sizes": "96x96",
+                    "src": "/tabata/icon96_rounded.png",
+                    "type": "image/png"
+                }
+            ],
+            "name": "Start your workout",
+            "url": "/tabata/start"
+        },
+        {
+            "description": "Update your workout settings with the Tabata app",
+            "icons": [
+                {
+                    "sizes": "96x96",
+                    "src": "/tabata/icon96_rounded.png",
+                    "type": "image/png"
+                }
+            ],
+            "name": "Update your workout",
+            "url": "/tabata/settings"
+        }
+    ],
     "start_url": "/tabata",
     "theme_color": "#052940"
 }
