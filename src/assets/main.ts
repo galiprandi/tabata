@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 // Listen for wake lock release
-
 async function wakeLock() {
   const wakeLock = await navigator?.wakeLock?.request()
   wakeLock?.addEventListener('release', () => {
@@ -58,18 +57,17 @@ export function delaySeconds(seconds: number) {
   )
 }
 
+// Get audio status
+const audioEnable = () => !!localStorage.getItem('audioEnable')
+
 // Play sound function
-export const play = async (src: Sound, cb?: () => void) => {
+export const play = async (src: Sound) => {
+  if (!audioEnable()) return
   try {
     document.getElementById('player') as HTMLAudioElement
-    await new Audio(`/tabata/sounds/${src}.mp3`).play().then(cb)
+    await new Audio(`/tabata/sounds/${src}.mp3`).play()
   } catch (error) {
-    const dialog = document.getElementById(
-      'audio-permissions'
-    ) as HTMLDialogElement
-
-    // if (dialog) dialog.showModal()
-    console.error(error)
+    localStorage.removeItem('audioEnable')
   }
 }
 

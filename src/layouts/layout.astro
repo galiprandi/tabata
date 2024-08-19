@@ -1,5 +1,5 @@
 ---
-import AudioModal from '../components/AudioModal.astro'
+import EnableAudio from '../components/EnableAudio.astro'
 ---
 
 <html lang="en" data-theme="dark">
@@ -60,11 +60,9 @@ import AudioModal from '../components/AudioModal.astro'
   <body class="prep">
     <main class="main">
       <slot />
-      <audio id="player">
-        <source src="" type="audio/mpeg" />
-      </audio>
     </main>
-    <AudioModal />
+
+    <EnableAudio />
     <!-- Google tag (gtag.js) -->
     <script
       defer

@@ -42,3 +42,12 @@ console.log(version)
     padding: 0.5em;
   }
 </style>
+
+<script>
+  import { play } from '../assets/main'
+  document.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      play('tap')
+    })
+  })
+</script>
