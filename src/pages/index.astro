@@ -7,8 +7,8 @@ import Layout from '../layouts/layout.astro'
     <div id="title">Wellcome</div>
   </section>
   <footer>
-    <button id="routine" class="tap secondary">Routine</button>
-    <button id="go" class="tap">Go</button>
+    <a href="/tabata/settings" class="button secondary">Settings</a>
+    <a href="/tabata/start" class="button">Go</a>
   </footer>
 </Layout>
 
@@ -23,18 +23,3 @@ import Layout from '../layouts/layout.astro'
     font-weight: bold;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const goButton = document.getElementById('go')
-    const routineButton = document.getElementById('routine')
-
-    goButton?.addEventListener('click', () => {
-      location.href = '/tabata/start'
-    })
-
-    routineButton?.addEventListener('click', () => {
-      location.href = '/tabata/settings'
-    })
-  })
-</script>

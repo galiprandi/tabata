@@ -46,7 +46,9 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
 
   <footer>
     <div class="columns">
-      <button id="routine" class="secondary">Update Routine</button>
+      <a href="/tabata/settings/routine" class="button secondary"
+        >Update Routine</a
+      >
       <BackToHome />
     </div>
   </footer>
@@ -175,10 +177,6 @@ import ExerciseRestIcon from '../../components/ExerciseRestIcon.astro'
           ).toFixed(1)}m`
       })
     }
-
-    document.getElementById('routine')?.addEventListener('click', () => {
-      location.href = '/tabata/settings/routine'
-    })
 
     document.addEventListener('DOMContentLoaded', Init)
   </script>
