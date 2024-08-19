@@ -1,0 +1,34 @@
+<dialog id="audio-permissions">
+  <article>
+    <header>
+      <h2>🔇 Enable audio permissions</h2>
+    </header>
+    <p>
+      This app uses audio to alert you when to start and stop each exercise.
+      Please allow the browser to play audio.
+    </p>
+
+    <footer>
+      <button id="cancel" class="secondary">Cancel</button>
+      <button id="enable">Enable audio</button>
+    </footer>
+  </article>
+</dialog>
+
+<script>
+  import { play } from '../assets/main'
+  const dialog = document.getElementById(
+    'audio-permissions'
+  ) as HTMLDialogElement
+  const enable = document.getElementById('enable') as HTMLButtonElement
+  const cancel = document.getElementById('cancel') as HTMLButtonElement
+
+  enable.addEventListener('click', async () => {
+    await play('beep')
+    dialog.close()
+  })
+
+  cancel.addEventListener('click', () => {
+    dialog.close()
+  })
+</script>

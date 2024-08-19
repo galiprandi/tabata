@@ -60,9 +60,17 @@ export function delaySeconds(seconds: number) {
 
 // Play sound function
 export const play = async (src: Sound, cb?: () => void) => {
-  const playerEl = document.getElementById('player')
-  if (!playerEl) return
-  await new Audio(`/tabata/sounds/${src}.mp3`).play().then(cb)
+  try {
+    document.getElementById('player') as HTMLAudioElement
+    await new Audio(`/tabata/sounds/${src}.mp3`).play().then(cb)
+  } catch (error) {
+    const dialog = document.getElementById(
+      'audio-permissions'
+    ) as HTMLDialogElement
+
+    // if (dialog) dialog.showModal()
+    console.error(error)
+  }
 }
 
 // Update innerHTML of element
