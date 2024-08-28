@@ -22,10 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Listen for wake lock release
 async function wakeLock() {
-  const wakeLock = await navigator?.wakeLock?.request()
-  wakeLock?.addEventListener('release', () => {
-    console.log(`Screen Wake Lock released: ${wakeLock.released}`)
-  })
+  try {
+    const wakeLock = await navigator?.wakeLock?.request()
+    wakeLock?.addEventListener('release', () => {
+      console.log(`Screen Wake Lock released: ${wakeLock.released}`)
+    })
+  } catch (error) {}
 }
 
 // Get settings from local storage
@@ -62,14 +64,24 @@ const audioEnable = () => !!localStorage.getItem('audioEnable')
 
 // Play sound function
 export const play = async (src: Sound, force = false) => {
-  if (!force && !audioEnable()) return
   try {
+    if (!force && !audioEnable()) return
     document.getElementById('player') as HTMLAudioElement
     await new Audio(`/tabata/sounds/${src}.mp3`).play()
   } catch (error) {
     console.error(error)
     localStorage.removeItem('audioEnable')
   }
+}
+
+// Text to speech function
+export const textToSpeech = (text: string) => {
+  if (!('speechSynthesis' in window) || !audioEnable()) return
+  const voiceLanguage =
+    localStorage.getItem('voiceLanguage') ?? navigator.language
+  const synth = new SpeechSynthesisUtterance(text)
+  synth.lang = voiceLanguage
+  speechSynthesis.speak(synth)
 }
 
 // Update innerHTML of element
