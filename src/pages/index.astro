@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import QR from '../assets/qr_link.svg'
 import Layout from '../layouts/layout.astro'
 
 const date = new Date()
@@ -10,7 +8,6 @@ const date = new Date()
   .reverse()
   .join('')
 const version = `v${date}`
-console.log(version)
 ---
 
 <Layout>
@@ -22,10 +19,10 @@ console.log(version)
     <button id="go">Go</button>
   </footer>
   <small id="version">{version}</small>
-  <Image id='qr_link' src={QR} alt='Scan to open in your phone' width={50}/>
+  <img id='qr_link' src='/tabata/qr_link.svg' alt='Scan to open in your phone' width={50} height={50}/>
   <dialog id="dialog" >
     <div>
-      <Image id='qr_link_big' src={QR} alt='Tap image to share' />
+      <img id='qr_link_big' src='/tabata/qr_link.svg' alt='Tap image to share' />
       <br />
       <small>Tap image to share with your friends!</small>
     </div>
