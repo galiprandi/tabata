@@ -59,6 +59,12 @@
             "type": "image/png"
         },
         {
+            "form_factor": "wide",
+            "sizes": "2048x1536",
+            "src": "/tabata/screenshot-7.png",
+            "type": "image/png"
+        },
+        {
             "form_factor": "narrow",
             "sizes": "2960x1440",
             "src": "screenshot-2.png",
@@ -80,12 +86,6 @@
             "form_factor": "narrow",
             "sizes": "2960x1440",
             "src": "/tabata/screenshot-5.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "/tabata/screenshot-6.png",
             "type": "image/png"
         }
     ],
