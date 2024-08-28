@@ -35,7 +35,9 @@ import Working from '../../components/Working.astro'
     getSettings,
     switchBodyClass,
     delaySeconds,
+    textToSpeech
   } from '../../assets/main'
+
 
   // Initialize app
   document.addEventListener('DOMContentLoaded', startWorkout)
@@ -48,20 +50,19 @@ import Working from '../../components/Working.astro'
     let currentExercise = 0
     let remainingWorkouts = workouts.length
     const totalRoutineTime =
-      remainingWorkouts * (workDuration / 60 + restDuration / 60)
-
+    remainingWorkouts * (workDuration / 60 + restDuration / 60)
+    
     // Update screen
     updateExerciseLeft(workouts.length)
     updateRutineTimeLeft(totalRoutineTime)
-
+    
     // Show preparation time
+    textToSpeech(workouts[0])
     displayContent(workouts[0], 'Preparation Time')
-    await play('beep')
     for (let i = prepDuration; i > 0; i--) {
       renderTime(i, prepDuration)
       await delaySeconds(1)
     }
-    // await delaySeconds(prepDuration)
 
     // Loop through workouts
     for (const workout of workouts) {
@@ -86,6 +87,7 @@ import Working from '../../components/Working.astro'
         const nextWorkout = workouts[currentExercise]
         switchBodyClass('rest')
         displayContent(nextWorkout, 'Rest Time')
+        textToSpeech(nextWorkout)
 
         for (let j = restDuration; j > 0; j--) {
           renderTime(j, restDuration)
