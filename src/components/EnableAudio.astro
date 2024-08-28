@@ -41,13 +41,12 @@ import AudioOffIcon from './AudioOffIcon.astro'
   const btnOn = document.getElementById('btn-on') as HTMLButtonElement
   const btnOff = document.getElementById('btn-off') as HTMLButtonElement
   const player = document.getElementById('player') as HTMLAudioElement
-  const sound = '/tabata/sounds/tap.mp3'
 
   const mute = async () => {
     player.muted = true
   }
 
-  const unmute = async () => {
+  const unMute = async () => {
     player.muted = false
   }
 
@@ -58,7 +57,7 @@ import AudioOffIcon from './AudioOffIcon.astro'
       await mute()
     } else {
       localStorage.setItem('audioEnable', 'true')
-      await unmute()
+      await unMute()
     }
 
     await play('tap')
