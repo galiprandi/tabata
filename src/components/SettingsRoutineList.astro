@@ -62,9 +62,7 @@ import UpIcon from './UpIcon.astro'
   const editItemModal = document.getElementById(
     'edit-item-modal'
   ) as HTMLDialogElement
-  const editItemTitle = document.getElementById(
-    'edit-item-title'
-  ) as HTMLHeadingElement
+
   const editItemInput = document.getElementById(
     'edit-item-input'
   ) as HTMLInputElement
@@ -148,7 +146,7 @@ import UpIcon from './UpIcon.astro'
 
   const addNewWorkout = () => {
     const { workouts } = getSettings()
-    editItemTitle.textContent = 'Add Workout'
+    updateInnerHTML('#edit-item-modal .title', 'Add Workout')
     editItemInput.value = ''
     editItemInput.focus()
     editItemModal.showModal()
@@ -169,8 +167,7 @@ import UpIcon from './UpIcon.astro'
   const editWorkout = (index: number) => {
     const { workouts } = getSettings()
     const workout = workouts[index]
-
-    editItemTitle.textContent = 'Update Workout'
+    updateInnerHTML('#edit-item-modal .title', 'Edit Workout')
     editItemInput.value = workout
     editItemInput.focus()
     editItemModal.showModal()
