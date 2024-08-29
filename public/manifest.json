@@ -50,7 +50,7 @@
   "id": "/tabata",
   "lang": "en",
   "name": "Tabata",
-  "orientation": "landscape-primary",
+  "orientation": "any",
   "screenshots": [
     {
       "form_factor": "narrow",
