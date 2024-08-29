@@ -86,9 +86,9 @@ export const textToSpeech = (text: string) => {
 };
 
 // Update innerHTML of element
-export const updateText = (query: string, text: string) => {
-  const el = document.querySelector(query);
-  if (el) el.innerHTML = text;
-};
+export const updateInnerHTML = (selector: string, text: string) =>
+  document.querySelectorAll(selector).forEach((el) => {
+    el.innerHTML = text;
+  });
 
 type Sound = "beep" | "tap" | "end";

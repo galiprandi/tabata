@@ -42,52 +42,6 @@ const version = `v${date}`
   </dialog>
 </Layout>
 
-<style>
-  footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-  }
-
-  #title {
-    font-size: 10vw;
-    font-weight: bold;
-  }
-
-  #go {
-    min-width: 10em;
-  }
-
-  #version {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    font-size: 0.7em;
-    padding: 0.5em;
-  }
-
-  #qr_link {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 0.5em;
-  }
-
-  #dialog_close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0.5em;
-    font-size: 1.5em;
-  }
-
-  #qr_link_big {
-    max-height: 70vh;
-    max-width: 70vw;
-  }
-</style>
-
 <script>
   import { play } from '../assets/main'
 
@@ -137,3 +91,49 @@ const version = `v${date}`
     })
   })
 </script>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+  }
+
+  #title {
+    font-size: 10vw;
+    font-weight: bold;
+  }
+
+  #go {
+    min-width: 10em;
+  }
+
+  #version {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 0.7em;
+    padding: 0.5em;
+  }
+
+  #qr_link {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0.5em;
+  }
+
+  #dialog_close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5em;
+    font-size: 1.5em;
+  }
+
+  #qr_link_big {
+    max-height: 70vh;
+    max-width: 70vw;
+  }
+</style>

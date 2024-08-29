@@ -1,0 +1,257 @@
+---
+import BackToHome from './BackToHome.astro'
+import DownIcon from './DownIcon.astro'
+import EditItemIcon from './EditItemIcon.astro'
+import TrashIcon from './TrashIcon.astro'
+import UpIcon from './UpIcon.astro'
+---
+
+<section id="routine-list">
+  <h2>Routine</h2>
+  <section id="workouts-list">
+    <span aria-busy="true">Loading...</span>
+  </section>
+
+  <section class="buttons">
+    <button id="add-new-item" class="">Add New Workout</button>
+    <br />
+    <br />
+    <BackToHome />
+  </section>
+
+  <dialog id="edit-item-modal">
+    <article>
+      <header>
+        <h3 class="title"></h3>
+      </header>
+      <main>
+        <input type="text" name="item" id="edit-item-input" />
+      </main>
+      <footer>
+        <button class="secondary">Cancel</button>
+        <button>Save</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <template id="workout-item-template">
+    <div class="item">
+      <div id="order"></div>
+      <div id="name"></div>
+      <div class="buttons">
+        <button class="up">
+          <UpIcon />
+        </button>
+        <button class="down">
+          <DownIcon />
+        </button>
+        <button class="edit">
+          <EditItemIcon />
+        </button>
+        <button class="delete">
+          <TrashIcon />
+        </button>
+      </div>
+    </div>
+  </template>
+</section>
+
+<script>
+  import { getSettings, updateSettings, updateInnerHTML } from '../assets/main'
+
+  const editItemModal = document.getElementById(
+    'edit-item-modal'
+  ) as HTMLDialogElement
+  const editItemTitle = document.getElementById(
+    'edit-item-title'
+  ) as HTMLHeadingElement
+  const editItemInput = document.getElementById(
+    'edit-item-input'
+  ) as HTMLInputElement
+  const saveEditItemButton = editItemModal.querySelector(
+    'button:not(.secondary)'
+  ) as HTMLButtonElement
+  const cancelEditItemButton = editItemModal.querySelector(
+    'button.secondary'
+  ) as HTMLButtonElement
+  const addNewItemButton = document.getElementById(
+    'add-new-item'
+  ) as HTMLButtonElement
+
+  const init = () => {
+    const { workouts } = getSettings()
+    const template = document.getElementById(
+      'workout-item-template'
+    ) as HTMLTemplateElement
+    const workoutsList = document.getElementById('workouts-list')
+
+    updateInnerHTML('#workouts-list', '')
+
+    workouts.forEach((workout, index) => {
+      const clone = template.content.cloneNode(true)
+      //@ts-expect-error
+      const item = clone.querySelector('.item') as HTMLDivElement
+      const itemOrder = item.querySelector('#order') as HTMLDivElement
+      const itemName = item.querySelector('#name') as HTMLDivElement
+      itemOrder.textContent = `${index + 1}.`
+      itemName.textContent = workout
+
+      item
+        .querySelectorAll('button')
+        .forEach(button => (button.dataset.idx = index.toString()))
+
+      workoutsList?.appendChild(clone)
+    })
+
+    document.querySelectorAll('.delete').forEach(button => {
+      button.addEventListener('click', ({ currentTarget }) => {
+        //@ts-expect-error
+        const idx = parseInt(currentTarget.dataset.idx)
+        if (idx > -1) deleteWorkout(idx)
+      })
+    })
+
+    document.querySelectorAll('.edit').forEach(button => {
+      button.addEventListener('click', ({ currentTarget }) => {
+        //@ts-expect-error
+        const idx = parseInt(currentTarget.dataset.idx)
+        if (idx > -1) editWorkout(idx)
+      })
+    })
+
+    document.querySelectorAll('.up').forEach(button => {
+      button.addEventListener('click', ({ currentTarget }) => {
+        //@ts-expect-error
+        const idx = parseInt(currentTarget.dataset.idx)
+        if (idx > -1) moveUp(idx)
+      })
+    })
+
+    document.querySelectorAll('.down').forEach(button => {
+      button.addEventListener('click', ({ currentTarget }) => {
+        //@ts-expect-error
+        const idx = parseInt(currentTarget.dataset.idx)
+        if (idx > -1) moveDown(idx)
+      })
+    })
+
+    addNewItemButton.addEventListener('click', addNewWorkout)
+  }
+
+  const deleteWorkout = (index: number) => {
+    const { workouts } = getSettings()
+    const items = workouts.splice(index, 1)
+    if (!confirm(`Are you sure you want to delete ${items[0]}?`)) return
+    updateSettings({ ...getSettings(), workouts })
+    init()
+  }
+
+  const addNewWorkout = () => {
+    const { workouts } = getSettings()
+    editItemTitle.textContent = 'Add Workout'
+    editItemInput.value = ''
+    editItemInput.focus()
+    editItemModal.showModal()
+
+    saveEditItemButton?.addEventListener('click', () => {
+      workouts.push(editItemInput.value)
+      updateSettings({ ...getSettings(), workouts })
+      editItemModal.close()
+      init()
+    })
+
+    cancelEditItemButton?.addEventListener('click', () => {
+      editItemInput.value = ''
+      editItemModal.close()
+    })
+  }
+
+  const editWorkout = (index: number) => {
+    const { workouts } = getSettings()
+    const workout = workouts[index]
+
+    editItemTitle.textContent = 'Update Workout'
+    editItemInput.value = workout
+    editItemInput.focus()
+    editItemModal.showModal()
+
+    saveEditItemButton?.addEventListener('click', () => {
+      workouts[index] = editItemInput.value
+      updateSettings({ ...getSettings(), workouts })
+      editItemModal.close()
+      init()
+    })
+
+    cancelEditItemButton?.addEventListener('click', () => {
+      editItemInput.value = ''
+      editItemModal.close()
+    })
+  }
+
+  const moveUp = (index: number) => {
+    const { workouts } = getSettings()
+    if (index > 0) {
+      const temp = workouts[index]
+      workouts[index] = workouts[index - 1]
+      workouts[index - 1] = temp
+      updateSettings({ ...getSettings(), workouts })
+      init()
+    }
+  }
+
+  const moveDown = (index: number) => {
+    const { workouts } = getSettings()
+    if (index < workouts.length - 1) {
+      const temp = workouts[index]
+      workouts[index] = workouts[index + 1]
+      workouts[index + 1] = temp
+      updateSettings({ ...getSettings(), workouts })
+      init()
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', init)
+</script>
+
+<style>
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+
+    & .buttons {
+      display: flex;
+      gap: 1.3em;
+    }
+
+    #name {
+      flex-grow: 2;
+      text-align: left;
+    }
+
+    button {
+      color: white;
+      border: 0;
+      background: 0;
+      padding: 0;
+      min-width: unset !important;
+      font-size: 1.5em;
+    }
+
+    .delete {
+      color: red;
+    }
+  }
+
+  #edit-item-modal {
+    footer {
+      display: block;
+
+      .secondary {
+        background: 0;
+        border: 0;
+      }
+    }
+  }
+</style>

@@ -7,39 +7,42 @@ import ExerciseWork from './ExerciseWork.astro'
 const { vertical = false } = Astro.props
 ---
 
-<section id="settings-data">
-  <div>
-    <TimerIcon />
-    <span class="total-routine-time"></span>
-  </div>
-  <div>
-    <ExerciseWork />
-    <span class="total-workouts-exercises"></span>
-  </div>
-</section>
-<section id="settings-timers" class={vertical ? 'vertical' : 'horizontal'}>
-  <div id="prepDur">
-    <label>
-      <PrepareIcon />
-      <input type="number" id="prepDuration" class="prep" min="0" />
-    </label>
-  </div>
-  <div id="workDur">
-    <label>
+<section id="settings-timers">
+  <header>
+    <div>
+      <TimerIcon />
+      <span class="total-routine-time"></span>'
+    </div>
+    <div>
       <ExerciseWork />
-      <input type="number" id="workDuration" class="workout" min="0" />
-    </label>
-  </div>
-  <div id="restDur">
-    <label>
-      <ExerciseRestIcon />
-      <input type="number" id="restDuration" class="rest" min="0" />
-    </label>
+      <span class="total-workouts-exercises"></span>
+    </div>
+  </header>
+  <div class={vertical ? 'vertical' : 'horizontal'}>
+    <div id="prepDur">
+      <label>
+        <PrepareIcon />
+        <input type="number" id="prepDuration" class="prep" min="0" />
+      </label>
+    </div>
+    <div id="workDur">
+      <label>
+        <ExerciseWork />
+        <input type="number" id="workDuration" class="workout" min="0" />
+      </label>
+    </div>
+    <div id="restDur">
+      <label>
+        <ExerciseRestIcon />
+        <input type="number" id="restDuration" class="rest" min="0" />
+      </label>
+    </div>
   </div>
 </section>
 
 <script>
   import { getSettings, updateSettings } from '../assets/main'
+  import { updateTotalWorkouts, updateRoutineTime } from '../assets/settings'
   const { workouts, prepDuration, workDuration, restDuration } = getSettings()
 
   function Init() {
@@ -53,30 +56,13 @@ const { vertical = false } = Astro.props
       'restDuration'
     ) as HTMLInputElement
 
-    const totalRoutineExerciseEl = document.querySelector(
-      '.total-workouts-exercises'
-    )
-    const totalRoutineTimeEl = document.querySelector('.total-routine-time')
-
-    const totalWorkouts = workouts.length
-    const routineTime = (
-      (totalWorkouts * (workDuration + restDuration)) /
-      60
-    ).toFixed(1)
-
     // Set the values
+    updateRoutineTime()
+    updateTotalWorkouts()
     if (prepDurationInput) prepDurationInput.value = prepDuration.toString()
     if (workoutDurationInput)
       workoutDurationInput.value = workDuration.toString()
     if (restDurationInput) restDurationInput.value = restDuration.toString()
-    if (totalRoutineExerciseEl)
-      totalRoutineExerciseEl.textContent = totalWorkouts.toString()
-    if (totalRoutineTimeEl) totalRoutineTimeEl.textContent = `${routineTime}'`
-
-    const updateRoutineTime = (min: number) => {
-      if (!totalRoutineTimeEl) return
-      totalRoutineTimeEl.textContent = `${min.toFixed(1)}'`
-    }
 
     // Save the settings
     prepDurationInput?.addEventListener('change', e => {
@@ -87,15 +73,13 @@ const { vertical = false } = Astro.props
     workoutDurationInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), workDuration: +value })
-      const duration = (totalWorkouts * (value + restDuration)) / 60
-      updateRoutineTime(duration)
+      updateRoutineTime()
     })
 
     restDurationInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), restDuration: +value })
-      const duration = (totalWorkouts * (workDuration + value)) / 60
-      updateRoutineTime(duration)
+      updateRoutineTime()
     })
   }
 
@@ -112,6 +96,29 @@ const { vertical = false } = Astro.props
 
     &.vertical {
       flex-direction: column;
+    }
+
+    & header {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-grow: 2;
+      font-size: 1.6em;
+
+      & > div {
+        & svg {
+          font-size: 60%;
+          opacity: 0.6;
+        }
+      }
+    }
+
+    & .vertical,
+    & .horizontal {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      gap: 2em;
     }
 
     & label {
@@ -132,17 +139,10 @@ const { vertical = false } = Astro.props
     }
   }
 
-  #settings-data {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 1.6em;
-
-    & > div {
-      & svg {
-        font-size: 60%;
-        opacity: 0.6;
-      }
+  @media (width > 450px) {
+    #settings-timers {
+      position: sticky;
+      top: 1em;
     }
   }
 </style>
