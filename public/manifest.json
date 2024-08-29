@@ -1,9 +1,14 @@
 {
-  "background_color": "#052940",
-  "categories": ["health", "fitness"],
+  "background_color": "#13171f",
+  "categories": [
+    "health",
+    "fitness"
+  ],
   "dir": "auto",
   "display": "fullscreen",
-  "display_override": ["window-controls-overlay"],
+  "display_override": [
+    "window-controls-overlay"
+  ],
   "icons": [
     {
       "purpose": "maskable",
@@ -45,7 +50,7 @@
   "id": "/tabata",
   "lang": "en",
   "name": "Tabata",
-  "orientation": "landscape",
+  "orientation": "landscape-primary",
   "screenshots": [
     {
       "form_factor": "narrow",
@@ -112,5 +117,5 @@
     }
   ],
   "start_url": "/tabata",
-  "theme_color": "#052940"
+  "theme_color": "#13171f"
 }
