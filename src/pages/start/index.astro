@@ -1,32 +1,29 @@
 ---
-import Layout from "../../layouts/layout.astro";
-import TimerIcon from "../../components/TimerIcon.astro";
-import Working from "../../components/Working.astro";
+import Layout from '../../layouts/layout.astro'
+import TimerIcon from '../../components/TimerIcon.astro'
+import Working from '../../components/Working.astro'
 ---
 
 <Layout>
-  <section>
-    <div id="subtitle">Press start to begin</div>
-  </section>
-  <section>
-    <div id="title">Tabata timer</div>
-  </section>
-  <section>
+  <div id="subtitle"></div>
+
+  <div id="title">Preparation Time</div>
+
+  <div>
     <progress id="progress" value="100" max="100"></progress>
-  </section>
-  <section id="info">
+  </div>
+  <div id="info">
     <div>
       <TimerIcon />
-      <span id="time-left"></span>
+      <span id="time-left">-</span>
     </div>
     <div>
       <Working />
-      <span id="exercise-left"></span>
+      <span id="exercise-left">-</span>
     </div>
-  </section>
-  <footer class="columns">
-    <a href="/tabata" class="secondary">Abort Session</a>
-  </footer>
+  </div>
+
+  <a href="/tabata" class="secondary">Abort Session</a>
 </Layout>
 
 <script>
@@ -36,125 +33,101 @@ import Working from "../../components/Working.astro";
     switchBodyClass,
     delaySeconds,
     textToSpeech,
-  } from "../../assets/main";
+    updateInnerHTML,
+  } from '../../assets/main'
+
+  let { workDuration, restDuration, workouts, prepDuration } = getSettings()
 
   // Initialize app
-  document.addEventListener("DOMContentLoaded", startWorkout);
-
-  // Start workout/rest circuit
-  const settings = getSettings();
-  let { workDuration, restDuration, workouts, prepDuration } = settings;
-
-  async function startWorkout() {
-    let currentExercise = 0;
-    let remainingWorkouts = workouts.length;
+  document.addEventListener('DOMContentLoaded', () => {
+    let remainingWorkouts = workouts.length
     const totalRoutineTime =
-      remainingWorkouts * (workDuration / 60 + restDuration / 60);
+      remainingWorkouts * (workDuration / 60 + restDuration / 60)
+    updateExerciseLeft(workouts.length)
+    updateRoutineTimeLeft(totalRoutineTime)
 
-    // Update screen
-    updateExerciseLeft(workouts.length);
-    updateRutineTimeLeft(totalRoutineTime);
+    startWorkout()
+  })
+
+  const startWorkout = async () => {
+    let currentExercise = 0
+    let remainingWorkouts = workouts.length
+    const totalRoutineTime =
+      remainingWorkouts * (workDuration / 60 + restDuration / 60)
 
     // Show preparation time
-    textToSpeech(workouts[0]);
-    displayContent(workouts[0], "Preparation Time");
+    textToSpeech(workouts[0])
+    renderContent(workouts[0], 'Preparation Time')
     for (let i = prepDuration; i > 0; i--) {
-      renderTime(i, prepDuration);
-      await delaySeconds(1);
+      renderTime(i, prepDuration)
+      await delaySeconds(1)
     }
 
     // Loop through workouts
     for (const workout of workouts) {
-      switchBodyClass(`workout`);
-      displayContent(workout, "Work Time");
+      switchBodyClass(`workout`)
+      renderContent(workout, 'Work Time')
 
       // Work time
       for (let timeLeft = workDuration; timeLeft > 0; timeLeft--) {
-        renderTime(timeLeft, workDuration);
-        await delaySeconds(1);
+        renderTime(timeLeft, workDuration)
+        await delaySeconds(1)
       }
 
       // Update current exercise
-      currentExercise = currentExercise + 1;
-      remainingWorkouts--;
+      currentExercise = currentExercise + 1
+      remainingWorkouts--
 
-      updateRutineTimeLeft(calculateTimeLeft(remainingWorkouts));
-      updateExerciseLeft(remainingWorkouts);
+      updateRoutineTimeLeft(calculateTimeLeft(remainingWorkouts))
+      updateExerciseLeft(remainingWorkouts)
 
       // Show rest time
       if (currentExercise < workouts.length) {
-        const nextWorkout = workouts[currentExercise];
-        switchBodyClass("rest");
-        displayContent(nextWorkout, "Rest Time");
-        textToSpeech(nextWorkout);
+        const nextWorkout = workouts[currentExercise]
+        switchBodyClass('rest')
+        renderContent(nextWorkout, 'Rest Time')
+        textToSpeech(nextWorkout)
 
         for (let j = restDuration; j > 0; j--) {
-          renderTime(j, restDuration);
-          await delaySeconds(1);
+          renderTime(j, restDuration)
+          await delaySeconds(1)
         }
       } else {
-        play("end");
-        await delaySeconds(3);
-        location.href = "/tabata/end";
+        play('end')
+        await delaySeconds(3)
+        location.href = '/tabata/end'
       }
     }
   }
 
-  // Show exercise function
-  function displayContent(title: string, content?: string) {
-    const subEl = subtitleElement();
-    const titleEl = titleElement();
-    if (titleEl) titleEl.textContent = title;
-    if (subEl) subEl.textContent = content ?? "";
+  // Render title and subtitle
+  const renderContent = (title: string, subtitle: string) => {
+    updateInnerHTML('#subtitle', subtitle)
+    updateInnerHTML('#title', title)
   }
 
-  // Show time function & beep sound when time is up
-  function renderTime(time: number, totlaTime: number) {
-    const progressEl = progressElement();
-    if (progressEl) progressEl.value = (time / totlaTime) * 100;
-    // Play beep sound when time is up
-    if (time <= 3) play("beep");
+  // Render time
+  const renderTime = (time: number, totalTime: number) => {
+    if (time <= 3) play('beep')
+    const progressEl = progressElement()
+    if (progressEl) progressEl.value = (time / totalTime) * 100
   }
 
   // Update exercise left
-  const updateExerciseLeft = (exercise: number) => {
-    const exerciseLeftEl = exerciseLeftElement();
-    if (exerciseLeftEl) exerciseLeftEl.textContent = exercise.toString();
-  };
+  const updateExerciseLeft = (exercise: number) =>
+    updateInnerHTML('#exercise-left', exercise.toString())
 
-  // Update rutine time left
-  function updateRutineTimeLeft(time: number) {
-    const timeLeftEl = timeLeftElement();
-    if (timeLeftEl) timeLeftEl.textContent = `${time.toFixed(1).toString()}m`;
-  }
+  // Update routine time left
+  const updateRoutineTimeLeft = (time: number) =>
+    updateInnerHTML('#time-left', `${time.toFixed(1).toString()}'`)
 
   // Calculate time left
   const calculateTimeLeft = (remainingWorkouts: number) =>
-    remainingWorkouts * (workDuration / 60 + restDuration / 60);
+    remainingWorkouts * (workDuration / 60 + restDuration / 60)
 
   // Get progress element
   function progressElement() {
-    return document.getElementById("progress") as HTMLProgressElement | null;
-  }
-
-  // Get Title element
-  function titleElement() {
-    return document.getElementById("title") as HTMLTitleElement | null;
-  }
-
-  // Get Subtitle element
-  function subtitleElement() {
-    return document.getElementById("subtitle") as HTMLTitleElement | null;
-  }
-
-  // Get exercise left element
-  function exerciseLeftElement() {
-    return document.getElementById("exercise-left") as HTMLSpanElement | null;
-  }
-
-  // Get time left element
-  function timeLeftElement() {
-    return document.getElementById("time-left") as HTMLSpanElement | null;
+    return document.getElementById('progress') as HTMLProgressElement | null
   }
 </script>
 
@@ -170,17 +143,17 @@ import Working from "../../components/Working.astro";
   }
 
   #info {
-    font-size: 5vw;
+    font-size: 2.2em;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     gap: 3em;
-  }
 
-  #info div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3em;
+    & div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3em;
+    }
   }
 
   /* Screens less than 300px */
@@ -191,10 +164,6 @@ import Working from "../../components/Working.astro";
 
     #title {
       font-size: 3em;
-    }
-
-    #info {
-      font-size: 2em;
     }
   }
 </style>
