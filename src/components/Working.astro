@@ -1,13 +1,13 @@
 ---
-import ExerciseWork from './ExerciseWork.astro'
-import ExerciseRestIcon from './ExerciseRestIcon.astro'
-import PrepareIcon from '../components/PrepareIcon.astro'
+import ExerciseWork from "./ExerciseWork.astro";
+import ExerciseRestIcon from "./ExerciseRestIcon.astro";
+import PrepareIcon from "../components/PrepareIcon.astro";
 ---
 
 <span id="workout-state" class="stop">
-  <ExerciseWork class:list={'icon-work'} />
-  <ExerciseRestIcon class:list={'icon-rest'} />
-  <PrepareIcon class:list={'icon-prep'} />
+  <ExerciseWork class:list={"icon-work"} />
+  <ExerciseRestIcon class:list={"icon-rest"} />
+  <PrepareIcon class:list={"icon-prep"} />
 </span>
 
 <style>
@@ -54,22 +54,22 @@ import PrepareIcon from '../components/PrepareIcon.astro'
   // Toggle Icon visibility
   function toggleIcon() {
     // get body class
-    const bodyClasses = document.body.classList
-    const state = document.getElementById('workout-state') as HTMLElement
-    const stateClasses = state.classList
+    const bodyClasses = document.body.classList;
+    const state = document.getElementById("workout-state") as HTMLElement;
+    const stateClasses = state.classList;
 
-    if (!bodyClasses.contains('workout')) return
+    if (!bodyClasses.contains("workout")) return;
 
     // Toggle state class 'work' and 'stop'
-    if (stateClasses.contains('work')) {
-      stateClasses.remove('work')
-      stateClasses.add('stop')
+    if (stateClasses.contains("work")) {
+      stateClasses.remove("work");
+      stateClasses.add("stop");
     } else {
-      stateClasses.remove('stop')
-      stateClasses.add('work')
+      stateClasses.remove("stop");
+      stateClasses.add("work");
     }
   }
 
   // Switch between workout and rest each second
-  setInterval(toggleIcon, 1000)
+  setInterval(toggleIcon, 1000);
 </script>

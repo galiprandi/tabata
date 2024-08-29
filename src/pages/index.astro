@@ -16,15 +16,26 @@ const version = `v${date}`
     <div id="title">Wellcome</div>
   </section>
   <footer>
-    <button id="settings" class="secondary">Settings</button>
+    <a href="/tabata/settings">Settings</a>
     <button id="go">Go</button>
   </footer>
+  <nav></nav>
   <small id="version">{version}</small>
-  <img id='qr_link' src='/tabata/qr_link.svg' alt='Scan to open in your phone' width={50} height={50}/>
-  <dialog id="dialog" >
-    <CloseIcon id="dialog_close"/>
+  <img
+    id="qr_link"
+    src="/tabata/qr_link.svg"
+    alt="Scan to open in your phone"
+    width={50}
+    height={50}
+  />
+  <dialog id="dialog">
+    <CloseIcon id="dialog_close" />
     <div>
-      <img id='qr_link_big' src='/tabata/qr_link.svg' alt='Tap image to share' />
+      <img
+        id="qr_link_big"
+        src="/tabata/qr_link.svg"
+        alt="Tap image to share"
+      />
       <br />
       <small>Tap image to share with your friends!</small>
     </div>
@@ -35,12 +46,17 @@ const version = `v${date}`
   footer {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 2em;
   }
 
   #title {
     font-size: 10vw;
     font-weight: bold;
+  }
+
+  #go {
+    min-width: 10em;
   }
 
   #version {
@@ -58,11 +74,11 @@ const version = `v${date}`
     margin: 0.5em;
   }
 
-  #dialog_close{    
+  #dialog_close {
     position: absolute;
     top: 0;
     right: 0;
-    margin: .5em;
+    margin: 0.5em;
     font-size: 1.5em;
   }
 
@@ -79,14 +95,18 @@ const version = `v${date}`
     title: 'Tabata Timer',
     text: "Check this out, I'm using this Tabata Timer every day",
     url: location.href,
-  };
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const dialogClose = document.getElementById('dialog_close') as HTMLButtonElement
+    const dialogClose = document.getElementById(
+      'dialog_close'
+    ) as HTMLButtonElement
     const openDialog = document.getElementById('qr_link') as HTMLImageElement
     const dialog = document.getElementById('dialog') as HTMLDialogElement
-    const shareButton = document.getElementById('qr_link_big') as HTMLButtonElement
-    const settings = document.getElementById('settings') as HTMLButtonElement
+    const shareButton = document.getElementById(
+      'qr_link_big'
+    ) as HTMLButtonElement
+
     const go = document.getElementById('go') as HTMLButtonElement
 
     dialogClose.addEventListener('click', async () => {
@@ -102,17 +122,18 @@ const version = `v${date}`
     shareButton.addEventListener('click', async () => {
       await play('tap', true)
       if (navigator.share) navigator.share(shareData)
-       dialog.close()
-    })
-
-    settings.addEventListener('click', async () => {
-      await play('tap', true)
-      location.href = '/tabata/settings'
+      dialog.close()
     })
 
     go.addEventListener('click', async () => {
       await play('tap', true)
       location.href = '/tabata/start'
+    })
+
+    document.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', async () => {
+        await play('tap')
+      })
     })
   })
 </script>

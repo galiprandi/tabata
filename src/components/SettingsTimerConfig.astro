@@ -1,0 +1,148 @@
+---
+import ExerciseRestIcon from './ExerciseRestIcon.astro'
+import PrepareIcon from './PrepareIcon.astro'
+import TimerIcon from './TimerIcon.astro'
+import ExerciseWork from './ExerciseWork.astro'
+
+const { vertical = false } = Astro.props
+---
+
+<section id="settings-data">
+  <div>
+    <TimerIcon />
+    <span class="total-routine-time"></span>
+  </div>
+  <div>
+    <ExerciseWork />
+    <span class="total-workouts-exercises"></span>
+  </div>
+</section>
+<section id="settings-timers" class={vertical ? 'vertical' : 'horizontal'}>
+  <div id="prepDur">
+    <label>
+      <PrepareIcon />
+      <input type="number" id="prepDuration" class="prep" min="0" />
+    </label>
+  </div>
+  <div id="workDur">
+    <label>
+      <ExerciseWork />
+      <input type="number" id="workDuration" class="workout" min="0" />
+    </label>
+  </div>
+  <div id="restDur">
+    <label>
+      <ExerciseRestIcon />
+      <input type="number" id="restDuration" class="rest" min="0" />
+    </label>
+  </div>
+</section>
+
+<script>
+  import { getSettings, updateSettings } from '../assets/main'
+  const { workouts, prepDuration, workDuration, restDuration } = getSettings()
+
+  function Init() {
+    const prepDurationInput = document.getElementById(
+      'prepDuration'
+    ) as HTMLInputElement
+    const workoutDurationInput = document.getElementById(
+      'workDuration'
+    ) as HTMLInputElement
+    const restDurationInput = document.getElementById(
+      'restDuration'
+    ) as HTMLInputElement
+
+    const totalRoutineExerciseEl = document.querySelector(
+      '.total-workouts-exercises'
+    )
+    const totalRoutineTimeEl = document.querySelector('.total-routine-time')
+
+    const totalWorkouts = workouts.length
+    const routineTime = (
+      (totalWorkouts * (workDuration + restDuration)) /
+      60
+    ).toFixed(1)
+
+    // Set the values
+    if (prepDurationInput) prepDurationInput.value = prepDuration.toString()
+    if (workoutDurationInput)
+      workoutDurationInput.value = workDuration.toString()
+    if (restDurationInput) restDurationInput.value = restDuration.toString()
+    if (totalRoutineExerciseEl)
+      totalRoutineExerciseEl.textContent = totalWorkouts.toString()
+    if (totalRoutineTimeEl) totalRoutineTimeEl.textContent = `${routineTime}'`
+
+    const updateRoutineTime = (min: number) => {
+      if (!totalRoutineTimeEl) return
+      totalRoutineTimeEl.textContent = `${min.toFixed(1)}'`
+    }
+
+    // Save the settings
+    prepDurationInput?.addEventListener('change', e => {
+      const value = parseInt((e.target as HTMLInputElement).value)
+      updateSettings({ ...getSettings(), prepDuration: +value })
+    })
+
+    workoutDurationInput?.addEventListener('change', e => {
+      const value = parseInt((e.target as HTMLInputElement).value)
+      updateSettings({ ...getSettings(), workDuration: +value })
+      const duration = (totalWorkouts * (value + restDuration)) / 60
+      updateRoutineTime(duration)
+    })
+
+    restDurationInput?.addEventListener('change', e => {
+      const value = parseInt((e.target as HTMLInputElement).value)
+      updateSettings({ ...getSettings(), restDuration: +value })
+      const duration = (totalWorkouts * (workDuration + value)) / 60
+      updateRoutineTime(duration)
+    })
+  }
+
+  document.addEventListener('DOMContentLoaded', Init)
+</script>
+
+<style>
+  #settings-timers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+
+    &.vertical {
+      flex-direction: column;
+    }
+
+    & label {
+      position: relative;
+      margin: 0;
+
+      & svg {
+        position: absolute;
+        top: 50%;
+        transform: translate(10px, -50%);
+      }
+
+      & input {
+        margin: 0;
+        text-align: center;
+        padding-left: 2.5em;
+      }
+    }
+  }
+
+  #settings-data {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.6em;
+
+    & > div {
+      & svg {
+        font-size: 60%;
+        opacity: 0.6;
+      }
+    }
+  }
+</style>

@@ -1,121 +1,116 @@
 {
-    "background_color": "#052940",
-    "categories": [
-        "health",
-        "fitness"
-    ],
-    "dir": "auto",
-    "display": "fullscreen",
-    "display_override": [
-        "window-controls-overlay"
-    ],
-    "icons": [
+  "background_color": "#052940",
+  "categories": ["health", "fitness"],
+  "dir": "auto",
+  "display": "fullscreen",
+  "display_override": ["window-controls-overlay"],
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "96x96",
+      "src": "icon96_maskable.png",
+      "type": "image/svg+xml"
+    },
+    {
+      "purpose": "any",
+      "sizes": "96x96",
+      "src": "public/icon96_rounded.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "192x192",
+      "src": "icon192_maskable.png",
+      "type": "image/svg+xml"
+    },
+    {
+      "purpose": "any",
+      "sizes": "192x192",
+      "src": "public/icon192_rounded.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/svg+xml"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "public/icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "id": "/tabata",
+  "lang": "en",
+  "name": "Tabata",
+  "orientation": "landscape",
+  "screenshots": [
+    {
+      "form_factor": "narrow",
+      "sizes": "2960x1440",
+      "src": "screenshot-1.png",
+      "type": "image/png"
+    },
+    {
+      "form_factor": "wide",
+      "sizes": "2048x1536",
+      "src": "/tabata/screenshot-7.png",
+      "type": "image/png"
+    },
+    {
+      "form_factor": "narrow",
+      "sizes": "2960x1440",
+      "src": "screenshot-2.png",
+      "type": "image/png"
+    },
+    {
+      "form_factor": "narrow",
+      "sizes": "2960x1440",
+      "src": "/tabata/screenshot-3.png",
+      "type": "image/png"
+    },
+    {
+      "form_factor": "narrow",
+      "sizes": "2960x1440",
+      "src": "/tabata/screenshot-4.png",
+      "type": "image/png"
+    },
+    {
+      "form_factor": "narrow",
+      "sizes": "2960x1440",
+      "src": "/tabata/screenshot-5.png",
+      "type": "image/png"
+    }
+  ],
+  "short_name": "Tabata",
+  "shortcuts": [
+    {
+      "description": "Start your workout with the Tabata app",
+      "icons": [
         {
-            "purpose": "maskable",
-            "sizes": "96x96",
-            "src": "icon96_maskable.png",
-            "type": "image/svg+xml"
-        },
-        {
-            "purpose": "any",
-            "sizes": "96x96",
-            "src": "public/icon96_rounded.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "maskable",
-            "sizes": "192x192",
-            "src": "icon192_maskable.png",
-            "type": "image/svg+xml"
-        },
-        {
-            "purpose": "any",
-            "sizes": "192x192",
-            "src": "public/icon192_rounded.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "maskable",
-            "sizes": "512x512",
-            "src": "icon512_maskable.png",
-            "type": "image/svg+xml"
-        },
-        {
-            "purpose": "any",
-            "sizes": "512x512",
-            "src": "public/icon512_rounded.png",
-            "type": "image/png"
+          "sizes": "96x96",
+          "src": "/tabata/icon96_rounded.png",
+          "type": "image/png"
         }
-    ],
-    "id": "/tabata",
-    "lang": "en",
-    "name": "Tabata",
-    "orientation": "landscape",
-    "screenshots": [
+      ],
+      "name": "Start your workout",
+      "url": "/tabata/start"
+    },
+    {
+      "description": "Update your workout settings with the Tabata app",
+      "icons": [
         {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "screenshot-1.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "wide",
-            "sizes": "2048x1536",
-            "src": "/tabata/screenshot-7.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "screenshot-2.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "/tabata/screenshot-3.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "/tabata/screenshot-4.png",
-            "type": "image/png"
-        },
-        {
-            "form_factor": "narrow",
-            "sizes": "2960x1440",
-            "src": "/tabata/screenshot-5.png",
-            "type": "image/png"
+          "sizes": "96x96",
+          "src": "/tabata/icon96_rounded.png",
+          "type": "image/png"
         }
-    ],
-    "short_name": "Tabata",
-    "shortcuts": [
-        {
-            "description": "Start your workout with the Tabata app",
-            "icons": [
-                {
-                    "sizes": "96x96",
-                    "src": "/tabata/icon96_rounded.png",
-                    "type": "image/png"
-                }
-            ],
-            "name": "Start your workout",
-            "url": "/tabata/start"
-        },
-        {
-            "description": "Update your workout settings with the Tabata app",
-            "icons": [
-                {
-                    "sizes": "96x96",
-                    "src": "/tabata/icon96_rounded.png",
-                    "type": "image/png"
-                }
-            ],
-            "name": "Update your workout",
-            "url": "/tabata/settings"
-        }
-    ],
-    "start_url": "/tabata",
-    "theme_color": "#052940"
+      ],
+      "name": "Update your workout",
+      "url": "/tabata/settings"
+    }
+  ],
+  "start_url": "/tabata",
+  "theme_color": "#052940"
 }

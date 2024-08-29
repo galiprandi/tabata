@@ -1,6 +1,6 @@
 ---
-import AudioOnIcon from './AudioOnIcon.astro'
-import AudioOffIcon from './AudioOffIcon.astro'
+import AudioOnIcon from "./AudioOnIcon.astro";
+import AudioOffIcon from "./AudioOffIcon.astro";
 ---
 
 <div id="enable-audio">
@@ -37,53 +37,53 @@ import AudioOffIcon from './AudioOffIcon.astro'
 </style>
 
 <script>
-  import { play } from '../assets/main'
-  const btnOn = document.getElementById('btn-on') as HTMLButtonElement
-  const btnOff = document.getElementById('btn-off') as HTMLButtonElement
-  const player = document.getElementById('player') as HTMLAudioElement
+  import { play } from "../assets/main";
+  const btnOn = document.getElementById("btn-on") as HTMLButtonElement;
+  const btnOff = document.getElementById("btn-off") as HTMLButtonElement;
+  const player = document.getElementById("player") as HTMLAudioElement;
 
   const mute = async () => {
-    player.muted = true
-  }
+    player.muted = true;
+  };
 
   const unMute = async () => {
-    player.muted = false
-  }
+    player.muted = false;
+  };
 
   const toggleAudio = async () => {
-    const enable = !!localStorage.getItem('audioEnable')
+    const enable = !!localStorage.getItem("audioEnable");
     if (enable) {
-      localStorage.removeItem('audioEnable')
-      await mute()
+      localStorage.removeItem("audioEnable");
+      await mute();
     } else {
-      localStorage.setItem('audioEnable', 'true')
-      await unMute()
+      localStorage.setItem("audioEnable", "true");
+      await unMute();
     }
 
-    await play('tap')
-    updateIcon()
-  }
+    await play("tap");
+    updateIcon();
+  };
 
   const updateIcon = () => {
-    const enable = !!localStorage.getItem('audioEnable')
+    const enable = !!localStorage.getItem("audioEnable");
 
     if (enable) {
-      btnOn.style.display = 'block'
-      btnOff.style.display = 'none'
+      btnOn.style.display = "block";
+      btnOff.style.display = "none";
     } else {
-      btnOn.style.display = 'none'
-      btnOff.style.display = 'block'
+      btnOn.style.display = "none";
+      btnOff.style.display = "block";
     }
-  }
+  };
 
-  btnOn.addEventListener('click', async () => {
-    await play('tap')
-    toggleAudio()
-  })
+  btnOn.addEventListener("click", async () => {
+    await play("tap");
+    toggleAudio();
+  });
 
-  btnOff.addEventListener('click', async () => {
-    await play('tap')
-    toggleAudio()
-  })
-  updateIcon()
+  btnOff.addEventListener("click", async () => {
+    await play("tap");
+    toggleAudio();
+  });
+  updateIcon();
 </script>
