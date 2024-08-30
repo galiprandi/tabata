@@ -19,23 +19,27 @@ import UpIcon from './UpIcon.astro'
     <BackToHome />
   </section>
 
-  <dialog id="edit-item-modal">
+  <dialog id="add-edit-modal">
     <article>
       <header>
         <h3 class="title"></h3>
       </header>
-      <fieldset role="group">
-        <input
-          type="text"
-          name="item"
-          id="edit-item-input"
-          placeholder="Enter workout name"
-        />
-        <button>Save</button>
-      </fieldset>
+
+      <form>
+        <fieldset role="group">
+          <input
+            type="text"
+            name="item"
+            id="edit-item-input"
+            placeholder="Enter workout name"
+            required
+          />
+          <button>Save</button>
+        </fieldset>
+      </form>
 
       <footer>
-        <button class="secondary">Cancel</button>
+        <button class="secondary" id="add-edit-modal-cancel">Cancel</button>
       </footer>
     </article>
 
@@ -65,155 +69,141 @@ import UpIcon from './UpIcon.astro'
     import {
       getSettings,
       updateSettings,
-      updateInnerHTML,
+      updateTextContent,
     } from '../assets/main'
 
-    const editItemModal = document.getElementById(
-      'edit-item-modal'
-    ) as HTMLDialogElement
+    const modalAddOrEdit = document.getElementById(
+      'add-edit-modal'
+    ) as HTMLDialogElement | null
 
-    const editItemInput = document.getElementById(
-      'edit-item-input'
-    ) as HTMLInputElement
-    const saveEditItemButton = editItemModal.querySelector(
-      'button:not(.secondary)'
-    ) as HTMLButtonElement
-    const cancelEditItemButton = editItemModal.querySelector(
-      'button.secondary'
-    ) as HTMLButtonElement
+    const modalAddOrEditCancelButton = document.querySelector(
+      '#add-edit-modal-cancel'
+    ) as HTMLButtonElement | null
+
     const addNewItemButton = document.getElementById(
       'add-new-item'
-    ) as HTMLButtonElement
+    ) as HTMLButtonElement | null
 
-    const init = () => {
+    const formAddEditItems = document.querySelector(
+      '#add-edit-modal form'
+    ) as HTMLFormElement | null
+
+    const inputAddEditItems = document.querySelector(
+      '#add-edit-modal form input'
+    ) as HTMLInputElement | null
+
+    formAddEditItems?.addEventListener('submit', e => {
+      e.preventDefault()
+      if (!modalAddOrEdit) throw new Error('Modal not found')
+      const form = e.target as HTMLFormElement
+      const idx = form.dataset.idx
+      const name = form.item.value
+      if (!name) return
+
+      addEditWorkout(name, idx)
+      modalAddOrEdit.close()
+    })
+
+    const updateRoutineList = () => {
+      if (!formAddEditItems) throw new Error('Form not found')
+      if (!inputAddEditItems) throw new Error('Input not found')
+      if (!modalAddOrEdit) throw new Error('Modal not found')
+
       const { workouts } = getSettings()
+      const workoutsList = document.getElementById('workouts-list')
       const template = document.getElementById(
         'workout-item-template'
       ) as HTMLTemplateElement
-      const workoutsList = document.getElementById('workouts-list')
+      if (!workoutsList || !template) return
 
-      updateInnerHTML('#workouts-list', '')
+      updateTextContent('#workouts-list', '')
 
+      // Populate list
       workouts.forEach((workout, index) => {
-        const clone = template.content.cloneNode(true)
-        //@ts-expect-error
+        const isFirstItem = index === 0
+        const isLastItem = index === workouts.length - 1
+
+        const clone = template.content.cloneNode(true) as HTMLDivElement
         const item = clone.querySelector('.item') as HTMLDivElement
         const itemOrder = item.querySelector('#order') as HTMLDivElement
         const itemName = item.querySelector('#name') as HTMLDivElement
         itemOrder.textContent = `${index + 1}.`
         itemName.textContent = workout
 
-        item
-          .querySelectorAll('button')
-          .forEach(button => (button.dataset.idx = index.toString()))
+        item.querySelectorAll('button').forEach(button => {
+          const { className } = button
+          if (className.includes('down') && isLastItem) button.disabled = true
+          if (className.includes('up') && isFirstItem) button.disabled = true
+
+          button.addEventListener('click', () => {
+            if (className.includes('delete')) removeWorkout(index)
+            if (className.includes('down')) moveWorkout(index, 'down')
+            if (className.includes('up')) moveWorkout(index, 'up')
+            if (className.includes('edit')) {
+              formAddEditItems.dataset.idx = index.toString()
+              inputAddEditItems.value = workout
+              modalAddOrEdit.showModal()
+            }
+          })
+        })
 
         workoutsList?.appendChild(clone)
       })
-
-      document.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', ({ currentTarget }) => {
-          //@ts-expect-error
-          const idx = parseInt(currentTarget.dataset.idx)
-          if (idx > -1) deleteWorkout(idx)
-        })
-      })
-
-      document.querySelectorAll('.edit').forEach(button => {
-        button.addEventListener('click', ({ currentTarget }) => {
-          //@ts-expect-error
-          const idx = parseInt(currentTarget.dataset.idx)
-          if (idx > -1) editWorkout(idx)
-        })
-      })
-
-      document.querySelectorAll('.up').forEach(button => {
-        button.addEventListener('click', ({ currentTarget }) => {
-          //@ts-expect-error
-          const idx = parseInt(currentTarget.dataset.idx)
-          if (idx > -1) moveUp(idx)
-        })
-      })
-
-      document.querySelectorAll('.down').forEach(button => {
-        button.addEventListener('click', ({ currentTarget }) => {
-          //@ts-expect-error
-          const idx = parseInt(currentTarget.dataset.idx)
-          if (idx > -1) moveDown(idx)
-        })
-      })
-
-      addNewItemButton.addEventListener('click', addNewWorkout)
     }
 
-    const deleteWorkout = (index: number) => {
+    const init = () => {
+      updateRoutineList()
+
+      if (!addNewItemButton) throw new Error('Add new item button not found')
+      if (!modalAddOrEditCancelButton)
+        throw new Error('Cancel button not found')
+      if (!inputAddEditItems) throw new Error('Input not found')
+      if (!modalAddOrEdit) throw new Error('Modal not found')
+      if (!formAddEditItems) throw new Error('Form not found')
+
+      addNewItemButton.addEventListener('click', () => {
+        if (!formAddEditItems) return
+        formAddEditItems.dataset.idx = ''
+        inputAddEditItems.value = ''
+        modalAddOrEdit.showModal()
+      })
+
+      modalAddOrEditCancelButton.addEventListener('click', () => {
+        formAddEditItems.dataset.idx = ''
+        inputAddEditItems.value = ''
+        modalAddOrEdit.close()
+      })
+    }
+
+    const removeWorkout = (index: number) => {
       const { workouts } = getSettings()
       const items = workouts.splice(index, 1)
-      if (!confirm(`Are you sure you want to delete ${items[0]}?`)) return
+      if (!confirm(`Are you sure you want to remove "${items[0]}"?`)) return
       updateSettings({ ...getSettings(), workouts })
       init()
     }
 
-    const addNewWorkout = () => {
+    const moveWorkout = (fromIdx: number, direction: 'up' | 'down') => {
       const { workouts } = getSettings()
-      updateInnerHTML('#edit-item-modal .title', 'Add Workout')
-      editItemInput.value = ''
-      editItemInput.focus()
-      editItemModal.showModal()
-
-      saveEditItemButton?.addEventListener('click', () => {
-        workouts.push(editItemInput.value)
-        updateSettings({ ...getSettings(), workouts })
-        editItemModal.close()
-        init()
-      })
-
-      cancelEditItemButton?.addEventListener('click', () => {
-        editItemInput.value = ''
-        editItemModal.close()
-      })
+      const toIdx = direction === 'up' ? fromIdx - 1 : fromIdx + 1
+      const orgWorkout = workouts[fromIdx]
+      const desWorkout = workouts[toIdx]
+      if (!orgWorkout || !desWorkout) return
+      workouts[fromIdx] = desWorkout
+      workouts[toIdx] = orgWorkout
+      updateSettings({ ...getSettings(), workouts })
+      updateRoutineList()
     }
 
-    const editWorkout = (index: number) => {
-      const { workouts } = getSettings()
-      const workout = workouts[index]
-      updateInnerHTML('#edit-item-modal .title', 'Edit Workout')
-      editItemInput.value = workout
-      editItemInput.focus()
-      editItemModal.showModal()
-
-      saveEditItemButton?.addEventListener('click', () => {
-        workouts[index] = editItemInput.value
-        updateSettings({ ...getSettings(), workouts })
-        editItemModal.close()
-        init()
-      })
-
-      cancelEditItemButton?.addEventListener('click', () => {
-        editItemInput.value = ''
-        editItemModal.close()
-      })
-    }
-
-    const moveUp = (index: number) => {
-      const { workouts } = getSettings()
-      if (index > 0) {
-        const temp = workouts[index]
-        workouts[index] = workouts[index - 1]
-        workouts[index - 1] = temp
-        updateSettings({ ...getSettings(), workouts })
-        init()
-      }
-    }
-
-    const moveDown = (index: number) => {
-      const { workouts } = getSettings()
-      if (index < workouts.length - 1) {
-        const temp = workouts[index]
-        workouts[index] = workouts[index + 1]
-        workouts[index + 1] = temp
-        updateSettings({ ...getSettings(), workouts })
-        init()
-      }
+    const addEditWorkout = (name: string, idx?: string) => {
+      if (!modalAddOrEdit) throw new Error('Modal not found')
+      if (!name.trim()) return
+      let { workouts } = getSettings()
+      if (!idx) workouts.push(name.trim())
+      else workouts[parseInt(idx)] = name.trim()
+      updateSettings({ ...getSettings(), workouts })
+      updateRoutineList()
+      modalAddOrEdit.close()
     }
 
     document.addEventListener('DOMContentLoaded', init)

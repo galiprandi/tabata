@@ -33,7 +33,7 @@ import Working from '../../components/Working.astro'
     switchBodyClass,
     delaySeconds,
     textToSpeech,
-    updateInnerHTML,
+    updateTextContent,
   } from '../../assets/main'
 
   let { workDuration, restDuration, workouts, prepDuration } = getSettings()
@@ -102,8 +102,8 @@ import Working from '../../components/Working.astro'
 
   // Render title and subtitle
   const renderContent = (title: string, subtitle: string) => {
-    updateInnerHTML('#subtitle', subtitle)
-    updateInnerHTML('#title', title)
+    updateTextContent('#subtitle', subtitle)
+    updateTextContent('#title', title)
   }
 
   // Render time
@@ -115,11 +115,11 @@ import Working from '../../components/Working.astro'
 
   // Update exercise left
   const updateExerciseLeft = (exercise: number) =>
-    updateInnerHTML('#exercise-left', exercise.toString())
+    updateTextContent('#exercise-left', exercise.toString())
 
   // Update routine time left
   const updateRoutineTimeLeft = (time: number) =>
-    updateInnerHTML('#time-left', `${time.toFixed(1).toString()}'`)
+    updateTextContent('#time-left', `${time.toFixed(1).toString()}'`)
 
   // Calculate time left
   const calculateTimeLeft = (remainingWorkouts: number) =>
