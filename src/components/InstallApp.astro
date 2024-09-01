@@ -1,0 +1,43 @@
+---
+import InstallAppIcon from './InstallAppIcon.astro'
+---
+
+<button class="contrast" id="install-app-button">
+  <small> Install App </small>
+  <InstallAppIcon />
+</button>
+
+<style>
+  #install-app-button {
+    display: none;
+    padding: 0.55em 1.5em;
+  }
+</style>
+
+<script>
+  const installButton = document.getElementById(
+    'install-app-button'
+  ) as HTMLButtonElement | null
+
+  let deferredPrompt: any
+  window.addEventListener('beforeinstallprompt', event => {
+    if (!installButton) return
+    event.preventDefault()
+    deferredPrompt = event
+    installButton.style.display = 'block'
+
+    installButton.addEventListener('click', () => {
+      deferredPrompt.prompt()
+      deferredPrompt.userChoice.then((response: UserChoice) => {
+        deferredPrompt = null
+        installButton.style.display = 'none'
+        console.log(response)
+      })
+    })
+  })
+
+  type UserChoice = {
+    outcome: 'accepted' | 'dismissed'
+    platform: string
+  }
+</script>

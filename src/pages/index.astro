@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/layout.astro'
-import CloseIcon from '../components/CloseIcom.astro'
+import CloseIcon from '../components/CloseIcon.astro'
+import InstallApp from '../components/InstallApp.astro'
+import ShareApp from '../components/ShareApp.astro'
 
 const date = new Date()
   .toLocaleDateString('es-AR')
@@ -15,69 +17,21 @@ const version = `v${date}`
   <section class="display">
     <div id="title">Wellcome</div>
   </section>
-  <footer>
+  <section class="buttons">
     <a href="/tabata/settings">Settings</a>
     <button id="go">Go</button>
+  </section>
+  <footer>
+    <ShareApp />
+    <InstallApp />
   </footer>
-  <nav></nav>
-  <small id="version">{version}</small>
-  <img
-    id="qr_link"
-    src="/tabata/qr_link.svg"
-    alt="Scan to open in your phone"
-    width={50}
-    height={50}
-  />
-  <dialog id="dialog">
-    <CloseIcon id="dialog_close" />
-    <div>
-      <img
-        id="qr_link_big"
-        src="/tabata/qr_link.svg"
-        alt="Tap image to share"
-      />
-      <br />
-      <small>Tap image to share with your friends!</small>
-    </div>
-  </dialog>
 </Layout>
 
 <script>
   import { play } from '../assets/main'
 
-  const shareData = {
-    title: 'Tabata Timer',
-    text: "Check this out, I'm using this Tabata Timer every day",
-    url: location.href,
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
-    const dialogClose = document.getElementById(
-      'dialog_close'
-    ) as HTMLButtonElement
-    const openDialog = document.getElementById('qr_link') as HTMLImageElement
-    const dialog = document.getElementById('dialog') as HTMLDialogElement
-    const shareButton = document.getElementById(
-      'qr_link_big'
-    ) as HTMLButtonElement
-
     const go = document.getElementById('go') as HTMLButtonElement
-
-    dialogClose.addEventListener('click', async () => {
-      await play('tap')
-      dialog.close()
-    })
-
-    openDialog.addEventListener('click', async () => {
-      await play('tap', true)
-      dialog.showModal()
-    })
-
-    shareButton.addEventListener('click', async () => {
-      await play('tap', true)
-      if (navigator.share) navigator.share(shareData)
-      dialog.close()
-    })
 
     go.addEventListener('click', async () => {
       await play('tap', true)
@@ -93,47 +47,30 @@ const version = `v${date}`
 </script>
 
 <style>
-  footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-  }
-
   #title {
     font-size: 10vw;
     font-weight: bold;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3em;
   }
 
   #go {
     min-width: 10em;
   }
 
-  #version {
-    position: absolute;
+  footer {
+    position: fixed;
+    bottom: 0;
     left: 0;
-    bottom: 0;
-    font-size: 0.7em;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 0.5em;
-  }
-
-  #qr_link {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 0.5em;
-  }
-
-  #dialog_close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0.5em;
-    font-size: 1.5em;
-  }
-
-  #qr_link_big {
-    max-height: 70vh;
-    max-width: 70vw;
   }
 </style>

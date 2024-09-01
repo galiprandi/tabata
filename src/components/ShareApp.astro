@@ -1,0 +1,83 @@
+---
+import CloseIcon from "./CloseIcon.astro";
+---
+
+<button id="share_app">
+  <img
+    id="qr_link"
+    src="/tabata/qr_link.svg"
+    alt="Scan to open in your phone"
+    width={50}
+    height={50}
+  />
+</button>
+<dialog id="dialog">
+  <CloseIcon id="dialog_close" />
+  <div>
+    <img id="qr_link_big" src="/tabata/qr_link.svg" alt="Tap image to share" />
+    <br />
+    <small>Tap image to share with your friends!</small>
+  </div>
+</dialog>
+
+
+<style>
+    #share_app {
+        background-color: 0
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    #dialog_close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5em;
+    font-size: 1.5em;
+  }
+
+  #qr_link_big {
+    max-height: 70vh;
+    max-width: 70vw;
+  }
+</style>
+
+<script>
+    import {play} from '../assets/main'
+
+ const shareData = {
+    title: 'Tabata Timer',
+    text: "Check this out, I'm using this Tabata Timer every day",
+    url: location.href,
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const dialogClose = document.getElementById(
+      'dialog_close'
+    ) as HTMLButtonElement
+    const openDialog = document.getElementById('qr_link') as HTMLImageElement
+    const dialog = document.getElementById('dialog') as HTMLDialogElement
+    const shareButton = document.getElementById(
+      'qr_link_big'
+    ) as HTMLButtonElement
+
+    dialogClose.addEventListener('click', async () => {
+      await play('tap')
+      dialog.close()
+    })
+
+    openDialog.addEventListener('click', async () => {
+      await play('tap', true)
+      dialog.showModal()
+    })
+
+    shareButton.addEventListener('click', async () => {
+      await play('tap', true)
+      if (navigator.share) navigator.share(shareData)
+      dialog.close()
+    })
+
+    
+  })
+</script>
