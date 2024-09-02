@@ -1,4 +1,3 @@
-import { textToSpeech } from "./main";
 let player: HTMLAudioElement | null = null;
 const audioKey = "audioEnable";
 
@@ -35,7 +34,7 @@ export const getAudioStatus = () => !!sessionStorage.getItem(audioKey);
 export const play = async (src: Sound, force = false) => {
   if (!player) return console.error("Player not found");
   const enable = getAudioStatus();
-  if (!force && !enable) return console.log(src);
+  if (!force && !enable) return;
   try {
     player.src = `/tabata/sounds/${src}.mp3`;
     await player.play();

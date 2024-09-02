@@ -10,7 +10,7 @@ import ShareApp from '../components/ShareApp.astro'
   </section>
   <section class="buttons">
     <a href="/tabata/settings">Settings</a>
-    <button id="go">Go</button>
+    <button id="start">Routine</button>
   </section>
   <footer>
     <ShareApp />
@@ -22,12 +22,13 @@ import ShareApp from '../components/ShareApp.astro'
   import { play } from '../assets/audio'
 
   document.addEventListener('DOMContentLoaded', () => {
-    const go = document.getElementById('go') as HTMLButtonElement
-
-    go.addEventListener('click', async () => {
-      await play('tap', true)
-      location.href = '/tabata/start'
-    })
+    const start = document.getElementById('start') as HTMLButtonElement | null
+    if (start) {
+      start.addEventListener('click', async () => {
+        await play('tap', true)
+        location.href = '/tabata/start'
+      })
+    }
 
     document.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', async () => {

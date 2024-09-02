@@ -12,6 +12,7 @@ import Working from '../../components/Working.astro'
   <div>
     <progress id="progress" value="100" max="100"></progress>
   </div>
+
   <div id="info">
     <div>
       <TimerIcon />
@@ -25,6 +26,26 @@ import Working from '../../components/Working.astro'
 
   <a href="/tabata" class="secondary">Abort Session</a>
 </Layout>
+<dialog id="go-modal" open>
+  <article>
+    <header>
+      <h3>My Routine</h3>
+    </header>
+
+    <section id="info">
+      <div>
+        <TimerIcon />
+        <span id="time-left">-</span>
+      </div>
+      <div>
+        <Working />
+        <span id="exercise-left">-</span>
+      </div>
+    </section>
+
+    <button>Start Routine</button>
+  </article>
+</dialog>
 
 <script>
   import { play } from '../../assets/audio'
@@ -38,9 +59,31 @@ import Working from '../../components/Working.astro'
 
   let { workDuration, restDuration, workouts, prepDuration } = getSettings()
 
+  declare global {
+    interface Window {
+      MSStream: any
+    }
+  }
+
   // Initialize app
   document.addEventListener('DOMContentLoaded', () => {
     const main = document.querySelector('main.main')
+    const goModal = document.querySelector(
+      '#go-modal'
+    ) as HTMLDialogElement | null
+    const goButton = document.querySelector(
+      '#go-modal button'
+    ) as HTMLButtonElement | null
+
+    if (goModal && goButton) {
+      goButton?.addEventListener('click', () => {
+        goModal.close()
+        textToSpeech(workouts[0] ?? 'Go!', true)
+        play('tap', true)
+        startWorkout()
+        document.querySelector('#ios-go-modal')?.remove()
+      })
+    }
 
     if (main) {
       main.addEventListener('click', () => {
@@ -57,7 +100,6 @@ import Working from '../../components/Working.astro'
 
     updateExerciseLeft(workouts.length)
     updateRoutineTimeLeft(totalRoutineTime)
-    startWorkout()
   })
 
   const startWorkout = async () => {
@@ -95,7 +137,8 @@ import Working from '../../components/Working.astro'
         const nextWorkout = workouts[currentExercise]
         switchBodyClass('rest')
         renderContent(nextWorkout, 'Rest Time')
-        textToSpeech(nextWorkout)
+
+        textToSpeech(`${remainingWorkouts}, ${nextWorkout}`)
 
         for (let j = restDuration; j > 0; j--) {
           await renderTime(j, restDuration)
