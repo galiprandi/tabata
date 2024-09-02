@@ -43,14 +43,14 @@ import Working from '../../components/Working.astro'
     let remainingWorkouts = workouts.length
     const totalRoutineTime =
       remainingWorkouts * (workDuration / 60 + restDuration / 60)
+
     updateExerciseLeft(workouts.length)
     updateRoutineTimeLeft(totalRoutineTime)
-
     startWorkout()
   })
 
   const startWorkout = async () => {
-    let currentExercise = 5
+    let currentExercise = 0
     let remainingWorkouts = workouts.length
     const totalRoutineTime =
       remainingWorkouts * (workDuration / 60 + restDuration / 60)
