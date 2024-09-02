@@ -4,6 +4,7 @@
     "health",
     "fitness"
   ],
+  "description": "Tabata is a free, user-friendly exercise routine app designed to help you create and manage high-intensity interval training (HIIT) workouts with ease.",
   "dir": "auto",
   "display": "fullscreen",
   "display_override": [
@@ -53,39 +54,33 @@
   "orientation": "any",
   "screenshots": [
     {
-      "form_factor": "narrow",
-      "sizes": "2960x1440",
-      "src": "screenshot-1.png",
-      "type": "image/png"
-    },
-    {
       "form_factor": "wide",
       "sizes": "2048x1536",
-      "src": "/tabata/screenshot-7.png",
+      "src": "/tabata/screenshots/screenshot-wide.png",
       "type": "image/png"
     },
     {
       "form_factor": "narrow",
       "sizes": "2960x1440",
-      "src": "screenshot-2.png",
+      "src": "/tabata/screenshots/screenshot-1.png",
       "type": "image/png"
     },
     {
       "form_factor": "narrow",
       "sizes": "2960x1440",
-      "src": "/tabata/screenshot-3.png",
+      "src": "/tabata/screenshots/screenshot-2.png",
       "type": "image/png"
     },
     {
       "form_factor": "narrow",
       "sizes": "2960x1440",
-      "src": "/tabata/screenshot-4.png",
+      "src": "/tabata/screenshots/screenshot-3.png",
       "type": "image/png"
     },
     {
       "form_factor": "narrow",
-      "sizes": "2960x1440",
-      "src": "/tabata/screenshot-5.png",
+      "sizes": "1440x2960",
+      "src": "/tabata/screenshots/screenshot-4.png",
       "type": "image/png"
     }
   ],
