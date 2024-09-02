@@ -67,7 +67,6 @@ import Working from '../../components/Working.astro'
 
   // Initialize app
   document.addEventListener('DOMContentLoaded', () => {
-    const main = document.querySelector('main.main')
     const goModal = document.querySelector(
       '#go-modal'
     ) as HTMLDialogElement | null
@@ -82,15 +81,6 @@ import Working from '../../components/Working.astro'
         play('tap', true)
         startWorkout()
         document.querySelector('#ios-go-modal')?.remove()
-      })
-    }
-
-    if (main) {
-      main.addEventListener('click', () => {
-        const titleText = document.querySelector('#title')?.textContent
-        if (!titleText) return
-        play('tap', true)
-        textToSpeech(titleText, true)
       })
     }
 
@@ -138,7 +128,7 @@ import Working from '../../components/Working.astro'
         switchBodyClass('rest')
         renderContent(nextWorkout, 'Rest Time')
 
-        textToSpeech(`${remainingWorkouts}, ${nextWorkout}`)
+        textToSpeech(nextWorkout)
 
         for (let j = restDuration; j > 0; j--) {
           await renderTime(j, restDuration)

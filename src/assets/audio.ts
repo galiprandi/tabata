@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Set audio disable
 export const setAudioDisable = () => {
   if (player) player.muted = true;
-  play("tap", true);
   sessionStorage.removeItem(audioKey);
 };
 
@@ -32,10 +31,11 @@ export const getAudioStatus = () => !!sessionStorage.getItem(audioKey);
 
 // Play sound function
 export const play = async (src: Sound, force = false) => {
-  if (!player) return console.error("Player not found");
-  const enable = getAudioStatus();
-  if (!force && !enable) return;
   try {
+    if (!player) return console.error("Player not found");
+    const enable = getAudioStatus();
+    if (!force && !enable) return;
+
     player.src = `/tabata/sounds/${src}.mp3`;
     await player.play();
   } catch (error) {
