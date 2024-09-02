@@ -59,7 +59,7 @@ import Working from '../../components/Working.astro'
     textToSpeech(workouts[0])
     renderContent(workouts[0], 'Preparation Time')
     for (let i = prepDuration; i > 0; i--) {
-      renderTime(i, prepDuration)
+      await renderTime(i, prepDuration)
       await delaySeconds(1)
     }
 
@@ -70,7 +70,7 @@ import Working from '../../components/Working.astro'
 
       // Work time
       for (let timeLeft = workDuration; timeLeft > 0; timeLeft--) {
-        renderTime(timeLeft, workDuration)
+        await renderTime(timeLeft, workDuration)
         await delaySeconds(1)
       }
 
@@ -89,7 +89,7 @@ import Working from '../../components/Working.astro'
         textToSpeech(nextWorkout)
 
         for (let j = restDuration; j > 0; j--) {
-          renderTime(j, restDuration)
+          await renderTime(j, restDuration)
           await delaySeconds(1)
         }
       } else {
@@ -107,10 +107,11 @@ import Working from '../../components/Working.astro'
   }
 
   // Render time
-  const renderTime = (time: number, totalTime: number) => {
-    if (time <= 3) play('beep')
+  const renderTime = async (time: number, totalTime: number) => {
+    console.log(time, totalTime)
     const progressEl = progressElement()
     if (progressEl) progressEl.value = (time / totalTime) * 100
+    if (time <= 3) await play('beep')
   }
 
   // Update exercise left
