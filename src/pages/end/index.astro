@@ -17,7 +17,9 @@ import BackToHome from '../../components/BackToHome.astro'
 </Layout>
 
 <script>
+  import { play } from '../../assets/main'
   document.addEventListener('DOMContentLoaded', () => {
+    play('end')
     document.getElementById('startAgaig')?.addEventListener('click', () => {
       location.href = '/tabata/start'
     })
