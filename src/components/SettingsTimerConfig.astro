@@ -43,7 +43,7 @@ const { vertical = false } = Astro.props
 <script>
   import { getSettings, updateSettings } from '../assets/main'
   import { updateTotalWorkouts, updateRoutineTime } from '../assets/settings'
-  const { workouts, prepDuration, workDuration, restDuration } = getSettings()
+  const { prepDuration, workDuration, restDuration } = getSettings()
 
   function Init() {
     const prepDurationInput = document.getElementById(

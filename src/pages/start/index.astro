@@ -27,8 +27,8 @@ import Working from '../../components/Working.astro'
 </Layout>
 
 <script>
+  import { play } from '../../assets/audio'
   import {
-    play,
     getSettings,
     switchBodyClass,
     delaySeconds,
@@ -40,6 +40,17 @@ import Working from '../../components/Working.astro'
 
   // Initialize app
   document.addEventListener('DOMContentLoaded', () => {
+    const main = document.querySelector('main.main')
+
+    if (main) {
+      main.addEventListener('click', () => {
+        const titleText = document.querySelector('#title')?.textContent
+        if (!titleText) return
+        play('tap', true)
+        textToSpeech(titleText, true)
+      })
+    }
+
     let remainingWorkouts = workouts.length
     const totalRoutineTime =
       remainingWorkouts * (workDuration / 60 + restDuration / 60)
@@ -52,8 +63,6 @@ import Working from '../../components/Working.astro'
   const startWorkout = async () => {
     let currentExercise = 0
     let remainingWorkouts = workouts.length
-    const totalRoutineTime =
-      remainingWorkouts * (workDuration / 60 + restDuration / 60)
 
     // Show preparation time
     textToSpeech(workouts[0])
@@ -107,7 +116,6 @@ import Working from '../../components/Working.astro'
 
   // Render time
   const renderTime = async (time: number, totalTime: number) => {
-    console.log(time, totalTime)
     const progressEl = progressElement()
     if (progressEl) progressEl.value = (time / totalTime) * 100
     if (time <= 3) await play('beep')

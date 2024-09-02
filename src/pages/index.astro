@@ -1,16 +1,7 @@
 ---
 import Layout from '../layouts/layout.astro'
-import CloseIcon from '../components/CloseIcon.astro'
 import InstallApp from '../components/InstallApp.astro'
 import ShareApp from '../components/ShareApp.astro'
-
-const date = new Date()
-  .toLocaleDateString('es-AR')
-  .split('/')
-  .map(n => n.padStart(2, '0'))
-  .reverse()
-  .join('')
-const version = `v${date}`
 ---
 
 <Layout>
@@ -28,7 +19,7 @@ const version = `v${date}`
 </Layout>
 
 <script>
-  import { play } from '../assets/main'
+  import { play } from '../assets/audio'
 
   document.addEventListener('DOMContentLoaded', () => {
     const go = document.getElementById('go') as HTMLButtonElement

@@ -16,7 +16,7 @@ export function updateTotalWorkouts() {
 export function updateRoutineTime() {
   const element = document.querySelector(".total-routine-time");
   if (!element) return;
-  const { workouts, prepDuration, workDuration, restDuration } = getSettings();
+  const { workouts, workDuration, restDuration } = getSettings();
   const totalWorkouts = workouts.length;
   const minutesByExercise = workDuration + restDuration;
   const routineTime = (totalWorkouts * minutesByExercise) / 60;

@@ -1,4 +1,5 @@
 import { defaultSettings } from "./defaultSettings";
+import { getAudioStatus } from "./audio";
 
 export const storageKey = "settings";
 
@@ -11,14 +12,6 @@ declare global {
 
 document.addEventListener("DOMContentLoaded", () => {
   wakeLock();
-
-  // Add tap sound to all elements with class .tap
-  const tapButtons = document.querySelectorAll(".tap");
-  tapButtons.forEach((button) => {
-    button.addEventListener("click", async () => {
-      await play("tap");
-    });
-  });
 });
 
 // Listen for wake lock release
@@ -60,29 +53,33 @@ export function delaySeconds(seconds: number) {
   );
 }
 
-// Get audio status
-const audioEnable = () => !!localStorage.getItem("audioEnable");
-
-// Play sound function
-export const play = async (src: Sound, force = false) => {
+// Text to speech function
+export const textToSpeech = (text: string, force = false) => {
+  const audioEnable = getAudioStatus();
   try {
-    if (!force && !audioEnable()) return;
-    document.getElementById("player") as HTMLAudioElement;
-    await new Audio(`/tabata/sounds/${src}.mp3`).play();
+    if (!("speechSynthesis" in window)) return;
+    if (!force && !audioEnable) return;
+
+    const voiceLanguage =
+      localStorage.getItem("voiceLanguage") ?? navigator.language;
+    const utterance = new SpeechSynthesisUtterance();
+
+    utterance.volume = 1;
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.rate = 1;
+
+    utterance.volume = 1;
+    utterance.rate = 1;
+    utterance.pitch = 0.8;
+    utterance.text = text;
+    utterance.lang = voiceLanguage;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
   } catch (error) {
     console.error(error);
-    localStorage.removeItem("audioEnable");
   }
-};
-
-// Text to speech function
-export const textToSpeech = (text: string) => {
-  if (!("speechSynthesis" in window) || !audioEnable()) return;
-  const voiceLanguage =
-    localStorage.getItem("voiceLanguage") ?? navigator.language;
-  const synth = new SpeechSynthesisUtterance(text);
-  synth.lang = voiceLanguage;
-  speechSynthesis.speak(synth);
 };
 
 // Update innerHTML of element
@@ -90,5 +87,3 @@ export const updateTextContent = (selector: string, text: string) =>
   document.querySelectorAll(selector).forEach((el) => {
     el.textContent = text;
   });
-
-type Sound = "beep" | "tap" | "end";

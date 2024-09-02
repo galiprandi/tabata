@@ -1,0 +1,74 @@
+---
+import AudioOnIcon from './AudioOnIcon.astro'
+import AudioOffIcon from './AudioOffIcon.astro'
+---
+
+<div id="enable-audio">
+  <button id="btn-on">
+    <AudioOnIcon />
+  </button>
+  <button id="btn-off">
+    <AudioOffIcon />
+  </button>
+  <audio id="player">
+    <source src="" type="audio/mpeg" />
+  </audio>
+</div>
+
+<style>
+  #enable-audio {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 0 0.5rem;
+    cursor: pointer;
+  }
+
+  button {
+    font-size: 1.7em;
+    color: white;
+    min-width: unset !important;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: none;
+  }
+</style>
+
+<script>
+  import {
+    getAudioStatus,
+    setAudioEnable,
+    setAudioDisable,
+  } from '../assets/audio'
+  const btnOn = document.getElementById('btn-on') as HTMLButtonElement | null
+  const btnOff = document.getElementById('btn-off') as HTMLButtonElement | null
+
+  const toggleAudio = async () => {
+    const enable = getAudioStatus()
+
+    if (enable) setAudioDisable()
+    else setAudioEnable()
+    updateIcon()
+  }
+
+  const updateIcon = async () => {
+    if (!btnOn || !btnOff) return
+    const enable = getAudioStatus()
+
+    if (enable) {
+      btnOn.style.display = 'block'
+      btnOff.style.display = 'none'
+    } else {
+      btnOn.style.display = 'none'
+      btnOff.style.display = 'block'
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (btnOn) btnOn.addEventListener('click', toggleAudio)
+    if (btnOff) btnOff.addEventListener('click', toggleAudio)
+    updateIcon()
+  })
+</script>
