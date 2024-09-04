@@ -55,6 +55,7 @@ import Working from '../../components/Working.astro'
     delaySeconds,
     textToSpeech,
     updateTextContent,
+    gaEvent,
   } from '../../assets/main'
 
   let { workDuration, restDuration, workouts, prepDuration } = getSettings()
@@ -93,6 +94,7 @@ import Working from '../../components/Working.astro'
   })
 
   const startWorkout = async () => {
+    gaEvent('Start Workout')
     let currentExercise = 0
     let remainingWorkouts = workouts.length
 

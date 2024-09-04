@@ -87,3 +87,11 @@ export const updateTextContent = (selector: string, text: string) =>
   document.querySelectorAll(selector).forEach((el) => {
     el.textContent = text;
   });
+
+// Send event to Google Analytics. Eg: Track when user Start Workout
+export const gaEvent = (name: EventsName) => {
+  if (!window.gtag) return;
+  window.gtag("event", name);
+};
+
+type EventsName = "Start Workout";
