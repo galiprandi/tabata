@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Set audio disable
 export const setAudioDisable = () => {
   if (player) player.muted = true;
-  sessionStorage.removeItem(audioKey);
+  localStorage.removeItem(audioKey);
 };
 
 // Set audio enable
 export const setAudioEnable = () => {
   if (player) player.muted = false;
   play("tap", true);
-  sessionStorage.setItem(audioKey, "true");
+  localStorage.setItem(audioKey, "true");
 };
 
 // Set audio status
@@ -27,7 +27,7 @@ export const setAudioStatus = (status: boolean) => {
 };
 
 // Get audio status
-export const getAudioStatus = () => !!sessionStorage.getItem(audioKey);
+export const getAudioStatus = () => !!localStorage.getItem(audioKey);
 
 // Play sound function
 export const play = async (src: Sound, force = false) => {
