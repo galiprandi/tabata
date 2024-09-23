@@ -1,7 +1,7 @@
 let player: HTMLAudioElement | null = null;
 const audioKey = "audioEnable";
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   player = document.getElementById("player") as HTMLAudioElement | null;
   if (!player) setAudioDisable();
   else if (getAudioStatus()) player.muted = false;
