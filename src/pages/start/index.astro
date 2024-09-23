@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/layout.astro'
-import TimerIcon from '../../components/TimerIcon.astro'
-import Working from '../../components/Working.astro'
+import TimerIcon from '@components/TimerIcon.astro'
+import Working from '@components/Working.astro'
 ---
 
 <Layout>
@@ -48,7 +48,7 @@ import Working from '../../components/Working.astro'
 </dialog>
 
 <script>
-  import { play } from '../../assets/audio'
+  import { play } from '@assets/audio'
   import {
     getSettings,
     switchBodyClass,
@@ -56,7 +56,7 @@ import Working from '../../components/Working.astro'
     textToSpeech,
     updateTextContent,
     gaEvent,
-  } from '../../assets/main'
+  } from '@assets/main'
 
   let { workDuration, restDuration, workouts, prepDuration } = getSettings()
 

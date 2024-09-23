@@ -1,8 +1,8 @@
 ---
-import ExerciseRestIcon from './ExerciseRestIcon.astro'
-import PrepareIcon from './PrepareIcon.astro'
-import TimerIcon from './TimerIcon.astro'
-import ExerciseWork from './ExerciseWork.astro'
+import ExerciseRestIcon from '@components/ExerciseRestIcon.astro'
+import PrepareIcon from '@components/PrepareIcon.astro'
+import TimerIcon from '@components/TimerIcon.astro'
+import ExerciseWork from '@components/ExerciseWork.astro'
 
 const { vertical = false } = Astro.props
 ---
@@ -37,24 +37,34 @@ const { vertical = false } = Astro.props
         <input type="number" id="restDuration" class="rest" min="0" />
       </label>
     </div>
+    <div id="cicleDur">
+      <label>
+        <ExerciseRestIcon />
+        <input type="number" id="rounds" class="rest" min="0" step="1" />
+      </label>
+    </div>
   </div>
 </section>
 
 <script>
   import { getSettings, updateSettings } from '../assets/main'
   import { updateTotalWorkouts, updateRoutineTime } from '../assets/settings'
-  const { prepDuration, workDuration, restDuration } = getSettings()
+  const { prepDuration, workDuration, restDuration, workouts, rounds } =
+    getSettings()
 
   function Init() {
     const prepDurationInput = document.getElementById(
       'prepDuration'
-    ) as HTMLInputElement
+    ) as HTMLInputElement | null
     const workoutDurationInput = document.getElementById(
       'workDuration'
-    ) as HTMLInputElement
+    ) as HTMLInputElement | null
     const restDurationInput = document.getElementById(
       'restDuration'
-    ) as HTMLInputElement
+    ) as HTMLInputElement | null
+    const roundsInput = document.getElementById(
+      'rounds'
+    ) as HTMLInputElement | null
 
     // Set the values
     updateRoutineTime()
@@ -63,6 +73,7 @@ const { vertical = false } = Astro.props
     if (workoutDurationInput)
       workoutDurationInput.value = workDuration.toString()
     if (restDurationInput) restDurationInput.value = restDuration.toString()
+    if (roundsInput) roundsInput.value = `${rounds}`
 
     // Save the settings
     prepDurationInput?.addEventListener('change', e => {
@@ -79,6 +90,12 @@ const { vertical = false } = Astro.props
     restDurationInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), restDuration: +value })
+      updateRoutineTime()
+    })
+
+    roundsInput?.addEventListener('change', e => {
+      const value = parseInt((e.target as HTMLInputElement).value)
+      updateSettings({ ...getSettings(), rounds: +value })
       updateRoutineTime()
     })
   }

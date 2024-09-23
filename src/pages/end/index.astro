@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/layout.astro'
-import BackToHome from '../../components/BackToHome.astro'
+import BackToHome from '@components/BackToHome.astro'
 ---
 
 <Layout>
@@ -10,17 +10,17 @@ import BackToHome from '../../components/BackToHome.astro'
 
   <footer>
     <div class="columns">
-      <button id="startAgaig">Start Again</button>
+      <button id="startAgain">Start Again</button>
       <BackToHome />
     </div>
   </footer>
 </Layout>
 
 <script>
-  import { play } from '../../assets/audio'
+  import { play } from '@assets/audio'
   document.addEventListener('DOMContentLoaded', () => {
     play('end')
-    document.getElementById('startAgaig')?.addEventListener('click', () => {
+    document.getElementById('startAgain')?.addEventListener('click', () => {
       location.href = '/tabata/start'
     })
   })

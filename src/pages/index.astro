@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/layout.astro'
-import InstallApp from '../components/InstallApp.astro'
-import ShareApp from '../components/ShareApp.astro'
+import InstallApp from '@components/InstallApp.astro'
+import ShareApp from '@components/ShareApp.astro'
 ---
 
 <Layout>
@@ -19,7 +19,7 @@ import ShareApp from '../components/ShareApp.astro'
 </Layout>
 
 <script>
-  import { play } from '../assets/audio'
+  import { play } from '@assets/audio'
 
   document.addEventListener('DOMContentLoaded', () => {
     const start = document.getElementById('start') as HTMLButtonElement | null

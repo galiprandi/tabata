@@ -1,4 +1,4 @@
-import { getSettings } from "./main";
+import { getSettings } from "@assets/main";
 
 /**
  * Update the total number of workouts in the settings
@@ -15,10 +15,11 @@ export function updateTotalWorkouts() {
  */
 export function updateRoutineTime() {
   const element = document.querySelector(".total-routine-time");
+
   if (!element) return;
-  const { workouts, workDuration, restDuration } = getSettings();
-  const totalWorkouts = workouts.length;
-  const minutesByExercise = workDuration + restDuration;
-  const routineTime = (totalWorkouts * minutesByExercise) / 60;
-  element.textContent = routineTime.toFixed(1);
+  const { workDuration, restDuration, rounds } = getSettings();
+  const secondsByExercise = workDuration + restDuration;
+  const minutesByExercise = secondsByExercise / 60;
+  const roundMinutes = minutesByExercise * rounds;
+  element.textContent = roundMinutes.toFixed(1);
 }

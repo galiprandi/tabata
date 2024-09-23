@@ -1,5 +1,5 @@
-import { defaultSettings } from "./defaultSettings";
-import { getAudioStatus } from "./audio";
+import { defaultSettings } from "@assets/defaultSettings";
+import { getAudioStatus } from "@assets/audio";
 
 export const storageKey = "settings";
 
@@ -31,7 +31,9 @@ export function getSettings() {
     localStorage.setItem(storageKey, JSON.stringify(defaultSettings));
     storageConfig = JSON.stringify(defaultSettings);
   }
-  return JSON.parse(storageConfig) as typeof defaultSettings;
+  const settings = JSON.parse(storageConfig) as typeof defaultSettings;
+  if (!settings.rounds) settings.rounds = settings.workouts.length;
+  return settings;
 }
 
 // Update settings in local storage
