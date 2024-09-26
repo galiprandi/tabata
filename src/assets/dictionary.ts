@@ -1,7 +1,15 @@
 export const dictionary = {
+  "Add new item to the list": {
+    en: "Add new item to the list",
+    es: "Agregar nuevo elemento a la lista",
+  },
   Cancel: {
     en: "Cancel",
     es: "Cancelar",
+  },
+  "Config Routine": {
+    en: "Config Routine",
+    es: "Configurar Rutina",
   },
   Continue: {
     en: "Continue",
@@ -11,7 +19,10 @@ export const dictionary = {
     en: "Exercise",
     es: "Ejercicio",
   },
-
+  "Install App": {
+    en: "Install App",
+    es: "Instalar App",
+  },
   Last: {
     en: "Last",
     es: "Último",
@@ -31,6 +42,10 @@ export const dictionary = {
   "Preparation Time": {
     en: "Preparation Time",
     es: "Tiempo de preparación",
+  },
+  "Return to home": {
+    en: "Return to home",
+    es: "Volver a inicio",
   },
   "Rest!": {
     en: "Rest!",
@@ -56,6 +71,10 @@ export const dictionary = {
     en: "Settings",
     es: "Ajustes",
   },
+  "Start Routine": {
+    en: "Start Routine",
+    es: "Iniciar rutina",
+  },
   Train: {
     en: "Train",
     es: "Entrenar",
@@ -74,4 +93,17 @@ export const t = (key: keyof typeof dictionary) => {
   }
 };
 
+export const initTranslation = () => {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = `${el?.getAttribute("data-i18n")}` as DictionaryKeys;
+    el.textContent = t(key);
+  });
+
+  document.querySelectorAll("[data-tooltip]").forEach((el) => {
+    const tooltip = `${el?.getAttribute("data-tooltip")}` as DictionaryKeys;
+    el.setAttribute("data-tooltip", t(tooltip));
+  });
+};
+
 type AvailableLanguages = "en" | "es";
+type DictionaryKeys = keyof typeof dictionary;
