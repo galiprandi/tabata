@@ -1,3 +1,5 @@
+import { textToSpeech } from "./main";
+
 // Format duration in seconds to human readable format
 export const formatDuration = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
@@ -25,7 +27,16 @@ export const getBodyClasses = () => getClasses(document.body);
 export const hasClass = (element: HTMLElement, className: string) =>
   element.classList.contains(className);
 
+// Execute callback when element is clicked
 export const onClick = (selector: string, callback: (e: Event) => void) =>
   document.querySelectorAll(selector).forEach((el) => {
     el.addEventListener("click", callback);
   });
+
+// Speech textContext on tap
+export const speechOnTap = () =>
+  document
+    .querySelectorAll(".speech")
+    .forEach((el) =>
+      el.addEventListener("click", () => textToSpeech(el.textContent || "")),
+    );

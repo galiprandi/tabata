@@ -243,5 +243,9 @@ import AudioControl from '../components/AudioControl.astro'
 
 <script>
   import { initTranslation } from '@assets/dictionary'
-  document.addEventListener('DOMContentLoaded', initTranslation)
+  import { speechOnTap } from '@assets/domHelpers'
+  document.addEventListener('DOMContentLoaded', () => {
+    initTranslation()
+    speechOnTap()
+  })
 </script>
