@@ -10,7 +10,9 @@ import GoToSettings from '@components/GoToSettings.astro'
 ---
 
 <Layout>
-  <div id="title" data-i18n="Preparation Time">Preparation Time</div>
+  <div id="title" data-i18n="Preparation Time" class="speech">
+    Preparation Time
+  </div>
 
   <div>
     <progress id="progress" value="100" max="100"></progress>
@@ -77,11 +79,6 @@ import GoToSettings from '@components/GoToSettings.astro'
   document.addEventListener('DOMContentLoaded', () => {
     const { rounds } = getSettings()
     updateScreen(rounds)
-
-    onClick('#title', () => {
-      const textContent = document.querySelector('#title')?.textContent
-      textContent && textToSpeech(textContent)
-    })
 
     onClick('#btn-routine-pause', () => {
       play('tap', true)
