@@ -2,18 +2,35 @@
 import Layout from '@app/layouts/layout.astro'
 import SettingsTimerConfig from '@components/SettingsTimerConfig.astro'
 import SettingsRoutineList from '@components/SettingsRoutineList.astro'
+import GoToHome from '@components/GoToHome.astro'
+import GoToTrain from '@components/GoToTrain.astro'
 ---
 
 <Layout>
-  <div class="layout">
+  <div class="columns">
     <SettingsTimerConfig vertical={true} />
-
     <SettingsRoutineList />
+  </div>
+
+  <div class="buttons">
+    <GoToHome />
+
+    <GoToTrain />
   </div>
 </Layout>
 
+<script>
+  import { onClick } from '@assets/domHelpers'
+
+  document.addEventListener('DOMContentLoaded', () => {
+    onClick('#btn-routine-start', () => {
+      window.location.href = '/tabata/start'
+    })
+  })
+</script>
+
 <style>
-  .layout {
+  .columns {
     display: grid;
     grid-template-areas: 'settings routine';
     grid-template-columns: 9em 1fr;
@@ -22,7 +39,7 @@ import SettingsRoutineList from '@components/SettingsRoutineList.astro'
   }
 
   @media (width <= 450px) {
-    .layout {
+    .columns {
       grid-template-columns: 1fr;
       grid-template-areas:
         'settings'

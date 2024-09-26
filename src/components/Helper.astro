@@ -1,0 +1,71 @@
+---
+import HelpIcon from '@components/HelpIcon.astro'
+
+const { title, description } = Astro.props
+---
+
+<button
+  title={title}
+  class="btn-open-dialog"
+  data-title={title}
+  data-description={description}
+>
+  <HelpIcon />
+</button>
+
+<dialog id="help-modal">
+  <article>
+    <header>
+      <h3 class="title"></h3>
+    </header>
+    <p class="description"></p>
+    <footer>
+      <button id="btn-close-dialog" title="Close">Close</button>
+    </footer>
+  </article>
+</dialog>
+
+<script>
+  import { updateTextContent } from '@assets/main'
+
+  const dialog = document.getElementById(
+    'help-modal'
+  ) as HTMLDialogElement | null
+  const btnOpen = document.querySelectorAll(
+    '.btn-open-dialog'
+  ) as NodeListOf<HTMLButtonElement> | null
+  const btnClose = document.getElementById(
+    'btn-close-dialog'
+  ) as HTMLButtonElement | null
+
+  if (dialog && btnOpen) {
+    btnOpen.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const title = btn.getAttribute('data-title')
+        const description = btn.getAttribute('data-description')
+
+        title && updateTextContent('.title', title)
+        description && updateTextContent('.description', description)
+
+        dialog.showModal()
+      })
+    })
+  }
+
+  if (dialog && btnClose) {
+    btnClose.addEventListener('click', () => {
+      dialog.close()
+    })
+  }
+</script>
+
+<style>
+  .btn-open-dialog {
+    background: 0;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    box-shadow: none;
+    color: inherit;
+  }
+</style>

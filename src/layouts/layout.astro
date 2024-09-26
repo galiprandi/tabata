@@ -6,8 +6,9 @@ import AudioControl from '../components/AudioControl.astro'
   <head>
     <title>Tabata</title>
     <meta charset="utf-8" />
+
     <link rel="icon" type="image/svg+xml" href="/tabata/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.pumpkin.min.css"
@@ -65,12 +66,19 @@ import AudioControl from '../components/AudioControl.astro'
     <AudioControl />
 
     <!-- Google tag (gtag.js) -->
-    <script
-      defer
-      is:inline
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-CZ03PKC275"></script>
-    <script defer src="/tabata/googleTag.js" is:inline></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CZ03PKC275"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        // @ts-ignore
+        dataLayer.push(arguments)
+      }
+      // @ts-ignore
+      gtag('js', new Date())
+      // @ts-ignore
+      gtag('config', 'G-CZ03PKC275')
+    </script>
   </body>
 </html>
 
@@ -145,6 +153,21 @@ import AudioControl from '../components/AudioControl.astro'
     text-decoration-color: var(--color-links);
   }
 
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5em;
+  }
+
+  button > svg {
+    margin-right: 0.5em;
+  }
+
+  button.icon > svg {
+    margin-right: 0;
+  }
+
   a.button {
     --pico-background-color: var(--pico-primary-background);
     --pico-border-color: var(--pico-primary-border);
@@ -217,3 +240,15 @@ import AudioControl from '../components/AudioControl.astro'
     border-radius: 5px;
   }
 </style>
+
+<script>
+  import { t } from '@assets/dictionary'
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = `${el?.getAttribute('data-i18n')}` as unknown as Parameters<
+        typeof t
+      >[0]
+      el.textContent = t(key)
+    })
+  })
+</script>

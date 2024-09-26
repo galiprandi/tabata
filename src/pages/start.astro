@@ -2,12 +2,15 @@
 import Layout from '@app/layouts/layout.astro'
 import TimerIcon from '@components/TimerIcon.astro'
 import Working from '@components/Working.astro'
+import RoundsIcon from '@components/RoundsIcon.astro'
+import Play from '@icons/Play.icon.astro'
+import Continue from '@components/icons/Continue.icon.astro'
+import Pause from '@icons/Pause.icon.astro'
+import GoToSettings from '@components/GoToSettings.astro'
 ---
 
 <Layout>
-  <div id="subtitle"></div>
-
-  <div id="title">Preparation Time</div>
+  <div id="title" data-i18n="Preparation Time">Preparation Time</div>
 
   <div>
     <progress id="progress" value="100" max="100"></progress>
@@ -18,167 +21,196 @@ import Working from '@components/Working.astro'
       <TimerIcon />
       <span id="time-left">-</span>
     </div>
+
+    <button id="btn-routine-pause" class="icon"><Pause /></button>
+
     <div>
       <Working />
       <span id="exercise-left">-</span>
     </div>
   </div>
-
-  <a href="/tabata" class="secondary">Abort Session</a>
 </Layout>
+
 <dialog id="go-modal" open>
   <article>
-    <header>
-      <h3>Routine</h3>
-    </header>
+    <h2 data-i18n="Routine">Routine</h2>
 
     <section id="info">
       <div>
-        <TimerIcon />
-        <span id="time-left">-</span>
+        <RoundsIcon />
+        <span class="total-routine-exercises"></span>
       </div>
+
       <div>
-        <Working />
-        <span id="exercise-left">-</span>
+        <TimerIcon />
+        <span class="total-routine-time"></span>
       </div>
     </section>
 
-    <button>Start Routine</button>
+    <div class="buttons">
+      <GoToSettings />
+      <button id="btn-routine-start" class="secondary" title="Restart">
+        <Play />
+        <span data-i18n="Restart">Restart</span>
+      </button>
+      <button id="btn-routine-continue" title="Continue"
+        ><Continue /><span data-i18n="Continue">Continue</span>
+      </button>
+    </div>
   </article>
 </dialog>
 
 <script>
   import { play } from '@assets/audio'
+  import { t } from '@assets/dictionary'
+  import { switchBodyClass, formatDuration, onClick } from '@assets/domHelpers'
   import {
     getSettings,
-    switchBodyClass,
     delaySeconds,
     textToSpeech,
     updateTextContent,
     gaEvent,
+    updateSettings,
   } from '@assets/main'
 
-  let { workDuration, restDuration, workouts, prepDuration } = getSettings()
-
-  declare global {
-    interface Window {
-      MSStream: any
-    }
-  }
-
-  // Initialize app
+  // Wait for the DOM to be ready
   document.addEventListener('DOMContentLoaded', () => {
-    const goModal = document.querySelector(
-      '#go-modal'
-    ) as HTMLDialogElement | null
-    const goButton = document.querySelector(
-      '#go-modal button'
-    ) as HTMLButtonElement | null
+    const { rounds } = getSettings()
+    updateScreen(rounds)
 
-    if (goModal && goButton) {
-      goButton?.addEventListener('click', () => {
-        goModal.close()
-        textToSpeech(workouts[0] ?? 'Go!', true)
-        play('tap', true)
-        startWorkout()
-        document.querySelector('#ios-go-modal')?.remove()
-      })
+    onClick('#title', () => {
+      const textContent = document.querySelector('#title')?.textContent
+      textContent && textToSpeech(textContent)
+    })
+
+    onClick('#btn-routine-pause', () => {
+      play('tap', true)
+      window.location.reload()
+    })
+
+    const playRoutine = () => {
+      const modal = document.querySelector(
+        '#go-modal'
+      ) as HTMLDialogElement | null
+
+      modal?.close()
+      play('tap', true)
+      startRoutine()
+      document.querySelector('#ios-go-modal')?.remove()
     }
 
-    let remainingWorkouts = workouts.length
-    const totalRoutineTime =
-      remainingWorkouts * (workDuration / 60 + restDuration / 60)
+    onClick('#btn-routine-start', () => {
+      updateSettings({ ...getSettings(), nextExercise: 0 })
+      playRoutine()
+    })
 
-    updateExerciseLeft(workouts.length)
-    updateRoutineTimeLeft(totalRoutineTime)
+    onClick('#btn-routine-continue', playRoutine)
   })
 
-  const startWorkout = async () => {
-    gaEvent('Start Workout')
-    let currentExercise = 0
-    let remainingWorkouts = workouts.length
+  const updateScreen = (exerciseLeft: number) => {
+    const { rounds, workouts, nextExercise, workDuration, restDuration } =
+      getSettings()
+    const exercise = workouts[nextExercise]
+    const secondsByExercise = workDuration + restDuration
+    const timeLeft = secondsByExercise * exerciseLeft
+    updateTextContent('.t-next-exercise', exercise)
+    updateTextContent('.total-routine-exercises', rounds.toString())
+    updateTextContent('#exercise-left', exerciseLeft.toString())
+    updateTextContent('#time-left', formatDuration(timeLeft))
+    updateTextContent('.total-routine-time', formatDuration(timeLeft))
+    updateTextContent('#title', exercise)
+    updateTextContent('#go-modal h3', t('Routine'))
+    updateTextContent('#go-settings', t('Settings'))
+  }
 
-    // Show preparation time
-    textToSpeech(workouts[0])
-    renderContent(workouts[0], 'Preparation Time')
-    for (let i = prepDuration; i > 0; i--) {
-      await renderTime(i, prepDuration)
+  const startRoutine = async () => {
+    gaEvent('Start Workout')
+    const { rounds } = getSettings()
+
+    // Preparation time
+    await prepTime()
+
+    // Loop through rounds
+    for (let round = rounds; round > 0; round--) {
+      const isLastExercise = round === 2
+      updateScreen(round)
+      await workTime()
+      if (round !== 1) await restTime({ isLastExercise })
+    }
+
+    // End of routine
+    routineCompleted()
+  }
+
+  const prepTime = async () => {
+    const { prepDuration, workouts, nextExercise } = getSettings()
+    const exercise = workouts[nextExercise]
+    switchBodyClass(`prep`)
+    updateTextContent('#title', exercise)
+    textToSpeech(`${t('First Exercise')}: ${exercise}`)
+
+    for (let sec = prepDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, prepDuration)
       await delaySeconds(1)
     }
+  }
 
-    // Loop through workouts
-    for (const workout of workouts) {
-      switchBodyClass(`workout`)
-      renderContent(workout, 'Work Time')
+  const workTime = async () => {
+    const { workouts, nextExercise, workDuration } = getSettings()
+    const exercise = workouts[nextExercise] ?? nextExercise + 1
+    switchBodyClass(`workout`)
+    updateTextContent('#title', exercise)
+    textToSpeech(t('Go!'))
+    for (let sec = workDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, workDuration)
+      await delaySeconds(1)
+    }
+    forwardToNextExercise()
+  }
 
-      // Work time
-      for (let timeLeft = workDuration; timeLeft > 0; timeLeft--) {
-        await renderTime(timeLeft, workDuration)
-        await delaySeconds(1)
-      }
-
-      // Update current exercise
-      currentExercise = currentExercise + 1
-      remainingWorkouts--
-
-      updateRoutineTimeLeft(calculateTimeLeft(remainingWorkouts))
-      updateExerciseLeft(remainingWorkouts)
-
-      // Show rest time
-      if (currentExercise < workouts.length) {
-        const nextWorkout = workouts[currentExercise]
-        switchBodyClass('rest')
-        renderContent(nextWorkout, 'Rest Time')
-
-        textToSpeech(nextWorkout)
-
-        for (let j = restDuration; j > 0; j--) {
-          await renderTime(j, restDuration)
-          await delaySeconds(1)
-        }
-      } else {
-        // End of workout
-        location.href = '/tabata/end'
-      }
+  const restTime = async ({ isLastExercise }: { isLastExercise: boolean }) => {
+    const { workouts, nextExercise, restDuration } = getSettings()
+    const exercise = workouts[nextExercise]
+    const subText = isLastExercise ? t('Last') : t('Next')
+    switchBodyClass(`rest`)
+    updateTextContent('#title', exercise)
+    textToSpeech(`${subText}, ${exercise}`)
+    for (let sec = restDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, restDuration)
+      await delaySeconds(1)
     }
   }
 
-  // Render title and subtitle
-  const renderContent = (title: string, subtitle: string) => {
-    updateTextContent('#subtitle', subtitle)
-    updateTextContent('#title', title)
+  const routineCompleted = async () => {
+    await play('end')
+    await delaySeconds(1)
+    textToSpeech(t('Routine completed!'))
+    const modal = document.querySelector(
+      '#go-modal'
+    ) as HTMLDialogElement | null
+    if (modal) {
+      modal.showModal()
+    }
   }
 
-  // Render time
-  const renderTime = async (time: number, totalTime: number) => {
-    const progressEl = progressElement()
+  const forwardToNextExercise = async () => {
+    const { workouts, nextExercise } = getSettings()
+    let nextIndex = nextExercise + 1
+    if (nextIndex >= workouts.length) nextIndex = 0
+    updateSettings({ ...getSettings(), nextExercise: nextIndex })
+  }
+
+  const displayElapsedTime = async (time: number, totalTime: number) => {
+    const progressEl = document.getElementById(
+      'progress'
+    ) as HTMLProgressElement | null
+
     if (progressEl) progressEl.value = (time / totalTime) * 100
-    if (time <= 3) await play('beep')
-  }
-
-  // Update exercise left
-  const updateExerciseLeft = (exercise: number) =>
-    updateTextContent('#exercise-left', exercise.toString())
-
-  // Update routine time left
-  const updateRoutineTimeLeft = (time: number) =>
-    updateTextContent('#time-left', `${time.toFixed(1).toString()}'`)
-
-  // Calculate time left
-  const calculateTimeLeft = (remainingWorkouts: number) =>
-    remainingWorkouts * (workDuration / 60 + restDuration / 60)
-
-  // Get progress element
-  function progressElement() {
-    return document.getElementById('progress') as HTMLProgressElement | null
+    if (time <= 3 && time >= 1) await play('beep')
   }
 </script>
 
 <style>
-  #subtitle {
-    font-size: 3vw;
-  }
-
   #title {
     font-size: 7.5vw;
     font-weight: bold;
@@ -188,8 +220,7 @@ import Working from '@components/Working.astro'
   #info {
     font-size: 2.2em;
     display: flex;
-    justify-content: space-evenly;
-    gap: 3em;
+    justify-content: space-around;
 
     & div {
       display: flex;
@@ -199,12 +230,14 @@ import Working from '@components/Working.astro'
     }
   }
 
+  dialog footer {
+    & button + button {
+      margin-left: 1em;
+    }
+  }
+
   /* Screens less than 300px */
   @media (width <= 450px) {
-    #subtitle {
-      font-size: 1.5em;
-    }
-
     #title {
       font-size: 3em;
     }

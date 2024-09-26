@@ -1,22 +1,21 @@
 ---
-import BackToHome from './BackToHome.astro'
 import DownIcon from './DownIcon.astro'
 import EditItemIcon from './EditItemIcon.astro'
+import Plus from './icons/Plus.icon.astro'
 import TrashIcon from './TrashIcon.astro'
 import UpIcon from './UpIcon.astro'
 ---
 
 <section id="routine-list">
-  <h2>Routine</h2>
+  <h2 data-i18n="Routine">Routine</h2>
   <section id="workouts-list">
     <span aria-busy="true">Loading...</span>
   </section>
 
   <section class="buttons">
-    <button id="add-new-item" class="">Add New Workout</button>
-    <br />
-    <br />
-    <BackToHome />
+    <button id="add-new-item" class="secondary" title="Add new item"
+      ><Plus /><span data-i18n="Exercise">Exercise</span></button
+    >
   </section>
 
   <dialog id="add-edit-modal">
@@ -31,15 +30,17 @@ import UpIcon from './UpIcon.astro'
             type="text"
             name="item"
             id="edit-item-input"
-            placeholder="Enter workout name"
+            placeholder="Exercise?"
             required
           />
-          <button>Save</button>
+          <button data-i18n="Save">Save</button>
         </fieldset>
       </form>
 
       <footer>
-        <button class="secondary" id="add-edit-modal-cancel">Cancel</button>
+        <button class="secondary" id="add-edit-modal-cancel" data-i18n="Cancel"
+          >Cancel</button
+        >
       </footer>
     </article>
 
@@ -48,16 +49,16 @@ import UpIcon from './UpIcon.astro'
         <div id="order"></div>
         <div id="name"></div>
         <div class="buttons">
-          <button class="up">
+          <button class="up" title="Up">
             <UpIcon />
           </button>
-          <button class="down">
+          <button class="down" title="Down">
             <DownIcon />
           </button>
-          <button class="edit">
+          <button class="edit" title="Edit">
             <EditItemIcon />
           </button>
-          <button class="delete">
+          <button class="delete" title="Delete">
             <TrashIcon />
           </button>
         </div>
@@ -72,17 +73,11 @@ import UpIcon from './UpIcon.astro'
       updateTextContent,
     } from '../assets/main'
 
+    import { onClick } from '@assets/domHelpers'
+
     const modalAddOrEdit = document.getElementById(
       'add-edit-modal'
     ) as HTMLDialogElement | null
-
-    const modalAddOrEditCancelButton = document.querySelector(
-      '#add-edit-modal-cancel'
-    ) as HTMLButtonElement | null
-
-    const addNewItemButton = document.getElementById(
-      'add-new-item'
-    ) as HTMLButtonElement | null
 
     const formAddEditItems = document.querySelector(
       '#add-edit-modal form'
@@ -154,21 +149,18 @@ import UpIcon from './UpIcon.astro'
     const init = () => {
       updateRoutineList()
 
-      if (!addNewItemButton) throw new Error('Add new item button not found')
-      if (!modalAddOrEditCancelButton)
-        throw new Error('Cancel button not found')
       if (!inputAddEditItems) throw new Error('Input not found')
       if (!modalAddOrEdit) throw new Error('Modal not found')
       if (!formAddEditItems) throw new Error('Form not found')
 
-      addNewItemButton.addEventListener('click', () => {
+      onClick('#add-new-item', () => {
         if (!formAddEditItems) return
         formAddEditItems.dataset.idx = ''
         inputAddEditItems.value = ''
         modalAddOrEdit.showModal()
       })
 
-      modalAddOrEditCancelButton.addEventListener('click', () => {
+      onClick('#add-edit-modal-cancel', () => {
         formAddEditItems.dataset.idx = ''
         inputAddEditItems.value = ''
         modalAddOrEdit.close()

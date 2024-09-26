@@ -11,6 +11,7 @@ import CloseIcon from "./CloseIcon.astro";
     height={50}
   />
 </button>
+
 <dialog id="dialog">
   <CloseIcon id="dialog_close" />
   <div>
@@ -19,7 +20,6 @@ import CloseIcon from "./CloseIcon.astro";
     <small>Tap image to share with your friends!</small>
   </div>
 </dialog>
-
 
 <style>
     #share_app {
@@ -44,7 +44,8 @@ import CloseIcon from "./CloseIcon.astro";
 </style>
 
 <script>
-    import {play} from '../assets/audio'
+  import { onClick } from '../assets/domHelpers'
+  import {play} from '../assets/audio'
 
  const shareData = {
     title: 'Tabata Timer',
@@ -53,31 +54,23 @@ import CloseIcon from "./CloseIcon.astro";
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const dialogClose = document.getElementById(
-      'dialog_close'
-    ) as HTMLButtonElement
-    const openDialog = document.getElementById('qr_link') as HTMLImageElement
-    const dialog = document.getElementById('dialog') as HTMLDialogElement
-    const shareButton = document.getElementById(
-      'qr_link_big'
-    ) as HTMLButtonElement
-
-    dialogClose.addEventListener('click', async () => {
+    const dialog = document.getElementById('dialog') as HTMLDialogElement | null
+    
+    onClick('#dialog_close', async () => {
       await play('tap')
-      dialog.close()
+      dialog?.close()
     })
 
-    openDialog.addEventListener('click', async () => {
-      await play('tap', true)
-      dialog.showModal()
-    })
-
-    shareButton.addEventListener('click', async () => {
+    onClick('#qr_link_big', async () => {
       await play('tap', true)
       if (navigator.share) navigator.share(shareData)
-      dialog.close()
+      dialog?.close()
+    })  
+    
+    onClick('#qr_link', async () => {
+      await play('tap', true)
+      dialog?.showModal()
     })
-
     
   })
 </script>

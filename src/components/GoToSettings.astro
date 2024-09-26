@@ -1,0 +1,21 @@
+---
+import Config from './icons/Config.icon.astro'
+---
+
+<button
+  id="btn-routine-config"
+  class="contrast outline icon"
+  title="Config Routine"><Config /></button
+>
+
+<script>
+  import { onClick } from '@assets/domHelpers'
+  import { play } from '@assets/audio'
+
+  document.addEventListener('DOMContentLoaded', () => {
+    onClick('#btn-routine-config', async () => {
+      await play('tap', true)
+      window.location.href = '/tabata/settings'
+    })
+  })
+</script>

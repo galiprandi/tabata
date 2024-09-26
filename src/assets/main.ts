@@ -7,6 +7,7 @@ declare global {
   interface Window {
     timer: any;
     audioContext: AudioContext;
+    dataLayer: any[];
   }
 }
 
@@ -33,19 +34,13 @@ export function getSettings() {
   }
   const settings = JSON.parse(storageConfig) as typeof defaultSettings;
   if (!settings.rounds) settings.rounds = settings.workouts.length;
+  if (!settings.nextExercise) settings.nextExercise = 0;
   return settings;
 }
 
 // Update settings in local storage
 export function updateSettings(settings: typeof defaultSettings) {
   localStorage.setItem(storageKey, JSON.stringify(settings));
-}
-
-// Change container class function
-export function switchBodyClass(className: string) {
-  const container = document.body;
-  if (!container) return;
-  container.className = `${className}`;
 }
 
 // Sleep function and remove all timers

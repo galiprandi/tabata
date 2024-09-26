@@ -1,0 +1,17 @@
+---
+import Home from '@icons/Home.icon.astro'
+---
+
+<button title="Home" class="btn-go-home icon contrast outline"><Home /></button>
+
+<script>
+  import { onClick } from '@assets/domHelpers'
+  import { play } from '@assets/audio'
+
+  document.addEventListener('DOMContentLoaded', () => {
+    onClick('button.btn-go-home', async () => {
+      await play('tap', true)
+      window.location.href = '/tabata'
+    })
+  })
+</script>

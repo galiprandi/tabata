@@ -4,8 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@icons/*": ["src/components/icons/*"],
       "@assets/*": ["src/assets/*"],
       "@app/*": ["src/*"]
-    }
+    },
+    "noUnusedLocals": true
   }
 }

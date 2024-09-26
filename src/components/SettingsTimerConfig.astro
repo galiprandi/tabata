@@ -3,6 +3,8 @@ import ExerciseRestIcon from '@components/ExerciseRestIcon.astro'
 import PrepareIcon from '@components/PrepareIcon.astro'
 import TimerIcon from '@components/TimerIcon.astro'
 import ExerciseWork from '@components/ExerciseWork.astro'
+import RoundsIcon from '@components/RoundsIcon.astro'
+import Helper from '@components/Helper.astro'
 
 const { vertical = false } = Astro.props
 ---
@@ -14,43 +16,55 @@ const { vertical = false } = Astro.props
       <span class="total-routine-time"></span>'
     </div>
     <div>
-      <ExerciseWork />
-      <span class="total-workouts-exercises"></span>
+      <RoundsIcon />
+      <span class="total-routine-exercises"></span>
     </div>
   </header>
   <div class={vertical ? 'vertical' : 'horizontal'}>
-    <div id="prepDur">
+    <div id="prepContainer">
       <label>
         <PrepareIcon />
         <input type="number" id="prepDuration" class="prep" min="0" />
       </label>
+      <Helper
+        title="Preparation Time"
+        description="Preparation time prior to the start of the round."
+      />
     </div>
-    <div id="workDur">
+    <div id="workContainer">
       <label>
         <ExerciseWork />
         <input type="number" id="workDuration" class="workout" min="0" />
       </label>
+      <Helper
+        title="Working Time"
+        description="Working time for each exercise."
+      />
     </div>
-    <div id="restDur">
+    <div id="restContainer">
       <label>
         <ExerciseRestIcon />
         <input type="number" id="restDuration" class="rest" min="0" />
       </label>
+      <Helper title="Rest Time" description="Rest time for each exercise." />
     </div>
-    <div id="cicleDur">
+    <div id="roundsContainer">
       <label>
-        <ExerciseRestIcon />
+        <RoundsIcon />
         <input type="number" id="rounds" class="rest" min="0" step="1" />
       </label>
+      <Helper
+        title="Exercise in Round"
+        description="The total number of exercises per round, which defines the total work time of the round."
+      />
     </div>
   </div>
 </section>
 
 <script>
   import { getSettings, updateSettings } from '../assets/main'
-  import { updateTotalWorkouts, updateRoutineTime } from '../assets/settings'
-  const { prepDuration, workDuration, restDuration, workouts, rounds } =
-    getSettings()
+  import { updateTotalWorkouts, updateRoutineStats } from '../assets/settings'
+  const { prepDuration, workDuration, restDuration, rounds } = getSettings()
 
   function Init() {
     const prepDurationInput = document.getElementById(
@@ -67,7 +81,7 @@ const { vertical = false } = Astro.props
     ) as HTMLInputElement | null
 
     // Set the values
-    updateRoutineTime()
+    updateRoutineStats()
     updateTotalWorkouts()
     if (prepDurationInput) prepDurationInput.value = prepDuration.toString()
     if (workoutDurationInput)
@@ -84,19 +98,19 @@ const { vertical = false } = Astro.props
     workoutDurationInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), workDuration: +value })
-      updateRoutineTime()
+      updateRoutineStats()
     })
 
     restDurationInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), restDuration: +value })
-      updateRoutineTime()
+      updateRoutineStats()
     })
 
     roundsInput?.addEventListener('change', e => {
       const value = parseInt((e.target as HTMLInputElement).value)
       updateSettings({ ...getSettings(), rounds: +value })
-      updateRoutineTime()
+      updateRoutineStats()
     })
   }
 
@@ -109,7 +123,7 @@ const { vertical = false } = Astro.props
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 2em;
+    gap: 1em;
 
     &.vertical {
       flex-direction: column;
@@ -117,7 +131,7 @@ const { vertical = false } = Astro.props
 
     & header {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-evenly;
       align-items: center;
       flex-grow: 2;
       font-size: 1.6em;
@@ -135,7 +149,7 @@ const { vertical = false } = Astro.props
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      gap: 2em;
+      gap: 1em;
     }
 
     & label {
@@ -154,6 +168,18 @@ const { vertical = false } = Astro.props
         padding-left: 2.5em;
       }
     }
+  }
+
+  #prepContainer,
+  #workContainer,
+  #restContainer,
+  #roundsContainer {
+    display: flex;
+    gap: 0.5em;
+  }
+
+  #rounds {
+    background-color: var(--pico-primary-background);
   }
 
   @media (width > 450px) {

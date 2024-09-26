@@ -1,0 +1,19 @@
+---
+import Continue from '@icons/Continue.icon.astro'
+---
+
+<button class="go-to-train" title="Train"
+  ><Continue /><span data-i18n="Train">Train</span>
+</button>
+
+<script>
+  import { onClick } from '@assets/domHelpers'
+  import { play } from '@assets/audio'
+
+  document.addEventListener('DOMContentLoaded', () => {
+    onClick('button.go-to-train', async () => {
+      await play('tap', true)
+      window.location.href = '/tabata/start'
+    })
+  })
+</script>

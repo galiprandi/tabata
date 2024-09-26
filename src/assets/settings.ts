@@ -1,10 +1,10 @@
-import { getSettings } from "@assets/main";
+import { getSettings, updateTextContent } from "@assets/main";
 
 /**
  * Update the total number of workouts in the settings
  */
 export function updateTotalWorkouts() {
-  const element = document.querySelector(".total-workouts-exercises");
+  const element = document.querySelector(".total-routine-exercises");
   if (!element) return;
   const { workouts } = getSettings();
   element.textContent = workouts.length.toString();
@@ -13,13 +13,11 @@ export function updateTotalWorkouts() {
 /**
  * Update the total time of the routine
  */
-export function updateRoutineTime() {
-  const element = document.querySelector(".total-routine-time");
-
-  if (!element) return;
+export function updateRoutineStats() {
   const { workDuration, restDuration, rounds } = getSettings();
   const secondsByExercise = workDuration + restDuration;
   const minutesByExercise = secondsByExercise / 60;
   const roundMinutes = minutesByExercise * rounds;
-  element.textContent = roundMinutes.toFixed(1);
+  updateTextContent(".total-routine-time", roundMinutes.toFixed(1));
+  updateTextContent(".total-routine-exercises", rounds.toString());
 }
