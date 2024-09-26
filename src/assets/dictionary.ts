@@ -63,6 +63,10 @@ export const dictionary = {
     en: "Routine completed!",
     es: "¡Rutina completada!",
   },
+  "Share this app with your friends!": {
+    en: "Share this app with your friends!",
+    es: "¡Comparte esta app con tus amigos!",
+  },
   Save: {
     en: "Save",
     es: "Guardar",
@@ -74,6 +78,10 @@ export const dictionary = {
   "Start Routine": {
     en: "Start Routine",
     es: "Iniciar rutina",
+  },
+  "Tap image to share with your friends!": {
+    en: "Tap image to share with your friends!",
+    es: "¡Toca la imagen para compartirla con tus amigos!",
   },
   Train: {
     en: "Train",
