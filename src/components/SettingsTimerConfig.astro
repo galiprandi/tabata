@@ -7,6 +7,7 @@ import RoundsIcon from '@components/RoundsIcon.astro'
 import Helper from '@components/Helper.astro'
 
 const { vertical = false } = Astro.props
+const className = vertical ? 'vertical' : 'horizontal'
 ---
 
 <section id="settings-timers">
@@ -20,7 +21,7 @@ const { vertical = false } = Astro.props
       <span class="total-routine-exercises"></span>
     </div>
   </header>
-  <div class={vertical ? 'vertical' : 'horizontal'}>
+  <div class={className}>
     <div id="prepContainer">
       <label>
         <PrepareIcon />
