@@ -131,8 +131,8 @@ import GoToSettings from '@components/GoToSettings.astro'
     for (let round = rounds; round > 0; round--) {
       const isLastExercise = round === 2
       updateScreen(round)
-      await workTime()
-      if (round !== 1) await restTime({ isLastExercise })
+      await workTime({ round })
+      if (round !== 1) await restTime({ isLastExercise, round })
     }
 
     // End of routine
@@ -140,8 +140,8 @@ import GoToSettings from '@components/GoToSettings.astro'
   }
 
   const prepTime = async () => {
-    const { prepDuration, workouts, nextExercise } = getSettings()
-    const exercise = workouts[nextExercise]
+    const { prepDuration, workouts, nextExercise, rounds } = getSettings()
+    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${rounds}`
     switchBodyClass(`prep`)
     updateTextContent('#title', exercise)
     textToSpeech(`${t('First Exercise')}: ${exercise}`)
@@ -152,9 +152,9 @@ import GoToSettings from '@components/GoToSettings.astro'
     }
   }
 
-  const workTime = async () => {
+  const workTime = async ({ round }: { round: number }) => {
     const { workouts, nextExercise, workDuration } = getSettings()
-    const exercise = workouts[nextExercise] ?? nextExercise + 1
+    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${round}`
     switchBodyClass(`workout`)
     updateTextContent('#title', exercise)
     textToSpeech(t('Go!'))
@@ -165,9 +165,15 @@ import GoToSettings from '@components/GoToSettings.astro'
     forwardToNextExercise()
   }
 
-  const restTime = async ({ isLastExercise }: { isLastExercise: boolean }) => {
+  const restTime = async ({
+    isLastExercise,
+    round,
+  }: {
+    isLastExercise: boolean
+    round: number
+  }) => {
     const { workouts, nextExercise, restDuration } = getSettings()
-    const exercise = workouts[nextExercise]
+    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${round}`
     const subText = isLastExercise ? t('Last') : t('Next')
     switchBodyClass(`rest`)
     updateTextContent('#title', exercise)
