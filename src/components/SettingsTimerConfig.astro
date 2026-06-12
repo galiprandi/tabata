@@ -25,7 +25,13 @@ const className = vertical ? 'vertical' : 'horizontal'
     <div id="prepContainer">
       <label>
         <PrepareIcon />
-        <input type="number" id="prepDuration" class="prep" min="0" />
+        <input
+          type="number"
+          id="prepDuration"
+          class="prep"
+          min="0"
+          aria-label="Preparation duration in seconds"
+        />
       </label>
       <Helper
         title="Preparation Time"
@@ -35,7 +41,13 @@ const className = vertical ? 'vertical' : 'horizontal'
     <div id="workContainer">
       <label>
         <ExerciseWork />
-        <input type="number" id="workDuration" class="workout" min="0" />
+        <input
+          type="number"
+          id="workDuration"
+          class="workout"
+          min="0"
+          aria-label="Work duration in seconds"
+        />
       </label>
       <Helper
         title="Working Time"
@@ -45,14 +57,27 @@ const className = vertical ? 'vertical' : 'horizontal'
     <div id="restContainer">
       <label>
         <ExerciseRestIcon />
-        <input type="number" id="restDuration" class="rest" min="0" />
+        <input
+          type="number"
+          id="restDuration"
+          class="rest"
+          min="0"
+          aria-label="Rest duration in seconds"
+        />
       </label>
       <Helper title="Rest Time" description="Rest time for each exercise." />
     </div>
     <div id="roundsContainer">
       <label>
         <RoundsIcon />
-        <input type="number" id="rounds" class="rest" min="0" step="1" />
+        <input
+          type="number"
+          id="rounds"
+          class="rest"
+          min="0"
+          step="1"
+          aria-label="Number of rounds"
+        />
       </label>
       <Helper
         title="Exercise in Round"

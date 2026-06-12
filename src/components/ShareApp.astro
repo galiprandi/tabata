@@ -2,7 +2,11 @@
 import CloseIcon from "./CloseIcon.astro";
 ---
 
-<button id="share_app" title="Share this app with your friends!">
+<button
+  id="share_app"
+  title="Share this app with your friends!"
+  aria-label="Share this app"
+>
   <img
     id="qr_link"
     src="/tabata/qr_link.svg"
@@ -22,14 +26,15 @@ import CloseIcon from "./CloseIcon.astro";
 </dialog>
 
 <style>
-    #share_app {
-        background-color: 0
-        border: 0;
-        padding: 0;
-        margin: 0;
-    }
+  #share_app {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
 
-    #dialog_close {
+  #dialog_close {
     position: absolute;
     top: 0;
     right: 0;
