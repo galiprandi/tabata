@@ -1,13 +1,13 @@
 ---
-import Layout from '@app/layouts/layout.astro'
-import TimerIcon from '@components/TimerIcon.astro'
-import Working from '@components/Working.astro'
-import RoundsIcon from '@components/RoundsIcon.astro'
-import Play from '@icons/Play.icon.astro'
-import Continue from '@components/icons/Continue.icon.astro'
-import Pause from '@icons/Pause.icon.astro'
-import GoToSettings from '@components/GoToSettings.astro'
-import GoToHome from '@components/GoToHome.astro'
+import Layout from "@app/layouts/layout.astro";
+import TimerIcon from "@components/TimerIcon.astro";
+import Working from "@components/Working.astro";
+import RoundsIcon from "@components/RoundsIcon.astro";
+import Play from "@icons/Play.icon.astro";
+import Continue from "@components/icons/Continue.icon.astro";
+import Pause from "@icons/Pause.icon.astro";
+import GoToSettings from "@components/GoToSettings.astro";
+import GoToHome from "@components/GoToHome.astro";
 ---
 
 <Layout>
@@ -25,7 +25,9 @@ import GoToHome from '@components/GoToHome.astro'
       <span id="time-left">-</span>
     </div>
 
-    <button id="btn-routine-pause" class="icon"><Pause /></button>
+    <button id="btn-routine-pause" class="icon" aria-label="Pause workout"
+      ><Pause /></button
+    >
 
     <div>
       <Working />
@@ -53,11 +55,16 @@ import GoToHome from '@components/GoToHome.astro'
     <div class="buttons">
       <GoToHome />
       <GoToSettings />
-      <button id="btn-routine-start" class="secondary" title="Restart">
+      <button
+        id="btn-routine-start"
+        class="secondary"
+        title="Restart"
+        aria-label="Restart routine"
+      >
         <Play />
         <span data-i18n="Restart">Restart</span>
       </button>
-      <button id="btn-routine-continue" title="Continue"
+      <button id="btn-routine-continue" title="Continue" aria-label="Continue"
         ><Continue /><span data-i18n="Continue">Continue</span>
       </button>
     </div>
@@ -65,9 +72,9 @@ import GoToHome from '@components/GoToHome.astro'
 </dialog>
 
 <script>
-  import { play } from '@assets/audio'
-  import { t } from '@assets/dictionary'
-  import { switchBodyClass, formatDuration, onClick } from '@assets/domHelpers'
+  import { play } from "@assets/audio";
+  import { t } from "@assets/dictionary";
+  import { switchBodyClass, formatDuration, onClick } from "@assets/domHelpers";
   import {
     getSettings,
     delaySeconds,
@@ -75,144 +82,144 @@ import GoToHome from '@components/GoToHome.astro'
     updateTextContent,
     gaEvent,
     updateSettings,
-  } from '@assets/main'
+  } from "@assets/main";
 
   // Wait for the DOM to be ready
-  document.addEventListener('DOMContentLoaded', () => {
-    const { rounds } = getSettings()
-    updateScreen(rounds)
+  document.addEventListener("DOMContentLoaded", () => {
+    const { rounds } = getSettings();
+    updateScreen(rounds);
 
-    onClick('#btn-routine-pause', () => {
-      play('tap', true)
-      window.location.reload()
-    })
+    onClick("#btn-routine-pause", () => {
+      play("tap", true);
+      window.location.reload();
+    });
 
     const playRoutine = () => {
       const modal = document.querySelector(
-        '#go-modal'
-      ) as HTMLDialogElement | null
+        "#go-modal",
+      ) as HTMLDialogElement | null;
 
-      modal?.close()
-      play('tap', true)
-      startRoutine()
-      document.querySelector('#ios-go-modal')?.remove()
-    }
+      modal?.close();
+      play("tap", true);
+      startRoutine();
+      document.querySelector("#ios-go-modal")?.remove();
+    };
 
-    onClick('#btn-routine-start', () => {
-      updateSettings({ ...getSettings(), nextExercise: 0 })
-      playRoutine()
-    })
+    onClick("#btn-routine-start", () => {
+      updateSettings({ ...getSettings(), nextExercise: 0 });
+      playRoutine();
+    });
 
-    onClick('#btn-routine-continue', playRoutine)
-  })
+    onClick("#btn-routine-continue", playRoutine);
+  });
 
   const updateScreen = (exerciseLeft: number) => {
     const { rounds, workouts, nextExercise, workDuration, restDuration } =
-      getSettings()
-    const exercise = workouts[nextExercise]
-    const secondsByExercise = workDuration + restDuration
-    const timeLeft = secondsByExercise * exerciseLeft
-    updateTextContent('.t-next-exercise', exercise)
-    updateTextContent('.total-routine-exercises', rounds.toString())
-    updateTextContent('#exercise-left', exerciseLeft.toString())
-    updateTextContent('#time-left', formatDuration(timeLeft))
-    updateTextContent('.total-routine-time', formatDuration(timeLeft))
-    updateTextContent('#title', exercise)
-    updateTextContent('#go-modal h3', t('Routine'))
-    updateTextContent('#go-settings', t('Settings'))
-  }
+      getSettings();
+    const exercise = workouts[nextExercise];
+    const secondsByExercise = workDuration + restDuration;
+    const timeLeft = secondsByExercise * exerciseLeft;
+    updateTextContent(".t-next-exercise", exercise);
+    updateTextContent(".total-routine-exercises", rounds.toString());
+    updateTextContent("#exercise-left", exerciseLeft.toString());
+    updateTextContent("#time-left", formatDuration(timeLeft));
+    updateTextContent(".total-routine-time", formatDuration(timeLeft));
+    updateTextContent("#title", exercise);
+    updateTextContent("#go-modal h3", t("Routine"));
+    updateTextContent("#go-settings", t("Settings"));
+  };
 
   const startRoutine = async () => {
-    gaEvent('Start Workout')
-    const { rounds } = getSettings()
+    gaEvent("Start Workout");
+    const { rounds } = getSettings();
 
     // Preparation time
-    await prepTime()
+    await prepTime();
 
     // Loop through rounds
     for (let round = rounds; round > 0; round--) {
-      const isLastExercise = round === 2
-      updateScreen(round)
-      await workTime({ round })
-      if (round !== 1) await restTime({ isLastExercise, round })
+      const isLastExercise = round === 2;
+      updateScreen(round);
+      await workTime({ round });
+      if (round !== 1) await restTime({ isLastExercise, round });
     }
 
     // End of routine
-    routineCompleted()
-  }
+    routineCompleted();
+  };
 
   const prepTime = async () => {
-    const { prepDuration, workouts, nextExercise, rounds } = getSettings()
-    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${rounds}`
-    switchBodyClass(`prep`)
-    updateTextContent('#title', exercise)
-    textToSpeech(`${t('First Exercise')}: ${exercise}`)
+    const { prepDuration, workouts, nextExercise, rounds } = getSettings();
+    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${rounds}`;
+    switchBodyClass(`prep`);
+    updateTextContent("#title", exercise);
+    textToSpeech(`${t("First Exercise")}: ${exercise}`);
 
     for (let sec = prepDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, prepDuration)
-      await delaySeconds(1)
+      await displayElapsedTime(sec, prepDuration);
+      await delaySeconds(1);
     }
-  }
+  };
 
   const workTime = async ({ round }: { round: number }) => {
-    const { workouts, nextExercise, workDuration } = getSettings()
-    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${round}`
-    switchBodyClass(`workout`)
-    updateTextContent('#title', exercise)
-    textToSpeech(t('Go!'))
+    const { workouts, nextExercise, workDuration } = getSettings();
+    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${round}`;
+    switchBodyClass(`workout`);
+    updateTextContent("#title", exercise);
+    textToSpeech(t("Go!"));
     for (let sec = workDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, workDuration)
-      await delaySeconds(1)
+      await displayElapsedTime(sec, workDuration);
+      await delaySeconds(1);
     }
-    forwardToNextExercise()
-  }
+    forwardToNextExercise();
+  };
 
   const restTime = async ({
     isLastExercise,
     round,
   }: {
-    isLastExercise: boolean
-    round: number
+    isLastExercise: boolean;
+    round: number;
   }) => {
-    const { workouts, nextExercise, restDuration } = getSettings()
-    const exercise = workouts[nextExercise] ?? `${t('Exercise')} ${round}`
-    const subText = isLastExercise ? t('Last') : t('Next')
-    switchBodyClass(`rest`)
-    updateTextContent('#title', exercise)
-    textToSpeech(`${subText}, ${exercise}`)
+    const { workouts, nextExercise, restDuration } = getSettings();
+    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${round}`;
+    const subText = isLastExercise ? t("Last") : t("Next");
+    switchBodyClass(`rest`);
+    updateTextContent("#title", exercise);
+    textToSpeech(`${subText}, ${exercise}`);
     for (let sec = restDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, restDuration)
-      await delaySeconds(1)
+      await displayElapsedTime(sec, restDuration);
+      await delaySeconds(1);
     }
-  }
+  };
 
   const routineCompleted = async () => {
-    await play('end')
-    await delaySeconds(1)
-    textToSpeech(t('Routine completed!'))
+    await play("end");
+    await delaySeconds(1);
+    textToSpeech(t("Routine completed!"));
     const modal = document.querySelector(
-      '#go-modal'
-    ) as HTMLDialogElement | null
+      "#go-modal",
+    ) as HTMLDialogElement | null;
     if (modal) {
-      modal.showModal()
+      modal.showModal();
     }
-  }
+  };
 
   const forwardToNextExercise = async () => {
-    const { workouts, nextExercise } = getSettings()
-    let nextIndex = nextExercise + 1
-    if (nextIndex >= workouts.length) nextIndex = 0
-    updateSettings({ ...getSettings(), nextExercise: nextIndex })
-  }
+    const { workouts, nextExercise } = getSettings();
+    let nextIndex = nextExercise + 1;
+    if (nextIndex >= workouts.length) nextIndex = 0;
+    updateSettings({ ...getSettings(), nextExercise: nextIndex });
+  };
 
   const displayElapsedTime = async (time: number, totalTime: number) => {
     const progressEl = document.getElementById(
-      'progress'
-    ) as HTMLProgressElement | null
+      "progress",
+    ) as HTMLProgressElement | null;
 
-    if (progressEl) progressEl.value = (time / totalTime) * 100
-    if (time <= 3 && time >= 1) await play('beep')
-  }
+    if (progressEl) progressEl.value = (time / totalTime) * 100;
+    if (time <= 3 && time >= 1) await play("beep");
+  };
 </script>
 
 <style>
