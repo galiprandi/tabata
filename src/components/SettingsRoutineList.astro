@@ -1,10 +1,11 @@
 ---
-import DownIcon from './DownIcon.astro'
-import EditItemIcon from './EditItemIcon.astro'
-import Plus from './icons/Plus.icon.astro'
-import Save from './icons/Save.icon.astro'
-import TrashIcon from './TrashIcon.astro'
-import UpIcon from './UpIcon.astro'
+import AudioOnIcon from "./AudioOnIcon.astro";
+import DownIcon from "./DownIcon.astro";
+import EditItemIcon from "./EditItemIcon.astro";
+import Plus from "./icons/Plus.icon.astro";
+import Save from "./icons/Save.icon.astro";
+import TrashIcon from "./TrashIcon.astro";
+import UpIcon from "./UpIcon.astro";
 ---
 
 <section id="routine-list">
@@ -14,7 +15,11 @@ import UpIcon from './UpIcon.astro'
   </section>
 
   <section class="buttons">
-    <button id="add-new-item" class="secondary" title="Add new item to the list"
+    <button
+      id="add-new-item"
+      class="secondary"
+      title="Add new item to the list"
+      aria-label="Add new exercise"
       ><Plus /><span data-i18n="Exercise">Exercise</span></button
     >
   </section>
@@ -35,7 +40,7 @@ import UpIcon from './UpIcon.astro'
             required
           />
 
-          <button class="icon"><Save /></button>
+          <button class="icon" aria-label="Save exercise"><Save /></button>
         </fieldset>
       </form>
 
@@ -49,18 +54,26 @@ import UpIcon from './UpIcon.astro'
     <template id="workout-item-template">
       <div class="item">
         <div id="order"></div>
-        <div id="name" class="speech"></div>
+        <div
+          id="name"
+          class="speech"
+          title="Click to hear"
+          aria-label="Click to hear exercise name"
+        >
+          <span class="workout-name"></span>
+          <AudioOnIcon />
+        </div>
         <div class="buttons">
-          <button class="up" title="Up">
+          <button class="up" title="Up" aria-label="Move exercise up">
             <UpIcon />
           </button>
-          <button class="down" title="Down">
+          <button class="down" title="Down" aria-label="Move exercise down">
             <DownIcon />
           </button>
-          <button class="edit" title="Edit">
+          <button class="edit" title="Edit" aria-label="Edit exercise">
             <EditItemIcon />
           </button>
-          <button class="delete" title="Delete">
+          <button class="delete" title="Delete" aria-label="Delete exercise">
             <TrashIcon />
           </button>
         </div>
@@ -73,134 +86,136 @@ import UpIcon from './UpIcon.astro'
       getSettings,
       updateSettings,
       updateTextContent,
-    } from '../assets/main'
+    } from "../assets/main";
 
-    import { onClick } from '@assets/domHelpers'
+    import { onClick } from "@assets/domHelpers";
 
     const modalAddOrEdit = document.getElementById(
-      'add-edit-modal'
-    ) as HTMLDialogElement | null
+      "add-edit-modal",
+    ) as HTMLDialogElement | null;
 
     const formAddEditItems = document.querySelector(
-      '#add-edit-modal form'
-    ) as HTMLFormElement | null
+      "#add-edit-modal form",
+    ) as HTMLFormElement | null;
 
     const inputAddEditItems = document.querySelector(
-      '#add-edit-modal form input'
-    ) as HTMLInputElement | null
+      "#add-edit-modal form input",
+    ) as HTMLInputElement | null;
 
-    formAddEditItems?.addEventListener('submit', e => {
-      e.preventDefault()
-      if (!modalAddOrEdit) throw new Error('Modal not found')
-      const form = e.target as HTMLFormElement
-      const idx = form.dataset.idx
-      const name = form.item.value
-      if (!name) return
+    formAddEditItems?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!modalAddOrEdit) throw new Error("Modal not found");
+      const form = e.target as HTMLFormElement;
+      const idx = form.dataset.idx;
+      const name = form.item.value;
+      if (!name) return;
 
-      addEditWorkout(name, idx)
-      modalAddOrEdit.close()
-    })
+      addEditWorkout(name, idx);
+      modalAddOrEdit.close();
+    });
 
-    const updateRoutineList = () => {
-      if (!formAddEditItems) throw new Error('Form not found')
-      if (!inputAddEditItems) throw new Error('Input not found')
-      if (!modalAddOrEdit) throw new Error('Modal not found')
+    const updateRoutineList = async () => {
+      if (!formAddEditItems) throw new Error("Form not found");
+      if (!inputAddEditItems) throw new Error("Input not found");
+      if (!modalAddOrEdit) throw new Error("Modal not found");
 
-      const { workouts } = getSettings()
-      const workoutsList = document.getElementById('workouts-list')
+      const { workouts } = getSettings();
+      const workoutsList = document.getElementById("workouts-list");
       const template = document.getElementById(
-        'workout-item-template'
-      ) as HTMLTemplateElement
-      if (!workoutsList || !template) return
+        "workout-item-template",
+      ) as HTMLTemplateElement;
+      if (!workoutsList || !template) return;
 
-      updateTextContent('#workouts-list', '')
+      updateTextContent("#workouts-list", "");
+      const { speechOnTap } = await import("../assets/domHelpers");
 
       // Populate list
       workouts.forEach((workout, index) => {
-        const isFirstItem = index === 0
-        const isLastItem = index === workouts.length - 1
+        const isFirstItem = index === 0;
+        const isLastItem = index === workouts.length - 1;
 
-        const clone = template.content.cloneNode(true) as HTMLDivElement
-        const item = clone.querySelector('.item') as HTMLDivElement
-        const itemOrder = item.querySelector('#order') as HTMLDivElement
-        const itemName = item.querySelector('#name') as HTMLDivElement
-        itemOrder.textContent = `${index + 1}.`
-        itemName.textContent = workout
+        const clone = template.content.cloneNode(true) as HTMLDivElement;
+        const item = clone.querySelector(".item") as HTMLDivElement;
+        const itemOrder = item.querySelector("#order") as HTMLDivElement;
+        const itemName = item.querySelector(".workout-name") as HTMLDivElement;
+        itemOrder.textContent = `${index + 1}.`;
+        itemName.textContent = workout;
 
-        item.querySelectorAll('button').forEach(button => {
-          const { className } = button
-          if (className.includes('down') && isLastItem) button.disabled = true
-          if (className.includes('up') && isFirstItem) button.disabled = true
+        item.querySelectorAll("button").forEach((button) => {
+          const { className } = button;
+          if (className.includes("down") && isLastItem) button.disabled = true;
+          if (className.includes("up") && isFirstItem) button.disabled = true;
 
-          button.addEventListener('click', () => {
-            if (className.includes('delete')) removeWorkout(index)
-            if (className.includes('down')) moveWorkout(index, 'down')
-            if (className.includes('up')) moveWorkout(index, 'up')
-            if (className.includes('edit')) {
-              formAddEditItems.dataset.idx = index.toString()
-              inputAddEditItems.value = workout
-              modalAddOrEdit.showModal()
+          button.addEventListener("click", () => {
+            if (className.includes("delete")) removeWorkout(index);
+            if (className.includes("down")) moveWorkout(index, "down");
+            if (className.includes("up")) moveWorkout(index, "up");
+            if (className.includes("edit")) {
+              formAddEditItems.dataset.idx = index.toString();
+              inputAddEditItems.value = workout;
+              modalAddOrEdit.showModal();
             }
-          })
-        })
+          });
+        });
 
-        workoutsList?.appendChild(clone)
-      })
-    }
+        workoutsList?.appendChild(clone);
+      });
+      speechOnTap();
+    };
 
     const init = () => {
-      updateRoutineList()
+      updateRoutineList();
 
-      if (!inputAddEditItems) throw new Error('Input not found')
-      if (!modalAddOrEdit) throw new Error('Modal not found')
-      if (!formAddEditItems) throw new Error('Form not found')
+      if (!inputAddEditItems) throw new Error("Input not found");
+      if (!modalAddOrEdit) throw new Error("Modal not found");
+      if (!formAddEditItems) throw new Error("Form not found");
 
-      onClick('#add-new-item', () => {
-        if (!formAddEditItems) return
-        formAddEditItems.dataset.idx = ''
-        inputAddEditItems.value = ''
-        modalAddOrEdit.showModal()
-      })
+      onClick("#add-new-item", () => {
+        if (!formAddEditItems) return;
+        formAddEditItems.dataset.idx = "";
+        inputAddEditItems.value = "";
+        modalAddOrEdit.showModal();
+      });
 
-      onClick('#add-edit-modal-cancel', () => {
-        formAddEditItems.dataset.idx = ''
-        inputAddEditItems.value = ''
-        modalAddOrEdit.close()
-      })
-    }
+      onClick("#add-edit-modal-cancel", () => {
+        formAddEditItems.dataset.idx = "";
+        inputAddEditItems.value = "";
+        modalAddOrEdit.close();
+      });
+    };
 
     const removeWorkout = (index: number) => {
-      const { workouts } = getSettings()
-      const items = workouts.splice(index, 1)
-      if (!confirm(`Are you sure you want to remove "${items[0]}"?`)) return
-      updateSettings({ ...getSettings(), workouts })
-      init()
-    }
+      const { workouts } = getSettings();
+      const items = workouts.splice(index, 1);
+      if (!confirm(`Are you sure you want to remove "${items[0]}"?`)) return;
+      updateSettings({ ...getSettings(), workouts });
+      init();
+    };
 
-    const moveWorkout = (fromIdx: number, direction: 'up' | 'down') => {
-      const { workouts } = getSettings()
-      const toIdx = direction === 'up' ? fromIdx - 1 : fromIdx + 1
-      const orgWorkout = workouts[fromIdx]
-      const desWorkout = workouts[toIdx]
-      if (!orgWorkout || !desWorkout) return
-      workouts[fromIdx] = desWorkout
-      workouts[toIdx] = orgWorkout
-      updateSettings({ ...getSettings(), workouts })
-      updateRoutineList()
-    }
+    const moveWorkout = (fromIdx: number, direction: "up" | "down") => {
+      const { workouts } = getSettings();
+      const toIdx = direction === "up" ? fromIdx - 1 : fromIdx + 1;
+      const orgWorkout = workouts[fromIdx];
+      const desWorkout = workouts[toIdx];
+      if (!orgWorkout || !desWorkout) return;
+      workouts[fromIdx] = desWorkout;
+      workouts[toIdx] = orgWorkout;
+      updateSettings({ ...getSettings(), workouts });
+      updateRoutineList();
+    };
 
     const addEditWorkout = (name: string, idx?: string) => {
-      if (!modalAddOrEdit) throw new Error('Modal not found')
-      if (!name.trim()) return
-      let { workouts } = getSettings()
-      if (!idx) workouts.push(name.trim())
-      else workouts[parseInt(idx)] = name.trim()
-      updateSettings({ ...getSettings(), workouts })
-      updateRoutineList()
-      modalAddOrEdit.close()
-    }
+      if (!modalAddOrEdit) throw new Error("Modal not found");
+      if (!name.trim()) return;
+      let { workouts } = getSettings();
+      if (!idx) workouts.push(name.trim());
+      else workouts[parseInt(idx)] = name.trim();
+      updateSettings({ ...getSettings(), workouts });
+      updateRoutineList();
+      modalAddOrEdit.close();
+    };
 
-    document.addEventListener('DOMContentLoaded', init)
+    document.addEventListener("DOMContentLoaded", init);
   </script>
 
   <style>
@@ -218,6 +233,22 @@ import UpIcon from './UpIcon.astro'
       #name {
         flex-grow: 2;
         text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        & svg {
+          font-size: 0.8em;
+          opacity: 0.6;
+        }
       }
 
       button {

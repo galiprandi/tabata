@@ -1,13 +1,14 @@
 ---
-import ExerciseRestIcon from '@components/ExerciseRestIcon.astro'
-import PrepareIcon from '@components/PrepareIcon.astro'
-import TimerIcon from '@components/TimerIcon.astro'
-import ExerciseWork from '@components/ExerciseWork.astro'
-import RoundsIcon from '@components/RoundsIcon.astro'
-import Helper from '@components/Helper.astro'
+import ExerciseRestIcon from "@components/ExerciseRestIcon.astro";
+import PrepareIcon from "@components/PrepareIcon.astro";
+import TimerIcon from "@components/TimerIcon.astro";
+import ExerciseWork from "@components/ExerciseWork.astro";
+import RoundsIcon from "@components/RoundsIcon.astro";
+import Helper from "@components/Helper.astro";
+import RestoreIcon from "@components/RestoreIcon.astro";
 
-const { vertical = false } = Astro.props
-const className = vertical ? 'vertical' : 'horizontal'
+const { vertical = false } = Astro.props;
+const className = vertical ? "vertical" : "horizontal";
 ---
 
 <section id="settings-timers">
@@ -20,12 +21,25 @@ const className = vertical ? 'vertical' : 'horizontal'
       <RoundsIcon />
       <span class="total-routine-exercises"></span>
     </div>
+    <button
+      id="reset-settings"
+      title="Reset to default settings"
+      aria-label="Reset to default settings"
+    >
+      <RestoreIcon />
+    </button>
   </header>
   <div class={className}>
     <div id="prepContainer">
       <label>
         <PrepareIcon />
-        <input type="number" id="prepDuration" class="prep" min="0" />
+        <input
+          type="number"
+          id="prepDuration"
+          class="prep"
+          min="0"
+          aria-label="Preparation duration in seconds"
+        />
       </label>
       <Helper
         title="Preparation Time"
@@ -35,7 +49,13 @@ const className = vertical ? 'vertical' : 'horizontal'
     <div id="workContainer">
       <label>
         <ExerciseWork />
-        <input type="number" id="workDuration" class="workout" min="0" />
+        <input
+          type="number"
+          id="workDuration"
+          class="workout"
+          min="0"
+          aria-label="Work duration in seconds"
+        />
       </label>
       <Helper
         title="Working Time"
@@ -45,14 +65,27 @@ const className = vertical ? 'vertical' : 'horizontal'
     <div id="restContainer">
       <label>
         <ExerciseRestIcon />
-        <input type="number" id="restDuration" class="rest" min="0" />
+        <input
+          type="number"
+          id="restDuration"
+          class="rest"
+          min="0"
+          aria-label="Rest duration in seconds"
+        />
       </label>
       <Helper title="Rest Time" description="Rest time for each exercise." />
     </div>
     <div id="roundsContainer">
       <label>
         <RoundsIcon />
-        <input type="number" id="rounds" class="rest" min="0" step="1" />
+        <input
+          type="number"
+          id="rounds"
+          class="rest"
+          min="0"
+          step="1"
+          aria-label="Number of rounds"
+        />
       </label>
       <Helper
         title="Exercise in Round"
@@ -63,59 +96,67 @@ const className = vertical ? 'vertical' : 'horizontal'
 </section>
 
 <script>
-  import { getSettings, updateSettings } from '../assets/main'
-  import { updateTotalWorkouts, updateRoutineStats } from '../assets/settings'
-  const { prepDuration, workDuration, restDuration, rounds } = getSettings()
+  import { getSettings, updateSettings } from "../assets/main";
+  import { defaultSettings } from "../assets/defaultSettings";
+  import { updateTotalWorkouts, updateRoutineStats } from "../assets/settings";
+  const { prepDuration, workDuration, restDuration, rounds } = getSettings();
 
   function Init() {
     const prepDurationInput = document.getElementById(
-      'prepDuration'
-    ) as HTMLInputElement | null
+      "prepDuration",
+    ) as HTMLInputElement | null;
     const workoutDurationInput = document.getElementById(
-      'workDuration'
-    ) as HTMLInputElement | null
+      "workDuration",
+    ) as HTMLInputElement | null;
     const restDurationInput = document.getElementById(
-      'restDuration'
-    ) as HTMLInputElement | null
+      "restDuration",
+    ) as HTMLInputElement | null;
     const roundsInput = document.getElementById(
-      'rounds'
-    ) as HTMLInputElement | null
+      "rounds",
+    ) as HTMLInputElement | null;
 
     // Set the values
-    updateRoutineStats()
-    updateTotalWorkouts()
-    if (prepDurationInput) prepDurationInput.value = prepDuration.toString()
+    updateRoutineStats();
+    updateTotalWorkouts();
+    if (prepDurationInput) prepDurationInput.value = prepDuration.toString();
     if (workoutDurationInput)
-      workoutDurationInput.value = workDuration.toString()
-    if (restDurationInput) restDurationInput.value = restDuration.toString()
-    if (roundsInput) roundsInput.value = `${rounds}`
+      workoutDurationInput.value = workDuration.toString();
+    if (restDurationInput) restDurationInput.value = restDuration.toString();
+    if (roundsInput) roundsInput.value = `${rounds}`;
 
     // Save the settings
-    prepDurationInput?.addEventListener('change', e => {
-      const value = parseInt((e.target as HTMLInputElement).value)
-      updateSettings({ ...getSettings(), prepDuration: +value })
-    })
+    prepDurationInput?.addEventListener("change", (e) => {
+      const value = parseInt((e.target as HTMLInputElement).value);
+      updateSettings({ ...getSettings(), prepDuration: +value });
+    });
 
-    workoutDurationInput?.addEventListener('change', e => {
-      const value = parseInt((e.target as HTMLInputElement).value)
-      updateSettings({ ...getSettings(), workDuration: +value })
-      updateRoutineStats()
-    })
+    workoutDurationInput?.addEventListener("change", (e) => {
+      const value = parseInt((e.target as HTMLInputElement).value);
+      updateSettings({ ...getSettings(), workDuration: +value });
+      updateRoutineStats();
+    });
 
-    restDurationInput?.addEventListener('change', e => {
-      const value = parseInt((e.target as HTMLInputElement).value)
-      updateSettings({ ...getSettings(), restDuration: +value })
-      updateRoutineStats()
-    })
+    restDurationInput?.addEventListener("change", (e) => {
+      const value = parseInt((e.target as HTMLInputElement).value);
+      updateSettings({ ...getSettings(), restDuration: +value });
+      updateRoutineStats();
+    });
 
-    roundsInput?.addEventListener('change', e => {
-      const value = parseInt((e.target as HTMLInputElement).value)
-      updateSettings({ ...getSettings(), rounds: +value })
-      updateRoutineStats()
-    })
+    roundsInput?.addEventListener("change", (e) => {
+      const value = parseInt((e.target as HTMLInputElement).value);
+      updateSettings({ ...getSettings(), rounds: +value });
+      updateRoutineStats();
+    });
+
+    document.getElementById("reset-settings")?.addEventListener("click", () => {
+      if (confirm("Are you sure you want to reset all settings to default?")) {
+        updateSettings(defaultSettings);
+        window.location.reload();
+      }
+    });
   }
 
-  document.addEventListener('DOMContentLoaded', Init)
+  document.addEventListener("DOMContentLoaded", Init);
 </script>
 
 <style>
@@ -141,6 +182,23 @@ const className = vertical ? 'vertical' : 'horizontal'
         & svg {
           font-size: 60%;
           opacity: 0.6;
+        }
+      }
+
+      & button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        width: auto;
+        margin: 0;
+        box-shadow: none;
+        font-size: 60%;
+        opacity: 0.6;
+        cursor: pointer;
+        color: inherit;
+
+        &:hover {
+          opacity: 1;
         }
       }
     }

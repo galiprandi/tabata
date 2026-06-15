@@ -2,7 +2,11 @@
 import CloseIcon from "./CloseIcon.astro";
 ---
 
-<button id="share_app" title="Share this app with your friends!">
+<button
+  id="share_app"
+  title="Share this app with your friends!"
+  aria-label="Share this app"
+>
   <img
     id="qr_link"
     src="/tabata/qr_link.svg"
@@ -13,28 +17,55 @@ import CloseIcon from "./CloseIcon.astro";
 </button>
 
 <dialog id="dialog">
-  <CloseIcon id="dialog_close" />
+  <button id="dialog_close" aria-label="Close">
+    <CloseIcon />
+  </button>
   <div>
-    <img id="qr_link_big" src="/tabata/qr_link.svg" alt="Tap image to share" />
+    <button id="btn_share_big" aria-label="Share this app">
+      <img
+        id="qr_link_big"
+        src="/tabata/qr_link.svg"
+        alt="Tap image to share"
+      />
+    </button>
     <br />
-    <small data-i18n="Tap image to share with your friends!">Tap image to share with your friends!</small>
+    <small data-i18n="Tap image to share with your friends!"
+      >Tap image to share with your friends!</small
+    >
   </div>
 </dialog>
 
 <style>
-    #share_app {
-        background-color: 0
-        border: 0;
-        padding: 0;
-        margin: 0;
-    }
+  #share_app {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
 
-    #dialog_close {
+  #dialog_close {
     position: absolute;
     top: 0;
     right: 0;
     margin: 0.5em;
     font-size: 1.5em;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    box-shadow: none;
+    color: inherit;
+  }
+
+  #btn_share_big {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    box-shadow: none;
   }
 
   #qr_link_big {
@@ -44,33 +75,34 @@ import CloseIcon from "./CloseIcon.astro";
 </style>
 
 <script>
-  import { onClick } from '../assets/domHelpers'
-  import {play} from '../assets/audio'
+  import { onClick } from "../assets/domHelpers";
+  import { play } from "../assets/audio";
 
- const shareData = {
-    title: 'Tabata Timer',
+  const shareData = {
+    title: "Tabata Timer",
     text: "Check this out, I'm using this Tabata Timer every day",
     url: location.href,
-  }
+  };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const dialog = document.getElementById('dialog') as HTMLDialogElement | null
-    
-    onClick('#dialog_close', async () => {
-      await play('tap')
-      dialog?.close()
-    })
+  document.addEventListener("DOMContentLoaded", () => {
+    const dialog = document.getElementById(
+      "dialog",
+    ) as HTMLDialogElement | null;
 
-    onClick('#qr_link_big', async () => {
-      await play('tap', true)
-      if (navigator.share) navigator.share(shareData)
-      dialog?.close()
-    })  
-    
-    onClick('#qr_link', async () => {
-      await play('tap', true)
-      dialog?.showModal()
-    })
-    
-  })
+    onClick("#dialog_close", async () => {
+      await play("tap");
+      dialog?.close();
+    });
+
+    onClick("#btn_share_big", async () => {
+      await play("tap", true);
+      if (navigator.share) navigator.share(shareData);
+      dialog?.close();
+    });
+
+    onClick("#qr_link", async () => {
+      await play("tap", true);
+      dialog?.showModal();
+    });
+  });
 </script>
