@@ -3,21 +3,22 @@ const audioKey = "audioEnable";
 
 document.addEventListener("DOMContentLoaded", () => {
   player = document.getElementById("player") as HTMLAudioElement | null;
-  if (!player) setAudioDisable();
-  else if (getAudioStatus()) player.muted = false;
+  if (player) {
+    player.muted = !getAudioStatus();
+  }
 });
 
 // Set audio disable
 export const setAudioDisable = () => {
   if (player) player.muted = true;
-  localStorage.removeItem(audioKey);
+  localStorage.setItem(audioKey, "false");
 };
 
 // Set audio enable
 export const setAudioEnable = () => {
   if (player) player.muted = false;
-  play("tap", true);
   localStorage.setItem(audioKey, "true");
+  play("tap", true);
 };
 
 // Set audio status
@@ -27,7 +28,7 @@ export const setAudioStatus = (status: boolean) => {
 };
 
 // Get audio status
-export const getAudioStatus = () => !!localStorage.getItem(audioKey);
+export const getAudioStatus = () => localStorage.getItem(audioKey) !== "false";
 
 // Play sound function
 export const play = async (src: Sound, force = false) => {
@@ -40,7 +41,6 @@ export const play = async (src: Sound, force = false) => {
     await player.play();
   } catch (error) {
     console.error(error);
-    setAudioDisable();
   }
 };
 
