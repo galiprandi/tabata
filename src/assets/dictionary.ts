@@ -87,6 +87,14 @@ export const dictionary = {
     en: "Train",
     es: "Entrenar",
   },
+  "No exercises added yet. Start your routine!": {
+    en: "No exercises added yet. Start your routine!",
+    es: "Aún no hay ejercicios agregados. ¡Comienza tu rutina!",
+  },
+  "Add Exercise": {
+    en: "Add Exercise",
+    es: "Agregar Ejercicio",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];

@@ -24,6 +24,16 @@ import UpIcon from "./UpIcon.astro";
     >
   </section>
 
+  <div id="empty-routine-state" style="display: none;">
+    <p data-i18n="No exercises added yet. Start your routine!">
+      No exercises added yet. Start your routine!
+    </p>
+    <button id="add-first-item" class="secondary">
+      <Plus />
+      <span data-i18n="Add Exercise">Add Exercise</span>
+    </button>
+  </div>
+
   <dialog id="add-edit-modal">
     <article>
       <header>
@@ -121,10 +131,25 @@ import UpIcon from "./UpIcon.astro";
 
       const { workouts } = getSettings();
       const workoutsList = document.getElementById("workouts-list");
+      const emptyState = document.getElementById("empty-routine-state");
+      const buttonsSection = document.querySelector("#routine-list > .buttons");
       const template = document.getElementById(
         "workout-item-template",
       ) as HTMLTemplateElement;
+
       if (!workoutsList || !template) return;
+
+      if (workouts.length === 0) {
+        if (emptyState) emptyState.style.display = "block";
+        if (workoutsList) workoutsList.style.display = "none";
+        if (buttonsSection)
+          (buttonsSection as HTMLElement).style.display = "none";
+      } else {
+        if (emptyState) emptyState.style.display = "none";
+        if (workoutsList) workoutsList.style.display = "block";
+        if (buttonsSection)
+          (buttonsSection as HTMLElement).style.display = "flex";
+      }
 
       updateTextContent("#workouts-list", "");
       const { speechOnTap } = await import("../assets/domHelpers");
@@ -163,14 +188,23 @@ import UpIcon from "./UpIcon.astro";
       speechOnTap();
     };
 
-    const init = () => {
-      updateRoutineList();
+    const init = async () => {
+      const { initTranslation } = await import("../assets/dictionary");
+      initTranslation();
+      await updateRoutineList();
 
       if (!inputAddEditItems) throw new Error("Input not found");
       if (!modalAddOrEdit) throw new Error("Modal not found");
       if (!formAddEditItems) throw new Error("Form not found");
 
       onClick("#add-new-item", () => {
+        if (!formAddEditItems) return;
+        formAddEditItems.dataset.idx = "";
+        inputAddEditItems.value = "";
+        modalAddOrEdit.showModal();
+      });
+
+      onClick("#add-first-item", () => {
         if (!formAddEditItems) return;
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
@@ -215,7 +249,7 @@ import UpIcon from "./UpIcon.astro";
       modalAddOrEdit.close();
     };
 
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", async () => await init());
   </script>
 
   <style>
@@ -262,6 +296,19 @@ import UpIcon from "./UpIcon.astro";
 
       .delete {
         color: red;
+      }
+    }
+
+    #empty-routine-state {
+      text-align: center;
+      padding: 2em;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      margin: 1em 0;
+
+      & p {
+        margin-bottom: 1.5em;
+        opacity: 0.8;
       }
     }
   </style>
