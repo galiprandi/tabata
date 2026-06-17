@@ -8,34 +8,6 @@ import {
   gaEvent,
 } from './main';
 import { defaultSettings } from './defaultSettings';
-import { StorageManager } from './storage';
-
-// Mock StorageManager
-vi.mock('./storage', () => ({
-  StorageManager: class {
-    constructor(key: string, defaultValue: any) {
-      this.key = key;
-      this.defaultValue = defaultValue;
-    }
-    get() {
-      const data = localStorage.getItem(this.key);
-      if (!data) {
-        localStorage.setItem(this.key, JSON.stringify(this.defaultValue));
-        return this.defaultValue;
-      }
-      return JSON.parse(data);
-    }
-    set(data: any) {
-      localStorage.setItem(this.key, JSON.stringify(data));
-    }
-    remove() {
-      localStorage.removeItem(this.key);
-    }
-    exists() {
-      return localStorage.getItem(this.key) !== null;
-    }
-  },
-}));
 import * as audioModule from './audio';
 
 // Mock speechSynthesis

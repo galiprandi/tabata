@@ -11,6 +11,7 @@ export class StorageManager<T> {
     try {
       const data = localStorage.getItem(this.key);
       if (!data) {
+        localStorage.setItem(this.key, JSON.stringify(this.defaultValue));
         return this.defaultValue;
       }
       return JSON.parse(data) as T;

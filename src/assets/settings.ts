@@ -1,4 +1,5 @@
-import { getSettings, updateTextContent } from "@assets/main";
+import { updateTextContent } from "@assets/main";
+import { RoutineService } from "@assets/routine";
 
 /**
  * Update the total number of workouts in the settings
@@ -6,18 +7,15 @@ import { getSettings, updateTextContent } from "@assets/main";
 export function updateTotalWorkouts() {
   const element = document.querySelector(".total-routine-exercises");
   if (!element) return;
-  const { workouts } = getSettings();
-  element.textContent = workouts.length.toString();
+  const stats = RoutineService.calculateStats();
+  element.textContent = stats.totalExercises.toString();
 }
 
 /**
  * Update the total time of the routine
  */
 export function updateRoutineStats() {
-  const { workDuration, restDuration, rounds } = getSettings();
-  const secondsByExercise = workDuration + restDuration;
-  const minutesByExercise = secondsByExercise / 60;
-  const roundMinutes = minutesByExercise * rounds;
-  updateTextContent(".total-routine-time", roundMinutes.toFixed(1));
-  updateTextContent(".total-routine-exercises", rounds.toString());
+  const stats = RoutineService.calculateStats();
+  updateTextContent(".total-routine-time", stats.totalMinutes.toFixed(1));
+  updateTextContent(".total-routine-exercises", stats.totalExercises.toString());
 }

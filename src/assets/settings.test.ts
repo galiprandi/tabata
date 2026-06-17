@@ -1,10 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { updateTotalWorkouts, updateRoutineStats } from './settings';
-import { getSettings, updateTextContent } from './main';
+import { updateTextContent } from './main';
+import { RoutineService } from './routine';
+
+// Mock the routine module
+vi.mock('./routine', () => ({
+  RoutineService: {
+    calculateStats: vi.fn(),
+  },
+}));
 
 // Mock the main module
 vi.mock('./main', () => ({
-  getSettings: vi.fn(),
   updateTextContent: vi.fn(),
 }));
 
@@ -19,13 +26,9 @@ describe('updateTotalWorkouts', () => {
     element.className = 'total-routine-exercises';
     document.body.appendChild(element);
 
-    vi.mocked(getSettings).mockReturnValue({
-      workouts: ['exercise1', 'exercise2', 'exercise3'],
-      workDuration: 20,
-      restDuration: 10,
-      rounds: 8,
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 3,
+      totalMinutes: 4.0,
     });
 
     updateTotalWorkouts();
@@ -34,13 +37,9 @@ describe('updateTotalWorkouts', () => {
   });
 
   it('should not throw when element does not exist', () => {
-    vi.mocked(getSettings).mockReturnValue({
-      workouts: ['exercise1', 'exercise2'],
-      workDuration: 20,
-      restDuration: 10,
-      rounds: 8,
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 2,
+      totalMinutes: 4.0,
     });
 
     expect(() => updateTotalWorkouts()).not.toThrow();
@@ -51,13 +50,9 @@ describe('updateTotalWorkouts', () => {
     element.className = 'total-routine-exercises';
     document.body.appendChild(element);
 
-    vi.mocked(getSettings).mockReturnValue({
-      workouts: [],
-      workDuration: 20,
-      restDuration: 10,
-      rounds: 8,
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 0,
+      totalMinutes: 0.0,
     });
 
     updateTotalWorkouts();
@@ -72,13 +67,9 @@ describe('updateRoutineStats', () => {
   });
 
   it('should calculate and update routine time and exercises', () => {
-    vi.mocked(getSettings).mockReturnValue({
-      workDuration: 20,
-      restDuration: 10,
-      rounds: 8,
-      workouts: ['exercise1', 'exercise2'],
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 8,
+      totalMinutes: 4.0,
     });
 
     updateRoutineStats();
@@ -88,13 +79,9 @@ describe('updateRoutineStats', () => {
   });
 
   it('should handle different durations', () => {
-    vi.mocked(getSettings).mockReturnValue({
-      workDuration: 30,
-      restDuration: 15,
-      rounds: 4,
-      workouts: ['exercise1'],
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 4,
+      totalMinutes: 3.0,
     });
 
     updateRoutineStats();
@@ -104,13 +91,9 @@ describe('updateRoutineStats', () => {
   });
 
   it('should handle zero rounds', () => {
-    vi.mocked(getSettings).mockReturnValue({
-      workDuration: 20,
-      restDuration: 10,
-      rounds: 0,
-      workouts: ['exercise1'],
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 0,
+      totalMinutes: 0.0,
     });
 
     updateRoutineStats();
@@ -120,13 +103,9 @@ describe('updateRoutineStats', () => {
   });
 
   it('should handle large numbers', () => {
-    vi.mocked(getSettings).mockReturnValue({
-      workDuration: 60,
-      restDuration: 30,
-      rounds: 10,
-      workouts: ['exercise1'],
-      prepDuration: 10,
-      nextExercise: 0,
+    vi.mocked(RoutineService.calculateStats).mockReturnValue({
+      totalExercises: 10,
+      totalMinutes: 15.0,
     });
 
     updateRoutineStats();

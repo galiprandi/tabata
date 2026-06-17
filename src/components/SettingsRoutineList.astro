@@ -94,9 +94,9 @@ import UpIcon from "./UpIcon.astro";
   <script>
     import {
       getSettings,
-      updateSettings,
       updateTextContent,
     } from "../assets/main";
+    import { RoutineService } from "../assets/routine";
 
     import { onClick } from "@assets/domHelpers";
 
@@ -129,7 +129,7 @@ import UpIcon from "./UpIcon.astro";
       if (!inputAddEditItems) throw new Error("Input not found");
       if (!modalAddOrEdit) throw new Error("Modal not found");
 
-      const { workouts } = getSettings();
+      const exercises = RoutineService.getExercises();
       const workoutsList = document.getElementById("workouts-list");
       const emptyState = document.getElementById("empty-routine-state");
       const buttonsSection = document.querySelector("#routine-list > .buttons");
@@ -139,7 +139,7 @@ import UpIcon from "./UpIcon.astro";
 
       if (!workoutsList || !template) return;
 
-      if (workouts.length === 0) {
+      if (exercises.length === 0) {
         if (emptyState) emptyState.style.display = "block";
         if (workoutsList) workoutsList.style.display = "none";
         if (buttonsSection)
@@ -155,9 +155,9 @@ import UpIcon from "./UpIcon.astro";
       const { speechOnTap } = await import("../assets/domHelpers");
 
       // Populate list
-      workouts.forEach((workout, index) => {
+      exercises.forEach((workout, index) => {
         const isFirstItem = index === 0;
-        const isLastItem = index === workouts.length - 1;
+        const isLastItem = index === exercises.length - 1;
 
         const clone = template.content.cloneNode(true) as HTMLDivElement;
         const item = clone.querySelector(".item") as HTMLDivElement;
@@ -222,32 +222,27 @@ import UpIcon from "./UpIcon.astro";
     };
 
     const removeWorkout = (index: number) => {
-      const { workouts } = getSettings();
-      const items = workouts.splice(index, 1);
-      if (!confirm(`Are you sure you want to remove "${items[0]}"?`)) return;
-      updateSettings({ ...getSettings(), workouts });
+      const exercises = RoutineService.getExercises();
+      const item = exercises[index];
+      if (!confirm(`Are you sure you want to remove "${item}"?`)) return;
+      RoutineService.removeExercise(index);
       init();
     };
 
     const moveWorkout = (fromIdx: number, direction: "up" | "down") => {
-      const { workouts } = getSettings();
       const toIdx = direction === "up" ? fromIdx - 1 : fromIdx + 1;
-      const orgWorkout = workouts[fromIdx];
-      const desWorkout = workouts[toIdx];
-      if (!orgWorkout || !desWorkout) return;
-      workouts[fromIdx] = desWorkout;
-      workouts[toIdx] = orgWorkout;
-      updateSettings({ ...getSettings(), workouts });
+      RoutineService.moveExercise(fromIdx, toIdx);
       updateRoutineList();
     };
 
     const addEditWorkout = (name: string, idx?: string) => {
       if (!modalAddOrEdit) throw new Error("Modal not found");
       if (!name.trim()) return;
-      let { workouts } = getSettings();
-      if (!idx) workouts.push(name.trim());
-      else workouts[parseInt(idx)] = name.trim();
-      updateSettings({ ...getSettings(), workouts });
+      if (!idx) {
+        RoutineService.addExercise(name.trim());
+      } else {
+        RoutineService.updateExercise(parseInt(idx), name.trim());
+      }
       updateRoutineList();
       modalAddOrEdit.close();
     };
