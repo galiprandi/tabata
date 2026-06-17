@@ -13,7 +13,7 @@ These plans prepare the codebase for Feature 01 (Gestión de Rutinas) by creatin
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
 | 001  | Storage Abstraction Layer | P1 | M | — | DONE |
-| 002  | UI Decoupling Service Layer | P1 | M | 001 | TODO |
+| 002  | UI Decoupling Service Layer | P1 | M | 001 | DONE |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale — finding fixed independently or approach abandoned)
 
