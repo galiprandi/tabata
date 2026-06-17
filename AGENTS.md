@@ -77,29 +77,47 @@
 - Environment: happy-dom para DOM testing
 - Cobertura objetivo: 80% en líneas, funciones, ramas y statements
 - **Estado actual**: ✅ 86.73% líneas, 86.2% funciones, 71.42% ramas, 84.07% statements
-- Scripts disponibles: `npm run test`, `npm run test:ui`, `npm run test:coverage`
-- Tests se ejecutan en CI antes del despliegue (requiere actualización manual de workflow)
-- **Total tests**: 57 tests pasando
+- Scripts disponibles: `npm run test`, `run test:ui`, `npm run test:coverage`
+- Tests se ejecutan en CI antes del despliegue (GitHub Actions)
+- **Total tests**: 70 tests pasando
 
 ### Storage Pattern
-- Key principal: `settings` (formato actual)
-- Migración: Preservar datos existentes al cambiar formato
-- **Refactor pendiente**: Plan 001 - Storage Abstraction Layer (ver plans/)
+- **Nuevo**: Sistema de múltiples rutinas con RoutineStorageService
+- Keys: `tabata_routines` (array de rutinas), `tabata_active_routine` (ID de rutina activa)
+- Migración automática desde formato `settings` a nuevo formato
+- Preservación de datos existentes al cambiar formato
+- StorageManager, SchemaValidator, MigrationManager disponibles (Plan 001 completado)
 
 ### Service Layer Pattern
-- **Refactor pendiente**: Plan 002 - UI Decoupling Service Layer (ver plans/)
-- Separación entre UI y lógica de negocio para Feature 01
+- **Completado**: RoutineService como capa de lógica de negocio
+- RoutineStorageService para gestión de almacenamiento
+- Fallback a formato antiguo para compatibilidad
+- Separación clara entre UI y lógica de negocio (Plan 002 completado)
+
+### Feature 01 - Gestión de Rutinas (Completado)
+- **Estructura**: Routine, RoutineConfig, RoutineStats, RoutineStorage
+- **Componentes**: RoutineList, RoutineSelector, RoutineForm (integrado en RoutineList)
+- **Migración**: Automática desde settings a nuevo formato con preservación de datos
+- **UI**: Selector en home page, lista completa en settings
+- **Tests**: RoutineStorage.test.ts (9 tests), RoutineService.test.ts (2 tests)
+- **Integración**: start.astro usa RoutineService para config y ejercicios
 
 ### Component Structure
 - Componentes Astro con lógica TypeScript
 - Separación clara entre UI y lógica de negocio
+- Iconos en `src/components/icons/`
 
 ### Audio
 - Sistema de audio con Web Speech API
 - Control de estado en localStorage
 
+### Deployment
+- GitHub Actions workflow: `🚀 Deploy to GitHub Pages`
+- Trigger: push a main
+- packageManager: `npm@10.10.4` especificado en package.json
+- Build exitoso en CI
+
 ### Refactor Plans
 - **plans/** contiene planes de implementación para preparar Feature 01
-- Ejecutar en orden numérico (001 → 002)
-- Cada plan tiene verificación automática y condiciones de STOP
-- Ver `plans/README.md` para detalles y dependencias
+- **Estado**: Plan 001 y 002 completados
+- Feature 01 implementado exitosamente

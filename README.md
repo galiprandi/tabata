@@ -4,7 +4,9 @@ Tabata is a free, user-friendly exercise routine app designed to help you create
 
 ## ✨ Features
 
-- **🎛️ Customizable Workouts**: Easily create, edit, and manage your own HIIT routines.
+- **🎛️ Multiple Routines**: Create, edit, and manage multiple workout routines with custom names (e.g., "Full Body", "Cardio", "Leg Day").
+- **🔄 Quick Switching**: Easily switch between your different routines before each workout.
+- **💾 Automatic Persistence**: Your routines and active selection are saved automatically.
 - **⏱️ Flexible Intervals**: Adjust intervals, sets, and rest periods to fit your fitness level.
 - **🖥️ User-Friendly Interface**: Clean and simple design for easy navigation.
 - **📱 Cross-Platform**: Works on various devices, ensuring your workout is always within reach.
@@ -36,9 +38,11 @@ The app will be running on `http://localhost:4321`.
 ## 🎯 Usage
 
 1. Launch the app.
-2. Create a new workout by defining intervals, sets, and rest periods.
-3. Save your workout routine.
-4. Start your workout and follow the on-screen prompts.
+2. Create your first routine by defining intervals, sets, and rest periods.
+3. Create additional routines for different workout types (e.g., "Cardio", "Leg Day", "Upper Body").
+4. Select your active routine from the dropdown on the home screen or settings.
+5. Start your workout and follow the on-screen prompts.
+6. Switch between routines anytime before starting a workout.
 
 ## 🤝 Contributing
 
