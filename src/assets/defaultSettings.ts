@@ -1,4 +1,5 @@
 export const defaultSettings = {
+  version: 1,
   prepDuration: 10,
   workDuration: 20,
   restDuration: 10,

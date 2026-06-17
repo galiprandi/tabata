@@ -1,7 +1,9 @@
 import { defaultSettings } from "@assets/defaultSettings";
 import { getAudioStatus } from "@assets/audio";
+import { StorageManager } from "@assets/storage";
 
 export const storageKey = "settings";
+const storageManager = new StorageManager(storageKey, defaultSettings);
 
 declare global {
   interface Window {
@@ -27,12 +29,7 @@ async function wakeLock() {
 
 // Get settings from local storage
 export function getSettings() {
-  let storageConfig = localStorage.getItem(storageKey);
-  if (!storageConfig) {
-    localStorage.setItem(storageKey, JSON.stringify(defaultSettings));
-    storageConfig = JSON.stringify(defaultSettings);
-  }
-  const settings = JSON.parse(storageConfig) as typeof defaultSettings;
+  const settings = storageManager.get();
   if (!settings.rounds) settings.rounds = settings.workouts.length;
   if (!settings.nextExercise) settings.nextExercise = 0;
   return settings;
@@ -40,7 +37,7 @@ export function getSettings() {
 
 // Update settings in local storage
 export function updateSettings(settings: typeof defaultSettings) {
-  localStorage.setItem(storageKey, JSON.stringify(settings));
+  storageManager.set(settings);
 }
 
 // Sleep function and remove all timers

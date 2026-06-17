@@ -8,6 +8,34 @@ import {
   gaEvent,
 } from './main';
 import { defaultSettings } from './defaultSettings';
+import { StorageManager } from './storage';
+
+// Mock StorageManager
+vi.mock('./storage', () => ({
+  StorageManager: class {
+    constructor(key: string, defaultValue: any) {
+      this.key = key;
+      this.defaultValue = defaultValue;
+    }
+    get() {
+      const data = localStorage.getItem(this.key);
+      if (!data) {
+        localStorage.setItem(this.key, JSON.stringify(this.defaultValue));
+        return this.defaultValue;
+      }
+      return JSON.parse(data);
+    }
+    set(data: any) {
+      localStorage.setItem(this.key, JSON.stringify(data));
+    }
+    remove() {
+      localStorage.removeItem(this.key);
+    }
+    exists() {
+      return localStorage.getItem(this.key) !== null;
+    }
+  },
+}));
 import * as audioModule from './audio';
 
 // Mock speechSynthesis
@@ -280,6 +308,29 @@ describe('main functions', () => {
       });
       
       expect(navigator.wakeLock).toBeUndefined();
+    });
+  });
+
+  describe('StorageManager integration', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    afterEach(() => {
+      localStorage.clear();
+    });
+
+    it('should use StorageManager for getSettings', () => {
+      const settings = getSettings();
+      expect(settings).toBeDefined();
+      expect(settings.workouts).toBeInstanceOf(Array);
+    });
+
+    it('should use StorageManager for updateSettings', () => {
+      const newSettings = { ...defaultSettings, workDuration: 30 };
+      updateSettings(newSettings);
+      const retrieved = getSettings();
+      expect(retrieved.workDuration).toBe(30);
     });
   });
 });
