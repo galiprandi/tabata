@@ -63,16 +63,16 @@ import UpIcon from "./UpIcon.astro";
 
     <template id="workout-item-template">
       <div class="item">
-        <div id="order"></div>
-        <div
-          id="name"
-          class="speech"
+        <div class="order"></div>
+        <button
+          type="button"
+          class="name speech"
           title="Click to hear"
           aria-label="Click to hear exercise name"
         >
           <span class="workout-name"></span>
           <AudioOnIcon />
-        </div>
+        </button>
         <div class="buttons">
           <button class="up" title="Up" aria-label="Move exercise up">
             <UpIcon />
@@ -161,7 +161,7 @@ import UpIcon from "./UpIcon.astro";
 
         const clone = template.content.cloneNode(true) as HTMLDivElement;
         const item = clone.querySelector(".item") as HTMLDivElement;
-        const itemOrder = item.querySelector("#order") as HTMLDivElement;
+        const itemOrder = item.querySelector(".order") as HTMLDivElement;
         const itemName = item.querySelector(".workout-name") as HTMLDivElement;
         itemOrder.textContent = `${index + 1}.`;
         itemName.textContent = workout;
@@ -179,6 +179,7 @@ import UpIcon from "./UpIcon.astro";
               formAddEditItems.dataset.idx = index.toString();
               inputAddEditItems.value = workout;
               modalAddOrEdit.showModal();
+              inputAddEditItems.focus();
             }
           });
         });
@@ -202,6 +203,7 @@ import UpIcon from "./UpIcon.astro";
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
         modalAddOrEdit.showModal();
+        inputAddEditItems.focus();
       });
 
       onClick("#add-first-item", () => {
@@ -209,6 +211,7 @@ import UpIcon from "./UpIcon.astro";
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
         modalAddOrEdit.showModal();
+        inputAddEditItems.focus();
       });
 
       onClick("#add-edit-modal-cancel", () => {
@@ -264,7 +267,7 @@ import UpIcon from "./UpIcon.astro";
         gap: 1.3em;
       }
 
-      #name {
+      .name {
         flex-grow: 2;
         text-align: left;
         display: flex;
@@ -274,6 +277,9 @@ import UpIcon from "./UpIcon.astro";
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
         transition: background-color 0.2s;
+        font-size: 1rem;
+        width: auto;
+        box-shadow: none;
 
         &:hover {
           background-color: rgba(255, 255, 255, 0.1);
