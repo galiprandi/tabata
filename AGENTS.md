@@ -70,8 +70,10 @@
 - Framework: Vitest con @vitest/coverage-v8
 - Environment: happy-dom para DOM testing
 - Cobertura objetivo: 80% en líneas, funciones, ramas y statements
+- **Estado actual**: ✅ 86.73% líneas, 86.2% funciones, 71.42% ramas, 84.07% statements
 - Scripts disponibles: `npm run test`, `npm run test:ui`, `npm run test:coverage`
 - Tests se ejecutan en CI antes del despliegue (requiere actualización manual de workflow)
+- **Total tests**: 57 tests pasando
 
 ### Storage Pattern
 - Key principal: `settings` (formato actual)
