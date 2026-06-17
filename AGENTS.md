@@ -78,6 +78,11 @@
 ### Storage Pattern
 - Key principal: `settings` (formato actual)
 - Migración: Preservar datos existentes al cambiar formato
+- **Refactor pendiente**: Plan 001 - Storage Abstraction Layer (ver plans/)
+
+### Service Layer Pattern
+- **Refactor pendiente**: Plan 002 - UI Decoupling Service Layer (ver plans/)
+- Separación entre UI y lógica de negocio para Feature 01
 
 ### Component Structure
 - Componentes Astro con lógica TypeScript
@@ -86,3 +91,9 @@
 ### Audio
 - Sistema de audio con Web Speech API
 - Control de estado en localStorage
+
+### Refactor Plans
+- **plans/** contiene planes de implementación para preparar Feature 01
+- Ejecutar en orden numérico (001 → 002)
+- Cada plan tiene verificación automática y condiciones de STOP
+- Ver `plans/README.md` para detalles y dependencias
