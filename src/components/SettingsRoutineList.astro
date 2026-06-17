@@ -41,7 +41,7 @@ import UpIcon from "./UpIcon.astro";
       </header>
 
       <form>
-        <fieldset role="group">
+        <fieldset>
           <input
             type="text"
             name="item"
@@ -49,16 +49,12 @@ import UpIcon from "./UpIcon.astro";
             placeholder="Exercise?"
             required
           />
-
-          <button class="icon" aria-label="Save exercise"><Save /></button>
         </fieldset>
+        <div class="form-buttons">
+          <button type="button" class="secondary" id="add-edit-modal-cancel" data-i18n="Cancel">Cancel</button>
+          <button type="submit" class="primary" aria-label="Save exercise"><Save /> <span data-i18n="Save">Save</span></button>
+        </div>
       </form>
-
-      <footer>
-        <button class="secondary" id="add-edit-modal-cancel" data-i18n="Cancel"
-          >Cancel</button
-        >
-      </footer>
     </article>
 
     <template id="workout-item-template">
@@ -256,6 +252,41 @@ import UpIcon from "./UpIcon.astro";
   </script>
 
   <style>
+    #add-edit-modal article {
+      width: 95vw;
+      max-width: 500px;
+    }
+
+    #edit-item-input {
+      font-size: 1.2rem;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-buttons button {
+      flex: 1;
+      min-height: 3.5rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    @media (orientation: landscape) and (max-height: 500px) {
+      #add-edit-modal article {
+        padding: 1rem;
+      }
+      #edit-item-input {
+        margin-bottom: 0.5rem;
+      }
+    }
+
     .item {
       display: flex;
       justify-content: space-between;

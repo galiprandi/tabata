@@ -83,10 +83,6 @@ describe('updateRoutineStats', () => {
 
     updateRoutineStats();
 
-    const secondsByExercise = 20 + 10; // 30
-    const minutesByExercise = 30 / 60; // 0.5
-    const roundMinutes = 0.5 * 8; // 4.0
-
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-time', '4.0');
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-exercises', '8');
   });
@@ -102,10 +98,6 @@ describe('updateRoutineStats', () => {
     });
 
     updateRoutineStats();
-
-    const secondsByExercise = 30 + 15; // 45
-    const minutesByExercise = 45 / 60; // 0.75
-    const roundMinutes = 0.75 * 4; // 3.0
 
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-time', '3.0');
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-exercises', '4');
@@ -138,10 +130,6 @@ describe('updateRoutineStats', () => {
     });
 
     updateRoutineStats();
-
-    const secondsByExercise = 60 + 30; // 90
-    const minutesByExercise = 90 / 60; // 1.5
-    const roundMinutes = 1.5 * 10; // 15.0
 
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-time', '15.0');
     expect(updateTextContent).toHaveBeenCalledWith('.total-routine-exercises', '10');

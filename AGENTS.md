@@ -37,6 +37,12 @@
 
 ## Reglas del Proyecto
 
+### UX & Usability
+- **Priority**: Usability is fundamental. Users are often tired, sweaty, and moving during exercise.
+- **Touch Targets**: All interactive elements (especially during training) must have large touch targets (minimum 48x48px).
+- **Responsiveness**: The app must be optimized for mobile (landscape is a priority), tablets, and monitors.
+- **Clarity**: High contrast and large fonts are essential for readability from a distance.
+
 ### Stack
 - **Framework**: Astro
 - **Lenguaje**: TypeScript
