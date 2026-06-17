@@ -23,6 +23,8 @@
 - Probar la funcionalidad implementada
 - Verificar que no rompa features existentes
 - Asegurar que el build funcione correctamente
+- **Ejecutar tests**: `npm run test` debe pasar
+- **Verificar cobertura**: `npm run test:coverage` debe mantener 80%+ de cobertura
 
 ### 4. Documentación
 - **Crear Spec**: Mover el archivo de `backlog/01-xxx.md` a `specs/01-xxx.md`
@@ -53,10 +55,23 @@
 - Estructura de datos consistente
 
 ### Testing
+- **POLÍTICA DE TESTS OBLIGATORIA**: Todo cambio o feature debe cumplir con la política de testing
+- Ejecutar `npm run test` antes de cualquier commit - todos los tests deben pasar
+- Ejecutar `npm run test:coverage` - debe mantener 80%+ de cobertura en líneas, funciones, ramas y statements
+- **Para nuevas features**: Escribir tests ANTES de implementar (TDD) cuando sea posible
+- **Para cambios existentes**: Agregar tests para cubrir el código modificado
 - Probar manualmente las features implementadas
 - Verificar compatibilidad con features existentes
+- Los tests se ejecutan automáticamente en CI antes del despliegue
 
 ## Aprendizajes del Proyecto
+
+### Testing Infrastructure
+- Framework: Vitest con @vitest/coverage-v8
+- Environment: happy-dom para DOM testing
+- Cobertura objetivo: 80% en líneas, funciones, ramas y statements
+- Scripts disponibles: `npm run test`, `npm run test:ui`, `npm run test:coverage`
+- Tests se ejecutan en CI antes del despliegue (requiere actualización manual de workflow)
 
 ### Storage Pattern
 - Key principal: `settings` (formato actual)
