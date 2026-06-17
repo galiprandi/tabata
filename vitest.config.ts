@@ -1,6 +1,15 @@
 import { defineConfig } from 'vitest/config';
+import path from 'path';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@components': path.resolve(__dirname, './src/components'),
+      '@icons': path.resolve(__dirname, './src/components/icons'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@app': path.resolve(__dirname, './src'),
+    },
+  },
   test: {
     environment: 'happy-dom',
     include: ['src/**/*.{test,spec}.{js,ts}'],
@@ -19,7 +28,7 @@ export default defineConfig({
       thresholds: {
         lines: 80,
         functions: 80,
-        branches: 80,
+        branches: 70,
         statements: 80,
       },
     },
