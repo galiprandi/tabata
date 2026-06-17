@@ -1,2 +1,3 @@
 export { RoutineService } from './RoutineService';
-export type { Routine, RoutineConfig, RoutineStats } from './RoutineTypes';
+export { RoutineStorageService } from './RoutineStorage';
+export type { Routine, RoutineConfig, RoutineStats, RoutineStorage } from './RoutineTypes';

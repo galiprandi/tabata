@@ -1,0 +1,302 @@
+---
+import Plus from "./icons/Plus.icon.astro";
+import TrashIcon from "./TrashIcon.astro";
+import EditItemIcon from "./EditItemIcon.astro";
+---
+
+<section id="routine-list">
+  <h2 data-i18n="My Routines">My Routines</h2>
+  <section id="routines-list">
+    <span aria-busy="true">Loading...</span>
+  </section>
+
+  <section class="buttons">
+    <button
+      id="add-new-routine"
+      class="secondary"
+      title="Add new routine"
+      aria-label="Add new routine"
+    >
+      <Plus />
+      <span data-i18n="New Routine">New Routine</span>
+    </button>
+  </section>
+
+  <div id="empty-routines-state" style="display: none;">
+    <p data-i18n="No routines yet. Create your first routine!">
+      No routines yet. Create your first routine!
+    </p>
+    <button id="add-first-routine" class="secondary">
+      <Plus />
+      <span data-i18n="Create Routine">Create Routine</span>
+    </button>
+  </div>
+
+  <dialog id="routine-modal">
+    <article>
+      <header>
+        <h3 class="title"></h3>
+      </header>
+
+      <form>
+        <fieldset role="group">
+          <label for="routine-name">Routine Name</label>
+          <input
+            type="text"
+            id="routine-name"
+            name="routine-name"
+            placeholder="e.g., Full Body, Cardio"
+            required
+          />
+        </fieldset>
+      </form>
+
+      <footer>
+        <button class="secondary" id="routine-modal-cancel" data-i18n="Cancel">
+          Cancel
+        </button>
+        <button id="routine-modal-save" data-i18n="Save">Save</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <template id="routine-item-template">
+    <div class="routine-item">
+      <div class="routine-info">
+        <div class="routine-name"></div>
+        <div class="routine-details">
+          <span class="routine-time"></span>
+          <span class="routine-exercises"></span>
+        </div>
+      </div>
+      <div class="routine-actions">
+        <button class="select" title="Select routine" aria-label="Select routine">
+          ✓
+        </button>
+        <button class="edit" title="Edit routine" aria-label="Edit routine">
+          <EditItemIcon />
+        </button>
+        <button class="delete" title="Delete routine" aria-label="Delete routine">
+          <TrashIcon />
+        </button>
+      </div>
+    </div>
+  </template>
+</section>
+
+<script>
+  import { RoutineStorageService } from "../assets/routine";
+  import { onClick } from "@assets/domHelpers";
+
+  const routineModal = document.getElementById(
+    "routine-modal",
+  ) as HTMLDialogElement | null;
+  const routineNameInput = document.getElementById(
+    "routine-name",
+  ) as HTMLInputElement | null;
+
+  const updateRoutineList = () => {
+    if (!routineModal) throw new Error("Modal not found");
+    if (!routineNameInput) throw new Error("Input not found");
+
+    const routines = RoutineStorageService.getRoutines();
+    const activeRoutineId = RoutineStorageService.getActiveRoutineId();
+    const routinesList = document.getElementById("routines-list");
+    const emptyState = document.getElementById("empty-routines-state");
+    const buttonsSection = document.querySelector("#routine-list > .buttons");
+    const template = document.getElementById(
+      "routine-item-template",
+    ) as HTMLTemplateElement;
+
+    if (!routinesList || !template) return;
+
+    if (routines.length === 0) {
+      if (emptyState) emptyState.style.display = "block";
+      if (routinesList) routinesList.style.display = "none";
+      if (buttonsSection)
+        (buttonsSection as HTMLElement).style.display = "none";
+    } else {
+      if (emptyState) emptyState.style.display = "none";
+      if (routinesList) routinesList.style.display = "block";
+      if (buttonsSection)
+        (buttonsSection as HTMLElement).style.display = "flex";
+    }
+
+    routinesList.innerHTML = "";
+
+    routines.forEach((routine) => {
+      const clone = template.content.cloneNode(true) as HTMLDivElement;
+      const item = clone.querySelector(".routine-item") as HTMLDivElement;
+      const nameElement = item.querySelector(".routine-name") as HTMLDivElement;
+      const timeElement = item.querySelector(".routine-time") as HTMLDivElement;
+      const exercisesElement = item.querySelector(".routine-exercises") as HTMLDivElement;
+
+      nameElement.textContent = routine.name;
+      timeElement.textContent = `${routine.config.rounds} rounds`;
+      exercisesElement.textContent = `${routine.exercises.length} exercises`;
+
+      // Marcar rutina activa
+      if (routine.id === activeRoutineId) {
+        item.classList.add("active");
+      }
+
+      item.querySelectorAll("button").forEach((button) => {
+        const { className } = button;
+        button.addEventListener("click", () => {
+          if (className.includes("select")) {
+            RoutineStorageService.setActiveRoutineId(routine.id);
+            updateRoutineList();
+          }
+          if (className.includes("edit")) {
+            routineNameInput.value = routine.name;
+            routineModal.dataset.routineId = routine.id;
+            routineModal.showModal();
+            routineNameInput.focus();
+          }
+          if (className.includes("delete")) {
+            if (confirm(`Are you sure you want to delete "${routine.name}"?`)) {
+              RoutineStorageService.deleteRoutine(routine.id);
+              updateRoutineList();
+            }
+          }
+        });
+      });
+
+      routinesList.appendChild(clone);
+    });
+  };
+
+  const init = () => {
+    if (!routineModal) throw new Error("Modal not found");
+    if (!routineNameInput) throw new Error("Input not found");
+
+    onClick("#add-new-routine", () => {
+      routineNameInput.value = "";
+      delete routineModal.dataset.routineId;
+      routineModal.showModal();
+      routineNameInput.focus();
+    });
+
+    onClick("#add-first-routine", () => {
+      routineNameInput.value = "";
+      delete routineModal.dataset.routineId;
+      routineModal.showModal();
+      routineNameInput.focus();
+    });
+
+    onClick("#routine-modal-cancel", () => {
+      routineNameInput.value = "";
+      delete routineModal.dataset.routineId;
+      routineModal.close();
+    });
+
+    onClick("#routine-modal-save", () => {
+      const name = routineNameInput.value.trim();
+      if (!name) return;
+
+      const routineId = routineModal.dataset.routineId;
+      if (routineId) {
+        // Editar rutina existente
+        RoutineStorageService.updateRoutine(routineId, { name });
+      } else {
+        // Crear nueva rutina con config actual
+        const activeRoutine = RoutineStorageService.getActiveRoutine();
+        const config = activeRoutine ? activeRoutine.config : {
+          prepDuration: 10,
+          workDuration: 20,
+          restDuration: 10,
+          rounds: 8,
+          nextExercise: 0,
+        };
+        const exercises = activeRoutine ? activeRoutine.exercises : [];
+        RoutineStorageService.createRoutine(name, config, exercises);
+      }
+
+      routineNameInput.value = "";
+      delete routineModal.dataset.routineId;
+      routineModal.close();
+      updateRoutineList();
+    });
+
+    updateRoutineList();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => init());
+</script>
+
+<style>
+  .routine-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-left: 3px solid #4CAF50;
+    }
+
+    .routine-info {
+      flex-grow: 1;
+
+      .routine-name {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 0.25em;
+      }
+
+      .routine-details {
+        display: flex;
+        gap: 1em;
+        font-size: 0.9em;
+        opacity: 0.8;
+      }
+    }
+
+    .routine-actions {
+      display: flex;
+      gap: 0.5em;
+
+      button {
+        color: white;
+        border: 0;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5em;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &.select {
+          background-color: #4CAF50;
+        }
+
+        &.delete {
+          color: #ff6b6b;
+        }
+      }
+    }
+  }
+
+  #empty-routines-state {
+    text-align: center;
+    padding: 2em;
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin: 1em 0;
+
+    & p {
+      margin-bottom: 1.5em;
+      opacity: 0.8;
+    }
+  }
+</style>

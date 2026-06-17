@@ -76,18 +76,17 @@ import GoToHome from "@components/GoToHome.astro";
   import { t } from "@assets/dictionary";
   import { switchBodyClass, formatDuration, onClick } from "@assets/domHelpers";
   import {
-    getSettings,
     delaySeconds,
     textToSpeech,
     updateTextContent,
     gaEvent,
-    updateSettings,
   } from "@assets/main";
+  import { RoutineService } from "@assets/routine/RoutineService";
 
   // Wait for the DOM to be ready
   document.addEventListener("DOMContentLoaded", () => {
-    const { rounds } = getSettings();
-    updateScreen(rounds);
+    const config = RoutineService.getConfig();
+    updateScreen(config.rounds);
 
     onClick("#btn-routine-pause", () => {
       play("tap", true);
@@ -106,7 +105,7 @@ import GoToHome from "@components/GoToHome.astro";
     };
 
     onClick("#btn-routine-start", () => {
-      updateSettings({ ...getSettings(), nextExercise: 0 });
+      RoutineService.updateConfig({ nextExercise: 0 });
       playRoutine();
     });
 
@@ -114,13 +113,13 @@ import GoToHome from "@components/GoToHome.astro";
   });
 
   const updateScreen = (exerciseLeft: number) => {
-    const { rounds, workouts, nextExercise, workDuration, restDuration } =
-      getSettings();
-    const exercise = workouts[nextExercise];
-    const secondsByExercise = workDuration + restDuration;
+    const config = RoutineService.getConfig();
+    const exercises = RoutineService.getExercises();
+    const exercise = exercises[config.nextExercise] || `${t("Exercise")} ${config.rounds}`;
+    const secondsByExercise = config.workDuration + config.restDuration;
     const timeLeft = secondsByExercise * exerciseLeft;
     updateTextContent(".t-next-exercise", exercise);
-    updateTextContent(".total-routine-exercises", rounds.toString());
+    updateTextContent(".total-routine-exercises", config.rounds.toString());
     updateTextContent("#exercise-left", exerciseLeft.toString());
     updateTextContent("#time-left", formatDuration(timeLeft));
     updateTextContent(".total-routine-time", formatDuration(timeLeft));
@@ -131,13 +130,13 @@ import GoToHome from "@components/GoToHome.astro";
 
   const startRoutine = async () => {
     gaEvent("Start Workout");
-    const { rounds } = getSettings();
+    const config = RoutineService.getConfig();
 
     // Preparation time
     await prepTime();
 
     // Loop through rounds
-    for (let round = rounds; round > 0; round--) {
+    for (let round = config.rounds; round > 0; round--) {
       const isLastExercise = round === 2;
       updateScreen(round);
       await workTime({ round });
@@ -149,26 +148,28 @@ import GoToHome from "@components/GoToHome.astro";
   };
 
   const prepTime = async () => {
-    const { prepDuration, workouts, nextExercise, rounds } = getSettings();
-    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${rounds}`;
+    const config = RoutineService.getConfig();
+    const exercises = RoutineService.getExercises();
+    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${config.rounds}`;
     switchBodyClass(`prep`);
     updateTextContent("#title", exercise);
     textToSpeech(`${t("First Exercise")}: ${exercise}`);
 
-    for (let sec = prepDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, prepDuration);
+    for (let sec = config.prepDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, config.prepDuration);
       await delaySeconds(1);
     }
   };
 
   const workTime = async ({ round }: { round: number }) => {
-    const { workouts, nextExercise, workDuration } = getSettings();
-    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${round}`;
+    const exercises = RoutineService.getExercises();
+    const config = RoutineService.getConfig();
+    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
     switchBodyClass(`workout`);
     updateTextContent("#title", exercise);
     textToSpeech(t("Go!"));
-    for (let sec = workDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, workDuration);
+    for (let sec = config.workDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, config.workDuration);
       await delaySeconds(1);
     }
     forwardToNextExercise();
@@ -181,14 +182,15 @@ import GoToHome from "@components/GoToHome.astro";
     isLastExercise: boolean;
     round: number;
   }) => {
-    const { workouts, nextExercise, restDuration } = getSettings();
-    const exercise = workouts[nextExercise] ?? `${t("Exercise")} ${round}`;
+    const exercises = RoutineService.getExercises();
+    const config = RoutineService.getConfig();
+    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
     const subText = isLastExercise ? t("Last") : t("Next");
     switchBodyClass(`rest`);
     updateTextContent("#title", exercise);
     textToSpeech(`${subText}, ${exercise}`);
-    for (let sec = restDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, restDuration);
+    for (let sec = config.restDuration; sec > 0; sec--) {
+      await displayElapsedTime(sec, config.restDuration);
       await delaySeconds(1);
     }
   };
@@ -206,10 +208,11 @@ import GoToHome from "@components/GoToHome.astro";
   };
 
   const forwardToNextExercise = async () => {
-    const { workouts, nextExercise } = getSettings();
-    let nextIndex = nextExercise + 1;
-    if (nextIndex >= workouts.length) nextIndex = 0;
-    updateSettings({ ...getSettings(), nextExercise: nextIndex });
+    const config = RoutineService.getConfig();
+    const exercises = RoutineService.getExercises();
+    let nextIndex = config.nextExercise + 1;
+    if (nextIndex >= exercises.length) nextIndex = 0;
+    RoutineService.updateConfig({ nextExercise: nextIndex });
   };
 
   const displayElapsedTime = async (time: number, totalTime: number) => {

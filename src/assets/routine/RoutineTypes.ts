@@ -7,8 +7,8 @@ export interface RoutineConfig {
 }
 
 export interface Routine {
-  id: string;
-  name: string;
+  id: string;           // UUID v4
+  name: string;         // "Full Body", "Cardio", etc.
   config: RoutineConfig;
   exercises: string[];
 }
@@ -16,4 +16,9 @@ export interface Routine {
 export interface RoutineStats {
   totalExercises: number;
   totalMinutes: number;
+}
+
+export interface RoutineStorage {
+  routines: Routine[];
+  activeRoutineId: string;  // Última rutina seleccionada
 }

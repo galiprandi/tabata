@@ -1,6 +1,7 @@
 import { defaultSettings } from "@assets/defaultSettings";
 import { getAudioStatus } from "@assets/audio";
 import { StorageManager } from "@assets/storage";
+import { RoutineStorageService } from "@assets/routine";
 
 export const storageKey = "settings";
 const storageManager = new StorageManager(storageKey, defaultSettings);
@@ -15,6 +16,8 @@ declare global {
 
 document.addEventListener("DOMContentLoaded", () => {
   wakeLock();
+  // Ejecutar migración si es necesario
+  RoutineStorageService.migrateFromOldFormat();
 });
 
 // Listen for wake lock release

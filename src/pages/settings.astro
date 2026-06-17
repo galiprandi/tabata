@@ -1,6 +1,7 @@
 ---
 import Layout from '@app/layouts/layout.astro'
 import SettingsTimerConfig from '@components/SettingsTimerConfig.astro'
+import RoutineList from '@components/RoutineList.astro'
 import SettingsRoutineList from '@components/SettingsRoutineList.astro'
 import GoToHome from '@components/GoToHome.astro'
 import GoToTrain from '@components/GoToTrain.astro'
@@ -9,12 +10,14 @@ import GoToTrain from '@components/GoToTrain.astro'
 <Layout>
   <div class="columns">
     <SettingsTimerConfig vertical={true} />
-    <SettingsRoutineList />
+    <div class="routine-section">
+      <RoutineList />
+      <SettingsRoutineList />
+    </div>
   </div>
 
   <div class="buttons">
     <GoToHome />
-
     <GoToTrain />
   </div>
 </Layout>
@@ -36,6 +39,12 @@ import GoToTrain from '@components/GoToTrain.astro'
     grid-template-columns: 9em 1fr;
     gap: 1.5em;
     align-items: start;
+  }
+
+  .routine-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
   }
 
   @media (width <= 450px) {

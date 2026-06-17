@@ -1,5 +1,5 @@
 import { updateTextContent } from "@assets/main";
-import { RoutineService } from "@assets/routine";
+import { RoutineService } from "@assets/routine/RoutineService";
 
 /**
  * Update the total number of workouts in the settings
