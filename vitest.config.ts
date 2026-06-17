@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitest/config';
-import astro from 'astro/config';
 
 export default defineConfig({
   test: {
