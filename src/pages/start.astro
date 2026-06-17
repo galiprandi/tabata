@@ -38,9 +38,11 @@ import GoToHome from "@components/GoToHome.astro";
 
 <dialog id="go-modal" open>
   <article>
-    <h2 data-i18n="Routine">Routine</h2>
+    <header>
+      <h2 data-i18n="Routine">Routine</h2>
+    </header>
 
-    <section id="info">
+    <section class="routine-info">
       <div>
         <RoundsIcon />
         <span class="total-routine-exercises"></span>
@@ -52,22 +54,26 @@ import GoToHome from "@components/GoToHome.astro";
       </div>
     </section>
 
-    <div class="buttons">
-      <GoToHome />
-      <GoToSettings />
-      <button
-        id="btn-routine-start"
-        class="secondary"
-        title="Restart"
-        aria-label="Restart routine"
-      >
-        <Play />
-        <span data-i18n="Restart">Restart</span>
-      </button>
-      <button id="btn-routine-continue" title="Continue" aria-label="Continue"
-        ><Continue /><span data-i18n="Continue">Continue</span>
-      </button>
-    </div>
+    <footer class="modal-footer">
+      <div class="secondary-buttons">
+        <GoToHome />
+        <GoToSettings />
+      </div>
+      <div class="primary-buttons">
+        <button
+          id="btn-routine-start"
+          class="secondary"
+          title="Restart"
+          aria-label="Restart routine"
+        >
+          <Play />
+          <span data-i18n="Restart">Restart</span>
+        </button>
+        <button id="btn-routine-continue" title="Continue" aria-label="Continue"
+          ><Continue /><span data-i18n="Continue">Continue</span>
+        </button>
+      </div>
+    </footer>
   </article>
 </dialog>
 
@@ -236,6 +242,8 @@ import GoToHome from "@components/GoToHome.astro";
     font-size: 2.2em;
     display: flex;
     justify-content: space-around;
+    margin-bottom: 1em;
+    align-items: center;
 
     & div {
       display: flex;
@@ -245,9 +253,96 @@ import GoToHome from "@components/GoToHome.astro";
     }
   }
 
-  dialog footer {
-    & button + button {
-      margin-left: 1em;
+  #btn-routine-pause {
+    font-size: 2em;
+    padding: 0;
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 3px solid white;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+    &:active {
+      transform: scale(0.95);
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .routine-info {
+    display: flex;
+    justify-content: space-around;
+    font-size: 2em;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+
+    & div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .primary-buttons,
+  .secondary-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .primary-buttons button {
+    flex: 1;
+    margin-bottom: 0;
+    min-height: 4rem;
+    font-size: 1.2rem;
+  }
+
+  .secondary-buttons :global(button) {
+    min-height: 3.5rem;
+    min-width: 3.5rem;
+    padding: 0.5rem;
+  }
+
+  /* Landscape optimization */
+  @media (orientation: landscape) and (max-height: 500px) {
+    dialog article {
+      width: 90vw;
+      max-width: 800px;
+      padding: 1rem;
+    }
+
+    .routine-info {
+      margin-bottom: 0.5rem;
+      font-size: 1.5em;
+    }
+
+    .modal-footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .secondary-buttons {
+      width: auto;
+    }
+
+    .primary-buttons {
+      width: auto;
+      flex: 1;
     }
   }
 

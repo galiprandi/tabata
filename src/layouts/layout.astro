@@ -168,6 +168,17 @@ import AudioControl from '../components/AudioControl.astro'
     margin-right: 0;
   }
 
+  /* Accessible touch targets for buttons */
+  button,
+  .button,
+  [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   a.button {
     --pico-background-color: var(--pico-primary-background);
     --pico-border-color: var(--pico-primary-border);
@@ -224,7 +235,20 @@ import AudioControl from '../components/AudioControl.astro'
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1em;
+    gap: 1.5rem;
+  }
+
+  /* Improve readability for landscape/tablets */
+  @media (min-width: 768px) {
+    :root {
+      font-size: 18px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    :root {
+      font-size: 20px;
+    }
   }
 
   progress {

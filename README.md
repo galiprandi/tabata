@@ -8,6 +8,7 @@ Tabata is a free, user-friendly exercise routine app designed to help you create
 - **⏱️ Flexible Intervals**: Adjust intervals, sets, and rest periods to fit your fitness level.
 - **🖥️ User-Friendly Interface**: Clean and simple design for easy navigation.
 - **📱 Cross-Platform**: Works on various devices, ensuring your workout is always within reach.
+- **🤸 Optimized for Action**: Designed for mobile (especially landscape), tablets, and monitors. Large touch targets and high contrast ensure usability even when you're tired and sweaty during a workout.
 
 ## 🚀 Installation
 
