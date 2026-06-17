@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { updateTotalWorkouts, updateRoutineStats } from './settings';
 import { updateTextContent } from './main';
-import { RoutineService } from './routine';
+import { RoutineService } from './routine/RoutineService';
 
 // Mock the routine module
-vi.mock('./routine', () => ({
+vi.mock('./routine/RoutineService', () => ({
   RoutineService: {
     calculateStats: vi.fn(),
   },
@@ -13,6 +13,8 @@ vi.mock('./routine', () => ({
 // Mock the main module
 vi.mock('./main', () => ({
   updateTextContent: vi.fn(),
+  getSettings: vi.fn(),
+  updateSettings: vi.fn(),
 }));
 
 describe('updateTotalWorkouts', () => {
