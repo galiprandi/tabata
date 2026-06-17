@@ -19,9 +19,11 @@ const { title, description } = Astro.props
     <header>
       <h3 class="title"></h3>
     </header>
-    <p class="description"></p>
+    <div class="content">
+      <p class="description"></p>
+    </div>
     <footer>
-      <button id="btn-close-dialog" title="Close">Close</button>
+      <button id="btn-close-dialog" title="Close" class="contrast">Close</button>
     </footer>
   </article>
 </dialog>
@@ -68,5 +70,30 @@ const { title, description } = Astro.props
     padding: 0;
     box-shadow: none;
     color: inherit;
+    cursor: pointer;
+  }
+
+  #help-modal article {
+    width: 90vw;
+    max-width: 600px;
+  }
+
+  #help-modal .content {
+    max-height: 50vh;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+  }
+
+  #btn-close-dialog {
+    width: 100%;
+    min-height: 3.5rem;
+    font-size: 1.2rem;
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    #help-modal article {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
   }
 </style>
