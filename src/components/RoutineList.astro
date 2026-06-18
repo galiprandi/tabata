@@ -14,8 +14,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     <button
       id="add-new-routine"
       class="secondary"
-      title="Add new routine"
-      aria-label="Add new routine"
+      data-i18n-title="Add new routine"
+      data-i18n-aria-label="Add new routine"
     >
       <Plus />
       <span data-i18n="New Routine">New Routine</span>
@@ -40,12 +40,13 @@ import EditItemIcon from "./EditItemIcon.astro";
 
       <form>
         <fieldset role="group">
-          <label for="routine-name">Routine Name</label>
+          <label for="routine-name" data-i18n="Routine Name">Routine Name</label>
           <input
             type="text"
             id="routine-name"
             name="routine-name"
             placeholder="e.g., Full Body, Cardio"
+            data-i18n-placeholder="e.g., Full Body, Cardio"
             required
           />
         </fieldset>
@@ -70,13 +71,25 @@ import EditItemIcon from "./EditItemIcon.astro";
         </div>
       </div>
       <div class="routine-actions">
-        <button class="select" title="Select routine" aria-label="Select routine">
+        <button
+          class="select"
+          data-i18n-title="Select routine"
+          data-i18n-aria-label="Select routine"
+        >
           ✓
         </button>
-        <button class="edit" title="Edit routine" aria-label="Edit routine">
+        <button
+          class="edit"
+          data-i18n-title="Edit routine"
+          data-i18n-aria-label="Edit routine"
+        >
           <EditItemIcon />
         </button>
-        <button class="delete" title="Delete routine" aria-label="Delete routine">
+        <button
+          class="delete"
+          data-i18n-title="Delete routine"
+          data-i18n-aria-label="Delete routine"
+        >
           <TrashIcon />
         </button>
       </div>
@@ -87,6 +100,7 @@ import EditItemIcon from "./EditItemIcon.astro";
 <script>
   import { RoutineStorageService } from "../assets/routine";
   import { onClick } from "@assets/domHelpers";
+  import { t, initTranslation } from "../assets/dictionary";
 
   const routineModal = document.getElementById(
     "routine-modal",
@@ -125,7 +139,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     routinesList.innerHTML = "";
 
     routines.forEach((routine) => {
-      const clone = template.content.cloneNode(true) as HTMLDivElement;
+      const clone = template.content.cloneNode(true) as DocumentFragment;
+      initTranslation(clone);
       const item = clone.querySelector(".routine-item") as HTMLDivElement;
       const nameElement = item.querySelector(".routine-name") as HTMLDivElement;
       const timeElement = item.querySelector(".routine-time") as HTMLDivElement;
@@ -148,6 +163,8 @@ import EditItemIcon from "./EditItemIcon.astro";
             updateRoutineList();
           }
           if (className.includes("edit")) {
+            const title = routineModal.querySelector(".title");
+            if (title) title.textContent = t("Edit Routine");
             routineNameInput.value = routine.name;
             routineModal.dataset.routineId = routine.id;
             routineModal.showModal();
@@ -171,6 +188,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     if (!routineNameInput) throw new Error("Input not found");
 
     onClick("#add-new-routine", () => {
+      const title = routineModal.querySelector(".title");
+      if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.showModal();
@@ -178,6 +197,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     });
 
     onClick("#add-first-routine", () => {
+      const title = routineModal.querySelector(".title");
+      if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.showModal();

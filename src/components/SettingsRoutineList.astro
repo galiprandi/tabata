@@ -18,8 +18,8 @@ import UpIcon from "./UpIcon.astro";
     <button
       id="add-new-item"
       class="secondary"
-      title="Add new item to the list"
-      aria-label="Add new exercise"
+      data-i18n-title="Add new item to the list"
+      data-i18n-aria-label="Add new exercise"
       ><Plus /><span data-i18n="Exercise">Exercise</span></button
     >
   </section>
@@ -42,17 +42,19 @@ import UpIcon from "./UpIcon.astro";
 
       <form>
         <fieldset>
+          <label for="edit-item-input" data-i18n="Exercise Name">Exercise Name</label>
           <input
             type="text"
             name="item"
             id="edit-item-input"
             placeholder="Exercise?"
+            data-i18n-placeholder="Exercise?"
             required
           />
         </fieldset>
         <div class="form-buttons">
           <button type="button" class="secondary" id="add-edit-modal-cancel" data-i18n="Cancel">Cancel</button>
-          <button type="submit" class="primary" aria-label="Save exercise"><Save /> <span data-i18n="Save">Save</span></button>
+          <button type="submit" class="primary" data-i18n-aria-label="Save exercise"><Save /> <span data-i18n="Save">Save</span></button>
         </div>
       </form>
     </article>
@@ -63,23 +65,39 @@ import UpIcon from "./UpIcon.astro";
         <button
           type="button"
           class="name speech"
-          title="Click to hear"
-          aria-label="Click to hear exercise name"
+          data-i18n-title="Click to hear"
+          data-i18n-aria-label="Click to hear exercise name"
         >
           <span class="workout-name"></span>
           <AudioOnIcon />
         </button>
         <div class="buttons">
-          <button class="up" title="Up" aria-label="Move exercise up">
+          <button
+            class="up"
+            data-i18n-title="Move exercise up"
+            data-i18n-aria-label="Move exercise up"
+          >
             <UpIcon />
           </button>
-          <button class="down" title="Down" aria-label="Move exercise down">
+          <button
+            class="down"
+            data-i18n-title="Move exercise down"
+            data-i18n-aria-label="Move exercise down"
+          >
             <DownIcon />
           </button>
-          <button class="edit" title="Edit" aria-label="Edit exercise">
+          <button
+            class="edit"
+            data-i18n-title="Edit exercise"
+            data-i18n-aria-label="Edit exercise"
+          >
             <EditItemIcon />
           </button>
-          <button class="delete" title="Delete" aria-label="Delete exercise">
+          <button
+            class="delete"
+            data-i18n-title="Delete exercise"
+            data-i18n-aria-label="Delete exercise"
+          >
             <TrashIcon />
           </button>
         </div>
@@ -120,6 +138,7 @@ import UpIcon from "./UpIcon.astro";
     });
 
     const updateRoutineList = async () => {
+      const { initTranslation } = await import("../assets/dictionary");
       if (!formAddEditItems) throw new Error("Form not found");
       if (!inputAddEditItems) throw new Error("Input not found");
       if (!modalAddOrEdit) throw new Error("Modal not found");
@@ -154,23 +173,28 @@ import UpIcon from "./UpIcon.astro";
         const isFirstItem = index === 0;
         const isLastItem = index === exercises.length - 1;
 
-        const clone = template.content.cloneNode(true) as HTMLDivElement;
+        const clone = template.content.cloneNode(true) as DocumentFragment;
         const item = clone.querySelector(".item") as HTMLDivElement;
         const itemOrder = item.querySelector(".order") as HTMLDivElement;
         const itemName = item.querySelector(".workout-name") as HTMLDivElement;
         itemOrder.textContent = `${index + 1}.`;
         itemName.textContent = workout;
 
+        initTranslation(clone);
+
         item.querySelectorAll("button").forEach((button) => {
           const { className } = button;
           if (className.includes("down") && isLastItem) button.disabled = true;
           if (className.includes("up") && isFirstItem) button.disabled = true;
 
-          button.addEventListener("click", () => {
+          button.addEventListener("click", async () => {
             if (className.includes("delete")) removeWorkout(index);
             if (className.includes("down")) moveWorkout(index, "down");
             if (className.includes("up")) moveWorkout(index, "up");
             if (className.includes("edit")) {
+              const { t } = await import("../assets/dictionary");
+              const title = modalAddOrEdit.querySelector(".title");
+              if (title) title.textContent = t("Edit Exercise");
               formAddEditItems.dataset.idx = index.toString();
               inputAddEditItems.value = workout;
               modalAddOrEdit.showModal();
@@ -193,7 +217,10 @@ import UpIcon from "./UpIcon.astro";
       if (!modalAddOrEdit) throw new Error("Modal not found");
       if (!formAddEditItems) throw new Error("Form not found");
 
-      onClick("#add-new-item", () => {
+      onClick("#add-new-item", async () => {
+        const { t } = await import("../assets/dictionary");
+        const title = modalAddOrEdit.querySelector(".title");
+        if (title) title.textContent = t("New Exercise");
         if (!formAddEditItems) return;
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
@@ -201,7 +228,10 @@ import UpIcon from "./UpIcon.astro";
         inputAddEditItems.focus();
       });
 
-      onClick("#add-first-item", () => {
+      onClick("#add-first-item", async () => {
+        const { t } = await import("../assets/dictionary");
+        const title = modalAddOrEdit.querySelector(".title");
+        if (title) title.textContent = t("New Exercise");
         if (!formAddEditItems) return;
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
