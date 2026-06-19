@@ -2,7 +2,7 @@
   "name": "tabata",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "npm@10.9.4",
+  "packageManager": "pnpm@9.15.4",
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev",
