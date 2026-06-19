@@ -183,6 +183,34 @@ export const dictionary = {
     en: "Exercise?",
     es: "¿Ejercicio?",
   },
+  Close: {
+    en: "Close",
+    es: "Cerrar",
+  },
+  "Turn audio on": {
+    en: "Turn audio on",
+    es: "Activar audio",
+  },
+  "Turn audio off": {
+    en: "Turn audio off",
+    es: "Desactivar audio",
+  },
+  "Reset to default settings": {
+    en: "Reset to default settings",
+    es: "Restablecer ajustes",
+  },
+  "No routine selected": {
+    en: "No routine selected",
+    es: "Sin rutina seleccionada",
+  },
+  "Loading...": {
+    en: "Loading...",
+    es: "Cargando...",
+  },
+  "Open help": {
+    en: "Open help",
+    es: "Abrir ayuda",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];

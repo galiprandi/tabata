@@ -2,8 +2,12 @@
 ---
 
 <div id="routine-selector" class="routine-selector">
-  <button id="routine-selector-button" class="selector-button">
-    <span id="current-routine-name">Loading...</span>
+  <button
+    id="routine-selector-button"
+    class="selector-button"
+    data-i18n-aria-label="Select routine"
+  >
+    <span id="current-routine-name" data-i18n="Loading...">Loading...</span>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M6 9l6 6 6-6"/>
     </svg>
@@ -16,6 +20,7 @@
 <script>
   import { RoutineStorageService } from '@assets/routine'
   import type { Routine } from '@assets/routine'
+  import { t } from '@assets/dictionary'
 
   const updateRoutineSelector = () => {
     const currentRoutineName = document.getElementById('current-routine-name');
@@ -30,7 +35,7 @@
     if (activeRoutine) {
       currentRoutineName.textContent = activeRoutine.name;
     } else {
-      currentRoutineName.textContent = 'No routine selected';
+      currentRoutineName.textContent = t('No routine selected');
     }
 
     // Populate dropdown

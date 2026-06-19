@@ -9,12 +9,13 @@ const { title, description } = Astro.props
   class="btn-open-dialog"
   data-title={title}
   data-description={description}
-  aria-label="Open help"
+  data-i18n-aria-label="Open help"
+  data-i18n-title="Open help"
 >
   <HelpIcon />
 </button>
 
-<dialog id="help-modal">
+<dialog class="help-modal">
   <article>
     <header>
       <h3 class="title"></h3>
@@ -23,22 +24,24 @@ const { title, description } = Astro.props
       <p class="description"></p>
     </div>
     <footer>
-      <button id="btn-close-dialog" title="Close" class="contrast">Close</button>
+      <button
+        data-i18n-title="Close"
+        data-i18n="Close"
+        class="contrast btn-close-dialog">Close</button
+      >
     </footer>
   </article>
 </dialog>
 
 <script>
-  import { updateTextContent } from '@assets/main'
-
-  const dialog = document.getElementById(
-    'help-modal'
+  const dialog = document.querySelector(
+    '.help-modal'
   ) as HTMLDialogElement | null
   const btnOpen = document.querySelectorAll(
     '.btn-open-dialog'
   ) as NodeListOf<HTMLButtonElement> | null
-  const btnClose = document.getElementById(
-    'btn-close-dialog'
+  const btnClose = document.querySelector(
+    '.btn-close-dialog'
   ) as HTMLButtonElement | null
 
   if (dialog && btnOpen) {
@@ -47,8 +50,11 @@ const { title, description } = Astro.props
         const title = btn.getAttribute('data-title')
         const description = btn.getAttribute('data-description')
 
-        title && updateTextContent('.title', title)
-        description && updateTextContent('.description', description)
+        const titleEl = dialog.querySelector('.title')
+        const descEl = dialog.querySelector('.description')
+
+        if (titleEl && title) titleEl.textContent = title
+        if (descEl && description) descEl.textContent = description
 
         dialog.showModal()
       })
@@ -71,20 +77,27 @@ const { title, description } = Astro.props
     box-shadow: none;
     color: inherit;
     cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 1;
+    }
   }
 
-  #help-modal article {
+  .help-modal article {
     width: 90vw;
     max-width: 600px;
   }
 
-  #help-modal .content {
+  .help-modal .content {
     max-height: 50vh;
     overflow-y: auto;
     margin-bottom: 1rem;
   }
 
-  #btn-close-dialog {
+  .btn-close-dialog {
     width: 100%;
     min-height: 3.5rem;
     font-size: 1.2rem;
