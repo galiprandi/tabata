@@ -4,10 +4,18 @@ import AudioOffIcon from './AudioOffIcon.astro'
 ---
 
 <div id="enable-audio">
-  <button id="btn-on" aria-label="Turn audio on" title="Turn audio on">
+  <button
+    id="btn-on"
+    data-i18n-aria-label="Turn audio off"
+    data-i18n-title="Turn audio off"
+  >
     <AudioOnIcon />
   </button>
-  <button id="btn-off" aria-label="Turn audio off" title="Turn audio off">
+  <button
+    id="btn-off"
+    data-i18n-aria-label="Turn audio on"
+    data-i18n-title="Turn audio on"
+  >
     <AudioOffIcon />
   </button>
   <audio id="player">
@@ -42,6 +50,9 @@ import AudioOffIcon from './AudioOffIcon.astro'
     setAudioEnable,
     setAudioDisable,
   } from '../assets/audio'
+  import { initTranslation } from '../assets/dictionary'
+
+  const container = document.getElementById('enable-audio')
   const btnOn = document.getElementById('btn-on') as HTMLButtonElement | null
   const btnOff = document.getElementById('btn-off') as HTMLButtonElement | null
 
@@ -64,6 +75,8 @@ import AudioOffIcon from './AudioOffIcon.astro'
       btnOn.style.display = 'none'
       btnOff.style.display = 'block'
     }
+
+    if (container) initTranslation(container)
   }
 
   document.addEventListener('DOMContentLoaded', async () => {

@@ -9,7 +9,7 @@ const { title, description } = Astro.props
   class="btn-open-dialog"
   data-title={title}
   data-description={description}
-  aria-label="Open help"
+  data-i18n-aria-label="Open help"
 >
   <HelpIcon />
 </button>
@@ -23,7 +23,12 @@ const { title, description } = Astro.props
       <p class="description"></p>
     </div>
     <footer>
-      <button id="btn-close-dialog" title="Close" class="contrast">Close</button>
+      <button
+        id="btn-close-dialog"
+        data-i18n-title="Close"
+        class="contrast"
+        data-i18n="Close">Close</button
+      >
     </footer>
   </article>
 </dialog>
