@@ -183,6 +183,22 @@ export const dictionary = {
     en: "Exercise?",
     es: "¿Ejercicio?",
   },
+  "Loading...": {
+    en: "Loading...",
+    es: "Cargando...",
+  },
+  "No routine selected": {
+    en: "No routine selected",
+    es: "Ninguna rutina seleccionada",
+  },
+  "Turn audio on": {
+    en: "Turn audio on",
+    es: "Activar audio",
+  },
+  "Turn audio off": {
+    en: "Turn audio off",
+    es: "Desactivar audio",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
@@ -197,14 +213,17 @@ export const t = (key: keyof typeof dictionary) => {
   }
 };
 
-export const initTranslation = (root: HTMLElement | Document | DocumentFragment = document) => {
+export const initTranslation = (
+  root: HTMLElement | Document | DocumentFragment = document,
+) => {
   root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = `${el?.getAttribute("data-i18n")}` as DictionaryKeys;
     el.textContent = t(key);
   });
 
   root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = `${el?.getAttribute("data-i18n-placeholder")}` as DictionaryKeys;
+    const key =
+      `${el?.getAttribute("data-i18n-placeholder")}` as DictionaryKeys;
     el.setAttribute("placeholder", t(key));
   });
 

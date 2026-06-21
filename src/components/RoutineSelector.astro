@@ -1,26 +1,47 @@
 ---
+
 ---
 
 <div id="routine-selector" class="routine-selector">
-  <button id="routine-selector-button" class="selector-button">
-    <span id="current-routine-name">Loading...</span>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M6 9l6 6 6-6"/>
+  <button
+    id="routine-selector-button"
+    class="selector-button"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-i18n-aria-label="Select routine"
+    data-i18n-title="Select routine"
+  >
+    <span id="current-routine-name" data-i18n="Loading...">Loading...</span>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path d="M6 9l6 6 6-6"></path>
     </svg>
   </button>
-  <div id="routine-dropdown" class="dropdown" style="display: none;">
+  <div
+    id="routine-dropdown"
+    class="dropdown"
+    style="display: none;"
+    role="listbox"
+  >
     <!-- Routines will be populated here -->
   </div>
 </div>
 
 <script>
-  import { RoutineStorageService } from '@assets/routine'
-  import type { Routine } from '@assets/routine'
+  import { RoutineStorageService } from "@assets/routine";
+  import type { Routine } from "@assets/routine";
+  import { initTranslation, t } from "@assets/dictionary";
 
   const updateRoutineSelector = () => {
-    const currentRoutineName = document.getElementById('current-routine-name');
-    const dropdown = document.getElementById('routine-dropdown');
-    const selectorButton = document.getElementById('routine-selector-button');
+    const currentRoutineName = document.getElementById("current-routine-name");
+    const dropdown = document.getElementById("routine-dropdown");
+    const selectorButton = document.getElementById("routine-selector-button");
 
     if (!currentRoutineName || !dropdown || !selectorButton) return;
 
@@ -29,50 +50,87 @@
 
     if (activeRoutine) {
       currentRoutineName.textContent = activeRoutine.name;
+      currentRoutineName.removeAttribute("data-i18n");
     } else {
-      currentRoutineName.textContent = 'No routine selected';
+      currentRoutineName.textContent = t("No routine selected");
+      currentRoutineName.setAttribute("data-i18n", "No routine selected");
     }
 
     // Populate dropdown
-    dropdown.innerHTML = '';
+    dropdown.innerHTML = "";
     routines.forEach((routine: Routine) => {
-      const item = document.createElement('div');
-      item.className = 'dropdown-item';
+      const item = document.createElement("button");
+      item.className = "dropdown-item";
       item.textContent = routine.name;
+      item.setAttribute("role", "option");
+      item.setAttribute(
+        "aria-selected",
+        (routine.id === activeRoutine?.id).toString(),
+      );
+
       if (routine.id === activeRoutine?.id) {
-        item.classList.add('active');
+        item.classList.add("active");
       }
-      item.addEventListener('click', () => {
+      item.addEventListener("click", () => {
         RoutineStorageService.setActiveRoutineId(routine.id);
         updateRoutineSelector();
-        dropdown.style.display = 'none';
+        closeDropdown();
       });
       dropdown.appendChild(item);
     });
   };
 
+  const closeDropdown = () => {
+    const dropdown = document.getElementById("routine-dropdown");
+    const selectorButton = document.getElementById("routine-selector-button");
+    if (dropdown && selectorButton) {
+      dropdown.style.display = "none";
+      selectorButton.setAttribute("aria-expanded", "false");
+    }
+  };
+
+  const toggleDropdown = () => {
+    const dropdown = document.getElementById("routine-dropdown");
+    const selectorButton = document.getElementById("routine-selector-button");
+    if (dropdown && selectorButton) {
+      const isVisible = dropdown.style.display !== "none";
+      dropdown.style.display = isVisible ? "none" : "block";
+      selectorButton.setAttribute("aria-expanded", (!isVisible).toString());
+    }
+  };
+
   const init = () => {
-    const selectorButton = document.getElementById('routine-selector-button');
-    const dropdown = document.getElementById('routine-dropdown');
+    const selectorButton = document.getElementById("routine-selector-button");
+    const dropdown = document.getElementById("routine-dropdown");
 
     if (!selectorButton || !dropdown) return;
 
-    selectorButton.addEventListener('click', () => {
-      const isVisible = dropdown.style.display !== 'none';
-      dropdown.style.display = isVisible ? 'none' : 'block';
+    selectorButton.addEventListener("click", () => {
+      toggleDropdown();
     });
 
     // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!selectorButton.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
-        dropdown.style.display = 'none';
+    document.addEventListener("click", (e) => {
+      if (
+        !selectorButton.contains(e.target as Node) &&
+        !dropdown.contains(e.target as Node)
+      ) {
+        closeDropdown();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeDropdown();
       }
     });
 
     updateRoutineSelector();
+    initTranslation(document.getElementById("routine-selector")!);
   };
 
-  document.addEventListener('DOMContentLoaded', () => init());
+  document.addEventListener("DOMContentLoaded", () => init());
 </script>
 
 <style>
@@ -93,9 +151,16 @@
     align-items: center;
     cursor: pointer;
     transition: background-color 0.2s;
+    font-family: inherit;
+    font-size: 1rem;
 
     &:hover {
       background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--pico-primary);
+      outline-offset: 2px;
     }
   }
 
@@ -111,15 +176,26 @@
     z-index: 1000;
     max-height: 300px;
     overflow-y: auto;
+    padding: 0;
   }
 
   .dropdown-item {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    color: white;
     padding: 0.75em 1em;
     cursor: pointer;
     transition: background-color 0.2s;
+    font-family: inherit;
+    font-size: 1rem;
+    display: block;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       background: rgba(255, 255, 255, 0.1);
+      outline: none;
     }
 
     &.active {
