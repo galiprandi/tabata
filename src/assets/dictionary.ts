@@ -183,9 +183,13 @@ export const dictionary = {
     en: "Exercise?",
     es: "¿Ejercicio?",
   },
-  Close: {
-    en: "Close",
-    es: "Cerrar",
+  "Loading...": {
+    en: "Loading...",
+    es: "Cargando...",
+  },
+  "No routine selected": {
+    en: "No routine selected",
+    es: "Ninguna rutina seleccionada",
   },
   "Turn audio on": {
     en: "Turn audio on",
@@ -194,22 +198,6 @@ export const dictionary = {
   "Turn audio off": {
     en: "Turn audio off",
     es: "Desactivar audio",
-  },
-  "Reset to default settings": {
-    en: "Reset to default settings",
-    es: "Restablecer ajustes",
-  },
-  "No routine selected": {
-    en: "No routine selected",
-    es: "Sin rutina seleccionada",
-  },
-  "Loading...": {
-    en: "Loading...",
-    es: "Cargando...",
-  },
-  "Open help": {
-    en: "Open help",
-    es: "Abrir ayuda",
   },
 };
 
@@ -225,14 +213,17 @@ export const t = (key: keyof typeof dictionary) => {
   }
 };
 
-export const initTranslation = (root: HTMLElement | Document | DocumentFragment = document) => {
+export const initTranslation = (
+  root: HTMLElement | Document | DocumentFragment = document,
+) => {
   root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = `${el?.getAttribute("data-i18n")}` as DictionaryKeys;
     el.textContent = t(key);
   });
 
   root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = `${el?.getAttribute("data-i18n-placeholder")}` as DictionaryKeys;
+    const key =
+      `${el?.getAttribute("data-i18n-placeholder")}` as DictionaryKeys;
     el.setAttribute("placeholder", t(key));
   });
 
