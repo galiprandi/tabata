@@ -1,1 +1,7 @@
-<a href="/tabata">Back to Home</a>
+---
+import Home from '@icons/Home.icon.astro'
+---
+<a href="/tabata" class="button contrast outline"><Home /><span data-i18n="Back to Home">Back to Home</span></a>
+<style>
+  a.button { display: inline-flex; align-items: center; gap: 0.5rem; }
+</style>
