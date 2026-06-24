@@ -1,5 +1,6 @@
 ---
 import AudioOnIcon from "./AudioOnIcon.astro";
+import CopyIcon from "./CopyIcon.astro";
 import DownIcon from "./DownIcon.astro";
 import EditItemIcon from "./EditItemIcon.astro";
 import Plus from "./icons/Plus.icon.astro";
@@ -42,7 +43,9 @@ import UpIcon from "./UpIcon.astro";
 
       <form>
         <fieldset>
-          <label for="edit-item-input" data-i18n="Exercise Name">Exercise Name</label>
+          <label for="edit-item-input" data-i18n="Exercise Name"
+            >Exercise Name</label
+          >
           <input
             type="text"
             name="item"
@@ -53,8 +56,18 @@ import UpIcon from "./UpIcon.astro";
           />
         </fieldset>
         <div class="form-buttons">
-          <button type="button" class="secondary" id="add-edit-modal-cancel" data-i18n="Cancel">Cancel</button>
-          <button type="submit" class="primary" data-i18n-aria-label="Save exercise"><Save /> <span data-i18n="Save">Save</span></button>
+          <button
+            type="button"
+            class="secondary"
+            id="add-edit-modal-cancel"
+            data-i18n="Cancel">Cancel</button
+          >
+          <button
+            type="submit"
+            class="primary"
+            data-i18n-aria-label="Save exercise"
+            ><Save /> <span data-i18n="Save">Save</span></button
+          >
         </div>
       </form>
     </article>
@@ -87,6 +100,13 @@ import UpIcon from "./UpIcon.astro";
             <DownIcon />
           </button>
           <button
+            class="duplicate"
+            data-i18n-title="Duplicate exercise"
+            data-i18n-aria-label="Duplicate exercise"
+          >
+            <CopyIcon />
+          </button>
+          <button
             class="edit"
             data-i18n-title="Edit exercise"
             data-i18n-aria-label="Edit exercise"
@@ -106,9 +126,7 @@ import UpIcon from "./UpIcon.astro";
   </dialog>
 
   <script>
-    import {
-      updateTextContent,
-    } from "../assets/main";
+    import { updateTextContent } from "../assets/main";
     import { RoutineService } from "../assets/routine/RoutineService";
 
     import { onClick } from "@assets/domHelpers";
@@ -183,15 +201,17 @@ import UpIcon from "./UpIcon.astro";
         initTranslation(clone);
 
         item.querySelectorAll("button").forEach((button) => {
-          const { className } = button;
-          if (className.includes("down") && isLastItem) button.disabled = true;
-          if (className.includes("up") && isFirstItem) button.disabled = true;
+          if (button.classList.contains("down") && isLastItem)
+            button.disabled = true;
+          if (button.classList.contains("up") && isFirstItem)
+            button.disabled = true;
 
           button.addEventListener("click", async () => {
-            if (className.includes("delete")) removeWorkout(index);
-            if (className.includes("down")) moveWorkout(index, "down");
-            if (className.includes("up")) moveWorkout(index, "up");
-            if (className.includes("edit")) {
+            if (button.classList.contains("delete")) removeWorkout(index);
+            if (button.classList.contains("duplicate")) duplicateWorkout(index);
+            if (button.classList.contains("down")) moveWorkout(index, "down");
+            if (button.classList.contains("up")) moveWorkout(index, "up");
+            if (button.classList.contains("edit")) {
               const { t } = await import("../assets/dictionary");
               const title = modalAddOrEdit.querySelector(".title");
               if (title) title.textContent = t("Edit Exercise");
@@ -257,6 +277,11 @@ import UpIcon from "./UpIcon.astro";
     const moveWorkout = (fromIdx: number, direction: "up" | "down") => {
       const toIdx = direction === "up" ? fromIdx - 1 : fromIdx + 1;
       RoutineService.moveExercise(fromIdx, toIdx);
+      updateRoutineList();
+    };
+
+    const duplicateWorkout = (index: number) => {
+      RoutineService.duplicateExercise(index);
       updateRoutineList();
     };
 
