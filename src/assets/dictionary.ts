@@ -195,10 +195,11 @@ export const dictionary = {
     en: "Turn audio on",
     es: "Activar audio",
   },
-  "Turn audio off": {
-    en: "Turn audio off",
-    es: "Desactivar audio",
-  },
+  "Turn audio off": { en: "Turn audio off", es: "Desactivar audio" },
+  Congrats: { en: "Congrats", es: "Felicidades" },
+  "Are you sure reset all?": { en: "Are you sure you want to reset all settings to default?", es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?" },
+  "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
+  "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
