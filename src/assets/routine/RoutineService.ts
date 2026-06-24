@@ -1,6 +1,6 @@
-import type { RoutineConfig, RoutineStats } from './RoutineTypes';
-import { RoutineStorageService } from './RoutineStorage';
-import { getSettings, updateSettings } from '../main';
+import type { RoutineConfig, RoutineStats } from "./RoutineTypes";
+import { RoutineStorageService } from "./RoutineStorage";
+import { getSettings, updateSettings } from "../main";
 
 export class RoutineService {
   static getExercises(): string[] {
@@ -22,6 +22,23 @@ export class RoutineService {
       // Fallback a formato antiguo
       const settings = getSettings();
       const exercises = [...settings.workouts, name.trim()];
+      updateSettings({ ...settings, workouts: exercises });
+    }
+  }
+
+  static duplicateExercise(index: number): void {
+    const activeRoutine = RoutineStorageService.getActiveRoutine();
+    if (activeRoutine) {
+      const exercises = [...activeRoutine.exercises];
+      const workout = exercises[index];
+      exercises.splice(index + 1, 0, workout);
+      RoutineStorageService.updateRoutine(activeRoutine.id, { exercises });
+    } else {
+      // Fallback a formato antiguo
+      const settings = getSettings();
+      const exercises = [...settings.workouts];
+      const workout = exercises[index];
+      exercises.splice(index + 1, 0, workout);
       updateSettings({ ...settings, workouts: exercises });
     }
   }
@@ -92,7 +109,9 @@ export class RoutineService {
     if (activeRoutine) {
       const currentConfig = activeRoutine.config;
       const newConfig = { ...currentConfig, ...config };
-      RoutineStorageService.updateRoutine(activeRoutine.id, { config: newConfig });
+      RoutineStorageService.updateRoutine(activeRoutine.id, {
+        config: newConfig,
+      });
     } else {
       // Fallback a formato antiguo
       const settings = getSettings();
@@ -105,7 +124,7 @@ export class RoutineService {
     const secondsByExercise = config.workDuration + config.restDuration;
     const minutesByExercise = secondsByExercise / 60;
     const totalMinutes = minutesByExercise * config.rounds;
-    
+
     return {
       totalExercises: this.getExercises().length,
       totalMinutes,

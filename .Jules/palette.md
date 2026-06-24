@@ -14,5 +14,11 @@
 **Action:** Always implement an empty state for dynamic lists to guide the user when no data is present.
 
 ## 2026-06-22 - [Toggle Control Accessibility]
-**Learning:** ARIA labels for toggle controls (e.g., audio on/off) must describe the *action* taken upon interaction (e.g., "Turn audio off") rather than the current state of the system. This provides clear intent to screen reader users.
+
+**Learning:** ARIA labels for toggle controls (e.g., audio on/off) must describe the _action_ taken upon interaction (e.g., "Turn audio off") rather than the current state of the system. This provides clear intent to screen reader users.
 **Action:** Always verify that toggle buttons have labels representing the transition, and use 'inline-flex' for icon button display to maintain design system alignment.
+
+## 2025-05-15 - [Safe Action Dispatching in Shared Templates]
+
+**Learning:** When using shared templates with multiple action buttons, identifying buttons by simple substrings (e.g., `className.includes("up")`) is brittle and can lead to multiple actions being triggered if class names overlap (e.g., "up" matching "duplicate").
+**Action:** Use `element.classList.contains()` for exact class matching to ensure one button triggers exactly one intended action.

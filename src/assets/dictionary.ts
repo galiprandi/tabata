@@ -139,6 +139,10 @@ export const dictionary = {
     en: "Delete exercise",
     es: "Eliminar ejercicio",
   },
+  "Duplicate exercise": {
+    en: "Duplicate exercise",
+    es: "Duplicar ejercicio",
+  },
   "Move exercise up": {
     en: "Move exercise up",
     es: "Mover ejercicio arriba",
