@@ -131,6 +131,10 @@ export const dictionary = {
     en: "Delete routine",
     es: "Eliminar rutina",
   },
+  'Are you sure you want to delete "{name}"?': {
+    en: 'Are you sure you want to delete "{name}"?',
+    es: '¿Estás seguro de que quieres eliminar "{name}"?',
+  },
   "Edit exercise": {
     en: "Edit exercise",
     es: "Editar ejercicio",
