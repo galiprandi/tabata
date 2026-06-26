@@ -76,6 +76,15 @@ import EditItemIcon from "./EditItemIcon.astro";
         <button class="edit" title="Edit routine" aria-label="Edit routine">
           <EditItemIcon />
         </button>
+        <button class="share" title="Share routine" aria-label="Share routine">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </button>
         <button class="delete" title="Delete routine" aria-label="Delete routine">
           <TrashIcon />
         </button>
@@ -86,6 +95,7 @@ import EditItemIcon from "./EditItemIcon.astro";
 
 <script>
   import { RoutineStorageService } from "../assets/routine";
+  import { compressRoutine } from "../assets/routineSharing";
   import { onClick } from "@assets/domHelpers";
 
   const routineModal = document.getElementById(
@@ -142,7 +152,7 @@ import EditItemIcon from "./EditItemIcon.astro";
 
       item.querySelectorAll("button").forEach((button) => {
         const { className } = button;
-        button.addEventListener("click", () => {
+        button.addEventListener("click", async () => {
           if (className.includes("select")) {
             RoutineStorageService.setActiveRoutineId(routine.id);
             updateRoutineList();
@@ -152,6 +162,29 @@ import EditItemIcon from "./EditItemIcon.astro";
             routineModal.dataset.routineId = routine.id;
             routineModal.showModal();
             routineNameInput.focus();
+          }
+          if (className.includes("share")) {
+            const result = compressRoutine(routine);
+            if (result.success && result.url) {
+              try {
+                if (navigator.share) {
+                  await navigator.share({
+                    title: 'Tabata Routine',
+                    text: `Check out this Tabata routine: ${routine.name}`,
+                    url: result.url,
+                  });
+                } else {
+                  await navigator.clipboard.writeText(result.url);
+                  const originalText = button.innerHTML;
+                  button.innerHTML = '✓';
+                  setTimeout(() => {
+                    button.innerHTML = originalText;
+                  }, 2000);
+                }
+              } catch (error) {
+                console.error('Failed to share:', error);
+              }
+            }
           }
           if (className.includes("delete")) {
             if (confirm(`Are you sure you want to delete "${routine.name}"?`)) {

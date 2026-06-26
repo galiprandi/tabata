@@ -1,0 +1,119 @@
+---
+---
+
+<div class="save-confirmation">
+  <div class="confirmation-content">
+    <div class="confirmation-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+      </svg>
+    </div>
+    <h2>Set as Active?</h2>
+    <p>Do you want to set this routine as your active routine?</p>
+    
+    <div class="confirmation-actions">
+      <button class="btn btn-cancel" data-action="cancel">No, Just Save</button>
+      <button class="btn btn-confirm" data-action="confirm">Yes, Set Active</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .save-confirmation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  .confirmation-content {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .confirmation-icon {
+    margin-bottom: 16px;
+    color: #3b82f6;
+  }
+
+  .confirmation-content h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 12px 0;
+  }
+
+  .confirmation-content p {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+  }
+
+  .confirmation-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-height: 48px;
+  }
+
+  .btn-cancel {
+    background: #e5e7eb;
+    color: #374151;
+  }
+
+  .btn-cancel:hover {
+    background: #d1d5db;
+  }
+
+  .btn-confirm {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .btn-confirm:hover {
+    background: #2563eb;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+</style>
+
+<script>
+  const cancelButton = document.querySelector('.btn-cancel') as HTMLButtonElement;
+  const confirmButton = document.querySelector('.btn-confirm') as HTMLButtonElement;
+
+  if (cancelButton) {
+    cancelButton.addEventListener('click', () => {
+      cancelButton.dispatchEvent(new CustomEvent('cancel'));
+    });
+  }
+
+  if (confirmButton) {
+    confirmButton.addEventListener('click', () => {
+      confirmButton.dispatchEvent(new CustomEvent('confirm'));
+    });
+  }
+</script>

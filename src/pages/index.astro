@@ -5,6 +5,8 @@ import InstallApp from '@components/InstallApp.astro'
 import ShareApp from '@components/ShareApp.astro'
 import GoToSettings from '@components/GoToSettings.astro'
 import RoutineSelector from '@components/RoutineSelector.astro'
+import RoutinePreview from '@components/RoutinePreview.astro'
+import SaveConfirmation from '@components/SaveConfirmation.astro'
 ---
 
 <Layout>
@@ -22,17 +24,148 @@ import RoutineSelector from '@components/RoutineSelector.astro'
     <ShareApp />
     <InstallApp />
   </footer>
+
+  <div id="shared-routine-modal" class="modal-overlay" style="display: none;">
+    <RoutinePreview routine={undefined} />
+  </div>
+
+  <div id="save-confirmation-modal" class="modal-overlay" style="display: none;">
+    <SaveConfirmation />
+  </div>
 </Layout>
 
-<script>
+<script is:inline>
   import { play } from '@assets/audio'
   import { onClick } from '@assets/domHelpers'
+  import { RoutineStorageService } from '../assets/routine'
+  import { sharedRoutineToRoutine, getSharedRoutineFromURL } from '../assets/routineSharing'
+
+  let savedRoutineId = null
+
+  function handleSaveSharedRoutine(sharedRoutine) {
+    const routine = sharedRoutineToRoutine(sharedRoutine)
+    RoutineStorageService.createRoutine(
+      routine.name,
+      routine.config,
+      routine.exercises
+    )
+    savedRoutineId = routine.id
+
+    // Show confirmation modal
+    const sharedModal = document.getElementById('shared-routine-modal')
+    const confirmationModal = document.getElementById('save-confirmation-modal')
+    if (sharedModal) sharedModal.style.display = 'none'
+    if (confirmationModal) confirmationModal.style.display = 'flex'
+  }
+
+  function handleCancelSharedRoutine() {
+    // Remove the ?r= parameter from URL
+    const url = new URL(window.location.href)
+    url.searchParams.delete('r')
+    window.history.replaceState({}, '', url.toString())
+
+    const sharedModal = document.getElementById('shared-routine-modal')
+    if (sharedModal) sharedModal.style.display = 'none'
+  }
+
+  function handleConfirmSetActive() {
+    if (savedRoutineId) {
+      RoutineStorageService.setActiveRoutineId(savedRoutineId)
+    }
+
+    // Remove the ?r= parameter from URL
+    const url = new URL(window.location.href)
+    url.searchParams.delete('r')
+    window.history.replaceState({}, '', url.toString())
+
+    const confirmationModal = document.getElementById('save-confirmation-modal')
+    if (confirmationModal) confirmationModal.style.display = 'none'
+
+    // Reload to update the UI
+    window.location.reload()
+  }
+
+  function handleCancelSetActive() {
+    // Remove the ?r= parameter from URL
+    const url = new URL(window.location.href)
+    url.searchParams.delete('r')
+    window.history.replaceState({}, '', url.toString())
+
+    const confirmationModal = document.getElementById('save-confirmation-modal')
+    if (confirmationModal) confirmationModal.style.display = 'none'
+
+    // Reload to update the UI
+    window.location.reload()
+  }
+
+  function updateRoutinePreview(routine) {
+    const previewComponent = document.querySelector('.routine-preview')
+    if (previewComponent && routine) {
+      // Update the preview with the routine data
+      const nameElement = previewComponent.querySelector('.routine-name')
+      const exercisesList = previewComponent.querySelector('.exercises-list')
+      const timingGrid = previewComponent.querySelector('.timing-grid')
+      
+      if (nameElement) nameElement.textContent = routine.name
+      if (exercisesList) {
+        exercisesList.innerHTML = routine.exercises.map((ex) => `<li>${ex}</li>`).join('')
+      }
+      if (timingGrid) {
+        timingGrid.innerHTML = `
+          <div class="timing-item">
+            <span class="label">Prep</span>
+            <span class="value">${routine.config.prepDuration}s</span>
+          </div>
+          <div class="timing-item">
+            <span class="label">Work</span>
+            <span class="value">${routine.config.workDuration}s</span>
+          </div>
+          <div class="timing-item">
+            <span class="label">Rest</span>
+            <span class="value">${routine.config.restDuration}s</span>
+          </div>
+          <div class="timing-item">
+            <span class="label">Rounds</span>
+            <span class="value">${routine.config.rounds}</span>
+          </div>
+        `
+      }
+    }
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     onClick('#btn-routine-config', async () => {
       await play('tap', true)
       window.location.href = '/tabata/settings'
     })
+
+    // Check for shared routine in URL
+    const sharedRoutineData = getSharedRoutineFromURL()
+    const sharedModal = document.getElementById('shared-routine-modal')
+    
+    if (sharedRoutineData && sharedRoutineData.success && sharedRoutineData.routine && sharedModal) {
+      updateRoutinePreview(sharedRoutineData.routine)
+      sharedModal.style.display = 'flex'
+      
+      // Listen for custom events from RoutinePreview
+      sharedModal.addEventListener('save', () => {
+        handleSaveSharedRoutine(sharedRoutineData.routine)
+      })
+      sharedModal.addEventListener('cancel', () => {
+        handleCancelSharedRoutine()
+      })
+    }
+
+    // Handle save confirmation modal
+    const confirmationModal = document.getElementById('save-confirmation-modal')
+    if (confirmationModal) {
+      confirmationModal.addEventListener('confirm', () => {
+        handleConfirmSetActive()
+      })
+      confirmationModal.addEventListener('cancel', () => {
+        handleCancelSetActive()
+      })
+    }
   })
 </script>
 
@@ -62,5 +195,19 @@ import RoutineSelector from '@components/RoutineSelector.astro'
     justify-content: space-between;
     align-items: center;
     padding: 1em;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
   }
 </style>

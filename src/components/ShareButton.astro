@@ -1,0 +1,117 @@
+---
+import type { Routine } from '../assets/routine/RoutineTypes';
+import { compressRoutine } from '../assets/routineSharing';
+
+interface Props {
+  routine: Routine;
+}
+
+const { routine } = Astro.props;
+
+function generateShareLink(routine: Routine): string {
+  const result = compressRoutine(routine);
+  return result.success ? result.url || '' : '';
+}
+
+const shareLink = generateShareLink(routine);
+---
+
+<button 
+  class="share-button"
+  data-share-link={shareLink}
+  aria-label="Share routine"
+  title="Share routine"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+  </svg>
+</button>
+
+<style>
+  .share-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .share-button:hover {
+    background: #2563eb;
+  }
+
+  .share-button:active {
+    background: #1d4ed8;
+  }
+
+  .share-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  .share-button svg {
+    margin-right: 6px;
+  }
+</style>
+
+<script>
+  const button = document.querySelector('.share-button') as HTMLButtonElement;
+  const shareLink = button?.dataset.shareLink;
+
+  if (button && shareLink) {
+    button.addEventListener('click', async () => {
+      try {
+        // Try native share first (mobile)
+        if (navigator.share) {
+          await navigator.share({
+            title: 'Tabata Routine',
+            text: 'Check out this Tabata routine!',
+            url: shareLink,
+          });
+        } else {
+          // Fallback to clipboard
+          await navigator.clipboard.writeText(shareLink);
+          
+          // Show feedback
+          const originalText = button.innerHTML;
+          button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Copied!
+          `;
+          button.style.background = '#10b981';
+          
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.background = '';
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Failed to share:', error);
+        // Show error feedback
+        const originalText = button.innerHTML;
+        button.innerHTML = 'Error';
+        button.style.background = '#ef4444';
+        
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.background = '';
+        }, 2000);
+      }
+    });
+  }
+</script>
