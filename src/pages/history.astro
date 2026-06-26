@@ -4,11 +4,15 @@ import StatsDashboard from '../components/StatsDashboard.astro'
 import WorkoutHistory from '../components/WorkoutHistory.astro'
 import RoutineStats from '../components/RoutineStats.astro'
 import ExerciseStats from '../components/ExerciseStats.astro'
+import ShareProgressButton from '../components/ShareProgressButton.astro'
 ---
 
 <Layout>
   <section class="history-page">
-    <h1>Workout History</h1>
+    <div class="history-header">
+      <h1>Workout History</h1>
+      <ShareProgressButton />
+    </div>
     
     <StatsDashboard />
     
@@ -21,6 +25,26 @@ import ExerciseStats from '../components/ExerciseStats.astro'
   </section>
 </Layout>
 
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+  import { compressProgress, getDateRanges } from '../assets/progressSharing'
+  
+  document.addEventListener('share-progress', () => {
+    const logs = WorkoutLogService.getLogs()
+    const ranges = getDateRanges()
+    
+    // For now, use the first range (Last 7 days)
+    const result = compressProgress(logs, ranges[0], 'My Progress')
+    
+    if (result.success && result.url) {
+      navigator.clipboard.writeText(result.url)
+      alert('Progress link copied to clipboard!')
+    } else {
+      alert('Failed to generate progress link')
+    }
+  })
+</script>
+
 <style>
   .history-page {
     padding: 2rem;
@@ -28,11 +52,18 @@ import ExerciseStats from '../components/ExerciseStats.astro'
     margin: 0 auto;
   }
 
-  .history-page h1 {
+  .history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .history-header h1 {
     font-size: 2rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 2rem;
+    margin: 0;
   }
 
   .stats-grid {

@@ -1,0 +1,149 @@
+---
+---
+
+<div class="progress-view">
+  <h2>Shared Progress</h2>
+  <div class="progress-user" data-user-pseudo></div>
+  
+  <div class="progress-stats">
+    <div class="stat-card">
+      <div class="stat-icon">🏋️</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="totalWorkouts">0</div>
+        <div class="stat-label">Total Workouts</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="totalDuration">0m</div>
+        <div class="stat-label">Total Time</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="uniqueRoutines">0</div>
+        <div class="stat-label">Unique Routines</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="streak">0</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="progress-workouts">
+    <h3>Workout History</h3>
+    <div class="workout-list"></div>
+  </div>
+</div>
+
+<style>
+  .progress-view {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .progress-view h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-user {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+  }
+
+  .progress-workouts h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .workout-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .workout-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .workout-date {
+    font-size: 0.875rem;
+    color: #64748b;
+    white-space: nowrap;
+  }
+
+  .workout-details {
+    flex: 1;
+  }
+
+  .workout-routine {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .workout-duration {
+    font-weight: 600;
+    color: #3b82f6;
+    white-space: nowrap;
+  }
+</style>

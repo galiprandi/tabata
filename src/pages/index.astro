@@ -7,6 +7,7 @@ import GoToSettings from '@components/GoToSettings.astro'
 import RoutineSelector from '@components/RoutineSelector.astro'
 import RoutinePreview from '@components/RoutinePreview.astro'
 import SaveConfirmation from '@components/SaveConfirmation.astro'
+import ProgressView from '@components/ProgressView.astro'
 ---
 
 <Layout>
@@ -32,6 +33,10 @@ import SaveConfirmation from '@components/SaveConfirmation.astro'
   <div id="save-confirmation-modal" class="modal-overlay" style="display: none;">
     <SaveConfirmation />
   </div>
+
+  <div id="shared-progress-modal" class="modal-overlay" style="display: none;">
+    <ProgressView />
+  </div>
 </Layout>
 
 <script is:inline>
@@ -39,6 +44,7 @@ import SaveConfirmation from '@components/SaveConfirmation.astro'
   import { onClick } from '@assets/domHelpers'
   import { RoutineStorageService } from '../assets/routine'
   import { sharedRoutineToRoutine, getSharedRoutineFromURL } from '../assets/routineSharing'
+  import { decompressProgress } from '../assets/progressSharing'
 
   let savedRoutineId = null
 
@@ -133,6 +139,48 @@ import SaveConfirmation from '@components/SaveConfirmation.astro'
     }
   }
 
+  function updateProgressView(progressData) {
+    const progressModal = document.getElementById('shared-progress-modal')
+    if (!progressModal) return
+
+    // Update user pseudo
+    const userElement = document.querySelector('[data-user-pseudo]')
+    if (userElement) {
+      userElement.textContent = progressData.userPseudo ? `Shared by ${progressData.userPseudo}` : 'Shared Progress'
+    }
+
+    // Update stats
+    const totalWorkoutsEl = document.querySelector('[data-stat="totalWorkouts"]')
+    const totalDurationEl = document.querySelector('[data-stat="totalDuration"]')
+    const uniqueRoutinesEl = document.querySelector('[data-stat="uniqueRoutines"]')
+    const streakEl = document.querySelector('[data-stat="streak"]')
+    
+    if (totalWorkoutsEl) totalWorkoutsEl.textContent = progressData.summary.totalWorkouts.toString()
+    if (totalDurationEl) totalDurationEl.textContent = `${Math.floor(progressData.summary.totalDuration / 60)}m`
+    if (uniqueRoutinesEl) uniqueRoutinesEl.textContent = progressData.summary.uniqueRoutines.toString()
+    if (streakEl) streakEl.textContent = progressData.summary.streak.toString()
+
+    // Update workout list
+    const workoutList = document.querySelector('.workout-list')
+    if (workoutList) {
+      workoutList.innerHTML = progressData.workoutLogs.map((log) => `
+        <div class="workout-item">
+          <div class="workout-date">
+            ${new Date(log.date).toLocaleDateString()}
+          </div>
+          <div class="workout-details">
+            <div class="workout-routine">${log.routineSnapshot.name}</div>
+          </div>
+          <div class="workout-duration">
+            ${Math.floor(log.duration / 60)}m ${log.duration % 60}s
+          </div>
+        </div>
+      `).join('')
+    }
+
+    progressModal.style.display = 'flex'
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     onClick('#btn-routine-config', async () => {
       await play('tap', true)
@@ -165,6 +213,12 @@ import SaveConfirmation from '@components/SaveConfirmation.astro'
       confirmationModal.addEventListener('cancel', () => {
         handleCancelSetActive()
       })
+    }
+
+    // Check for shared progress in URL
+    const progressData = decompressProgress()
+    if (progressData.success && progressData.url) {
+      updateProgressView(progressData)
     }
   })
 </script>

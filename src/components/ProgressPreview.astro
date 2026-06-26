@@ -1,0 +1,94 @@
+---
+---
+
+<div class="progress-preview">
+  <h3>Progress Preview</h3>
+  <div class="preview-stats">
+    <div class="preview-stat">
+      <span class="stat-label">Workouts:</span>
+      <span class="stat-value" data-stat="totalWorkouts">0</span>
+    </div>
+    <div class="preview-stat">
+      <span class="stat-label">Duration:</span>
+      <span class="stat-value" data-stat="totalDuration">0m</span>
+    </div>
+    <div class="preview-stat">
+      <span class="stat-label">Unique Routines:</span>
+      <span class="stat-value" data-stat="uniqueRoutines">0</span>
+    </div>
+  </div>
+  <div class="preview-actions">
+    <button class="btn btn-cancel" data-action="cancel">Cancel</button>
+    <button class="btn btn-primary" data-action="generate">Generate Link</button>
+  </div>
+</div>
+
+<style>
+  .progress-preview {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .progress-preview h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .preview-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .preview-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .preview-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+  }
+
+  .btn-cancel:hover {
+    background: #f8fafc;
+  }
+</style>
