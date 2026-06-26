@@ -20,7 +20,7 @@ jobs:
       - name: 🧰 Install, build, and upload your site
         uses: withastro/action@v6
         with:
-          packageManager: 'npm@10.10.4'
+          package-manager: 'npm@10.10.4'
 
   deploy:
     needs: build
