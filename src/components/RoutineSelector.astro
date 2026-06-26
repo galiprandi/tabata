@@ -37,6 +37,7 @@
   import { RoutineStorageService } from "@assets/routine";
   import type { Routine } from "@assets/routine";
   import { initTranslation, t } from "@assets/dictionary";
+  import { play } from "@assets/audio";
 
   const updateRoutineSelector = () => {
     const currentRoutineName = document.getElementById("current-routine-name");
@@ -71,7 +72,8 @@
       if (routine.id === activeRoutine?.id) {
         item.classList.add("active");
       }
-      item.addEventListener("click", () => {
+      item.addEventListener("click", async () => {
+        await play("tap", true);
         RoutineStorageService.setActiveRoutineId(routine.id);
         updateRoutineSelector();
         closeDropdown();
@@ -105,7 +107,8 @@
 
     if (!selectorButton || !dropdown) return;
 
-    selectorButton.addEventListener("click", () => {
+    selectorButton.addEventListener("click", async () => {
+      await play("tap", true);
       toggleDropdown();
     });
 

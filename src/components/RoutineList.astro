@@ -101,6 +101,7 @@ import EditItemIcon from "./EditItemIcon.astro";
   import { RoutineStorageService } from "../assets/routine";
   import { onClick } from "@assets/domHelpers";
   import { t, initTranslation } from "../assets/dictionary";
+  import { play } from "@assets/audio";
 
   const routineModal = document.getElementById(
     "routine-modal",
@@ -156,13 +157,13 @@ import EditItemIcon from "./EditItemIcon.astro";
       }
 
       item.querySelectorAll("button").forEach((button) => {
-        const { className } = button;
-        button.addEventListener("click", () => {
-          if (className.includes("select")) {
+        button.addEventListener("click", async () => {
+          await play("tap", true);
+          if (button.classList.contains("select")) {
             RoutineStorageService.setActiveRoutineId(routine.id);
             updateRoutineList();
           }
-          if (className.includes("edit")) {
+          if (button.classList.contains("edit")) {
             const title = routineModal.querySelector(".title");
             if (title) title.textContent = t("Edit Routine");
             routineNameInput.value = routine.name;
@@ -170,8 +171,15 @@ import EditItemIcon from "./EditItemIcon.astro";
             routineModal.showModal();
             routineNameInput.focus();
           }
-          if (className.includes("delete")) {
-            if (confirm(`Are you sure you want to delete "${routine.name}"?`)) {
+          if (button.classList.contains("delete")) {
+            if (
+              confirm(
+                t('Are you sure you want to delete "{name}"?').replace(
+                  "{name}",
+                  routine.name,
+                ),
+              )
+            ) {
               RoutineStorageService.deleteRoutine(routine.id);
               updateRoutineList();
             }
@@ -187,7 +195,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     if (!routineModal) throw new Error("Modal not found");
     if (!routineNameInput) throw new Error("Input not found");
 
-    onClick("#add-new-routine", () => {
+    onClick("#add-new-routine", async () => {
+      await play("tap", true);
       const title = routineModal.querySelector(".title");
       if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
@@ -196,7 +205,8 @@ import EditItemIcon from "./EditItemIcon.astro";
       routineNameInput.focus();
     });
 
-    onClick("#add-first-routine", () => {
+    onClick("#add-first-routine", async () => {
+      await play("tap", true);
       const title = routineModal.querySelector(".title");
       if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
@@ -205,13 +215,15 @@ import EditItemIcon from "./EditItemIcon.astro";
       routineNameInput.focus();
     });
 
-    onClick("#routine-modal-cancel", () => {
+    onClick("#routine-modal-cancel", async () => {
+      await play("tap", true);
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.close();
     });
 
-    onClick("#routine-modal-save", () => {
+    onClick("#routine-modal-save", async () => {
+      await play("tap", true);
       const name = routineNameInput.value.trim();
       if (!name) return;
 
