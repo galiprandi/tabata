@@ -1,8 +1,5 @@
 ---
 import Layout from "@app/layouts/layout.astro";
-import TimerIcon from "@components/TimerIcon.astro";
-import Working from "@components/Working.astro";
-import RoundsIcon from "@components/RoundsIcon.astro";
 import Play from "@icons/Play.icon.astro";
 import Continue from "@components/icons/Continue.icon.astro";
 import Pause from "@icons/Pause.icon.astro";
@@ -11,345 +8,760 @@ import GoToHome from "@components/GoToHome.astro";
 ---
 
 <Layout>
-  <div id="title" data-i18n="Preparation Time" class="speech">
-    Preparation Time
-  </div>
+  <!-- Main workout display -->
+  <div id="workout-screen">
+    <!-- Phase indicator (prep/work/rest) -->
+    <div id="phase-indicator" class="phase-indicator"></div>
 
-  <div>
-    <progress id="progress" value="100" max="100"></progress>
-  </div>
+    <!-- Round dots -->
+    <div id="round-dots" class="round-dots"></div>
 
-  <div id="info">
-    <div>
-      <TimerIcon />
-      <span id="time-left">-</span>
+    <!-- Exercise name - giant, centered -->
+    <div id="exercise-display" class="exercise-display speech">
+      <span id="exercise-name">Preparation</span>
     </div>
 
-    <button id="btn-routine-pause" class="icon" aria-label="Pause workout"
-      ><Pause /></button
-    >
-
-    <div>
-      <Working />
-      <span id="exercise-left">-</span>
+    <!-- Timer - giant countdown -->
+    <div id="timer-display" class="timer-display">
+      <span id="time-remaining">-</span>
     </div>
+
+    <!-- Progress bar - full width -->
+    <div class="progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+
+    <!-- Next exercise preview -->
+    <div id="next-exercise-preview" class="next-exercise-preview">
+      <span class="next-label">Próximo:</span>
+      <span id="next-exercise-name">-</span>
+    </div>
+
+    <!-- Pause button (visible but whole screen is tappable) -->
+    <button id="btn-pause" class="btn-pause" aria-label="Pausar">
+      <Pause />
+    </button>
   </div>
-</Layout>
 
-<dialog id="go-modal" open>
-  <article>
-    <header>
-      <h2 data-i18n="Routine">Routine</h2>
-    </header>
+  <!-- Start modal - dismissible overlay, not blocking dialog -->
+  <div id="start-overlay" class="start-overlay">
+    <div class="start-card">
+      <h2 class="start-title">Rutina</h2>
 
-    <section class="routine-info">
-      <div>
-        <RoundsIcon />
-        <span class="total-routine-exercises"></span>
+      <div class="routine-info">
+        <div class="info-item">
+          <span class="info-value" id="total-exercises">-</span>
+          <span class="info-label">ejercicios</span>
+        </div>
+        <div class="info-item">
+          <span class="info-value" id="total-rounds">-</span>
+          <span class="info-label">rondas</span>
+        </div>
+        <div class="info-item">
+          <span class="info-value" id="total-time">-</span>
+          <span class="info-label">tiempo</span>
+        </div>
       </div>
 
-      <div>
-        <TimerIcon />
-        <span class="total-routine-time"></span>
+      <div class="start-actions">
+        <button id="btn-restart" class="btn-secondary">
+          <Play />
+          <span>Reiniciar</span>
+        </button>
+        <button id="btn-continue" class="btn-primary">
+          <Continue />
+          <span>Continuar</span>
+        </button>
       </div>
-    </section>
 
-    <footer class="modal-footer">
-      <div class="secondary-buttons">
+      <div class="start-secondary">
         <GoToHome />
         <GoToSettings />
       </div>
-      <div class="primary-buttons">
-        <button
-          id="btn-routine-start"
-          class="secondary"
-          title="Restart"
-          aria-label="Restart routine"
-        >
-          <Play />
-          <span data-i18n="Restart">Restart</span>
+    </div>
+  </div>
+
+  <!-- Pause overlay -->
+  <div id="pause-overlay" class="pause-overlay" style="display: none;">
+    <div class="pause-card">
+      <h2 class="pause-title">Pausado</h2>
+      <div class="pause-actions">
+        <button id="btn-resume" class="btn-primary">
+          <Continue />
+          <span>Reanudar</span>
         </button>
-        <button id="btn-routine-continue" title="Continue" aria-label="Continue"
-          ><Continue /><span data-i18n="Continue">Continue</span>
+        <button id="btn-restart-pause" class="btn-secondary">
+          <Play />
+          <span>Reiniciar</span>
+        </button>
+        <button id="btn-exit" class="btn-exit">
+          <span>Salir</span>
         </button>
       </div>
-    </footer>
-  </article>
-</dialog>
+    </div>
+  </div>
+</Layout>
 
 <script>
   import { play } from "@assets/audio";
   import { t } from "@assets/dictionary";
   import { switchBodyClass, formatDuration, onClick } from "@assets/domHelpers";
-  import {
-    delaySeconds,
-    textToSpeech,
-    updateTextContent,
-    gaEvent,
-  } from "@assets/main";
+  import { textToSpeech, updateTextContent, gaEvent } from "@assets/main";
   import { RoutineService } from "@assets/routine/RoutineService";
+  import { TimerController, hapticFeedback } from "@assets/timerController";
+
+  let timer = new TimerController();
+  let isWorkoutRunning = false;
 
   // Wait for the DOM to be ready
   document.addEventListener("DOMContentLoaded", () => {
     const config = RoutineService.getConfig();
-    updateScreen(config.rounds);
+    updateRoutineInfo(config);
+    renderRoundDots(config.rounds, 0);
 
-    onClick("#btn-routine-pause", () => {
-      play("tap", true);
-      window.location.reload();
+    onClick("#btn-pause", () => {
+      if (isWorkoutRunning) {
+        pauseWorkout();
+      }
     });
 
-    const playRoutine = () => {
-      const modal = document.querySelector(
-        "#go-modal",
-      ) as HTMLDialogElement | null;
-
-      modal?.close();
-      play("tap", true);
-      startRoutine();
-      document.querySelector("#ios-go-modal")?.remove();
-    };
-
-    onClick("#btn-routine-start", () => {
+    onClick("#btn-restart", () => {
       RoutineService.updateConfig({ nextExercise: 0 });
-      playRoutine();
+      startWorkout();
     });
 
-    onClick("#btn-routine-continue", playRoutine);
+    onClick("#btn-continue", startWorkout);
+
+    onClick("#btn-resume", resumeWorkout);
+    onClick("#btn-restart-pause", () => {
+      hidePauseOverlay();
+      timer.abort();
+      RoutineService.updateConfig({ nextExercise: 0 });
+      setTimeout(() => startWorkout(), 100);
+    });
+    onClick("#btn-exit", () => {
+      timer.abort();
+      window.location.href = "/tabata";
+    });
+
+    // Tap anywhere on workout screen to pause (except buttons)
+    const workoutScreen = document.getElementById("workout-screen");
+    workoutScreen?.addEventListener("click", (e) => {
+      if (!isWorkoutRunning) return;
+      const target = e.target as HTMLElement;
+      if (target.closest("button")) return;
+      pauseWorkout();
+    });
+
+    // Swipe gestures
+    setupSwipeGestures();
   });
 
-  const updateScreen = (exerciseLeft: number) => {
-    const config = RoutineService.getConfig();
+  function setupSwipeGestures() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    document.addEventListener("touchstart", (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    document.addEventListener("touchend", (e) => {
+      if (!isWorkoutRunning) return;
+
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+
+      // Swipe = horizontal movement > 100px, less than 50px vertical, under 500ms
+      if (Math.abs(dx) > 100 && Math.abs(dy) < 50 && dt < 500) {
+        if (dx < 0) {
+          // Swipe left = restart
+          timer.abort();
+          RoutineService.updateConfig({ nextExercise: 0 });
+          setTimeout(() => startWorkout(), 100);
+        } else {
+          // Swipe right = skip rest (advance to next exercise)
+          // Only skip if currently in rest phase
+          if (document.body.classList.contains("rest")) {
+            timer.abort();
+          }
+        }
+      }
+    }, { passive: true });
+  }
+
+  function updateRoutineInfo(config: any) {
     const exercises = RoutineService.getExercises();
-    const exercise = exercises[config.nextExercise] || `${t("Exercise")} ${config.rounds}`;
     const secondsByExercise = config.workDuration + config.restDuration;
-    const timeLeft = secondsByExercise * exerciseLeft;
-    updateTextContent(".t-next-exercise", exercise);
-    updateTextContent(".total-routine-exercises", config.rounds.toString());
-    updateTextContent("#exercise-left", exerciseLeft.toString());
-    updateTextContent("#time-left", formatDuration(timeLeft));
-    updateTextContent(".total-routine-time", formatDuration(timeLeft));
-    updateTextContent("#title", exercise);
-    updateTextContent("#go-modal h3", t("Routine"));
-    updateTextContent("#go-settings", t("Settings"));
-  };
+    const totalTime = (config.prepDuration + secondsByExercise * config.rounds * exercises.length);
 
-  const startRoutine = async () => {
-    gaEvent("Start Workout");
-    const config = RoutineService.getConfig();
+    updateTextContent("#total-exercises", exercises.length.toString());
+    updateTextContent("#total-rounds", config.rounds.toString());
+    updateTextContent("#total-time", formatDuration(totalTime));
+  }
 
-    // Preparation time
-    await prepTime();
+  function renderRoundDots(totalRounds: number, currentRound: number) {
+    const container = document.getElementById("round-dots");
+    if (!container) return;
 
-    // Loop through rounds
-    for (let round = config.rounds; round > 0; round--) {
-      const isLastExercise = round === 2;
-      updateScreen(round);
-      await workTime({ round });
-      if (round !== 1) await restTime({ isLastExercise, round });
+    let dots = "";
+    for (let i = 0; i < totalRounds; i++) {
+      const completed = i < currentRound;
+      const current = i === currentRound;
+      dots += `<span class="dot ${completed ? "completed" : ""} ${current ? "current" : ""}"></span>`;
     }
+    container.innerHTML = dots;
+  }
 
-    // End of routine
-    routineCompleted();
-  };
+  function updatePhaseIndicator(phase: string) {
+    const indicator = document.getElementById("phase-indicator");
+    if (!indicator) return;
 
-  const prepTime = async () => {
+    const labels: Record<string, string> = {
+      prep: "Preparación",
+      workout: "Trabajo",
+      rest: "Descanso",
+    };
+    indicator.textContent = labels[phase] || phase;
+    indicator.className = `phase-indicator phase-${phase}`;
+  }
+
+  function updateNextExercisePreview() {
     const config = RoutineService.getConfig();
     const exercises = RoutineService.getExercises();
-    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${config.rounds}`;
-    switchBodyClass(`prep`);
-    updateTextContent("#title", exercise);
+    let nextIndex = config.nextExercise + 1;
+    if (nextIndex >= exercises.length) nextIndex = 0;
+    const nextExercise = exercises[nextIndex];
+    if (nextExercise) {
+      updateTextContent("#next-exercise-name", nextExercise);
+    }
+  }
+
+  function updateProgressBar(percent: number) {
+    const bar = document.getElementById("progress-bar");
+    if (bar) {
+      bar.style.width = `${percent}%`;
+    }
+  }
+
+  function pauseWorkout() {
+    if (!isWorkoutRunning) return;
+    timer.pause();
+    play("tap", true);
+    hapticFeedback(30);
+    showPauseOverlay();
+  }
+
+  function resumeWorkout() {
+    hidePauseOverlay();
+    play("tap", true);
+    hapticFeedback(30);
+    timer.resume();
+  }
+
+  function showPauseOverlay() {
+    const overlay = document.getElementById("pause-overlay");
+    if (overlay) overlay.style.display = "flex";
+  }
+
+  function hidePauseOverlay() {
+    const overlay = document.getElementById("pause-overlay");
+    if (overlay) overlay.style.display = "none";
+  }
+
+  function hideStartOverlay() {
+    const overlay = document.getElementById("start-overlay");
+    if (overlay) overlay.style.display = "none";
+  }
+
+  async function startWorkout() {
+    hideStartOverlay();
+    play("tap", true);
+    timer = new TimerController();
+    isWorkoutRunning = true;
+    gaEvent("Start Workout");
+    await runRoutine();
+  }
+
+  async function runRoutine() {
+    const config = RoutineService.getConfig();
+
+    try {
+      // Preparation time
+      await prepTime();
+
+      // Loop through rounds
+      for (let round = 1; round <= config.rounds; round++) {
+        await workTime(round);
+        if (round < config.rounds) {
+          await restTime(round);
+        }
+      }
+
+      // End of routine
+      routineCompleted();
+    } catch (e) {
+      // Timer was aborted (restart or exit) - silently handle
+      if (e instanceof Error && e.message === 'TIMER_ABORTED') {
+        return;
+      }
+      throw e;
+    }
+  }
+
+  async function prepTime() {
+    const config = RoutineService.getConfig();
+    const exercises = RoutineService.getExercises();
+    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} 1`;
+
+    switchBodyClass("prep");
+    updatePhaseIndicator("prep");
+    updateTextContent("#exercise-name", exercise);
+    updateTextContent("#next-exercise-name", exercise);
     textToSpeech(`${t("First Exercise")}: ${exercise}`);
+    hapticFeedback(100);
 
     for (let sec = config.prepDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, config.prepDuration);
-      await delaySeconds(1);
+      updateTextContent("#time-remaining", sec.toString());
+      updateProgressBar((sec / config.prepDuration) * 100);
+      if (sec <= 3 && sec >= 1) {
+        await play("beep");
+        hapticFeedback(50);
+      }
+      await timer.delay(1);
     }
-  };
+  }
 
-  const workTime = async ({ round }: { round: number }) => {
+  async function workTime(round: number) {
     const exercises = RoutineService.getExercises();
     const config = RoutineService.getConfig();
     const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
-    switchBodyClass(`workout`);
-    updateTextContent("#title", exercise);
+
+    switchBodyClass("workout");
+    updatePhaseIndicator("workout");
+    updateTextContent("#exercise-name", exercise);
+    renderRoundDots(config.rounds, round - 1);
+    updateNextExercisePreview();
     textToSpeech(t("Go!"));
-    for (let sec = config.workDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, config.workDuration);
-      await delaySeconds(1);
-    }
-    forwardToNextExercise();
-  };
+    hapticFeedback([50, 30, 50]);
 
-  const restTime = async ({
-    isLastExercise,
-    round,
-  }: {
-    isLastExercise: boolean;
-    round: number;
-  }) => {
+    for (let sec = config.workDuration; sec > 0; sec--) {
+      updateTextContent("#time-remaining", sec.toString());
+      updateProgressBar((sec / config.workDuration) * 100);
+      if (sec <= 3 && sec >= 1) {
+        await play("beep");
+        hapticFeedback(50);
+      }
+      await timer.delay(1);
+    }
+
+    forwardToNextExercise();
+  }
+
+  async function restTime(round: number) {
     const exercises = RoutineService.getExercises();
     const config = RoutineService.getConfig();
-    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
-    const subText = isLastExercise ? t("Last") : t("Next");
-    switchBodyClass(`rest`);
-    updateTextContent("#title", exercise);
-    textToSpeech(`${subText}, ${exercise}`);
+    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round + 1}`;
+
+    switchBodyClass("rest");
+    updatePhaseIndicator("rest");
+    updateTextContent("#exercise-name", exercise);
+    updateNextExercisePreview();
+    textToSpeech(`${t("Next")}, ${exercise}`);
+    hapticFeedback(100);
+
     for (let sec = config.restDuration; sec > 0; sec--) {
-      await displayElapsedTime(sec, config.restDuration);
-      await delaySeconds(1);
+      updateTextContent("#time-remaining", sec.toString());
+      updateProgressBar((sec / config.restDuration) * 100);
+      if (sec <= 3 && sec >= 1) {
+        await play("beep");
+        hapticFeedback(50);
+      }
+      await timer.delay(1);
     }
-  };
+  }
 
-  const routineCompleted = async () => {
+  async function routineCompleted() {
+    isWorkoutRunning = false;
     await play("end");
-    await delaySeconds(1);
+    hapticFeedback([100, 50, 100, 50, 200]);
+    await timer.delay(1);
     textToSpeech(t("Routine completed!"));
-    const modal = document.querySelector(
-      "#go-modal",
-    ) as HTMLDialogElement | null;
-    if (modal) {
-      modal.showModal();
-    }
-  };
+    window.location.href = "/tabata/end";
+  }
 
-  const forwardToNextExercise = async () => {
+  function forwardToNextExercise() {
     const config = RoutineService.getConfig();
     const exercises = RoutineService.getExercises();
     let nextIndex = config.nextExercise + 1;
     if (nextIndex >= exercises.length) nextIndex = 0;
     RoutineService.updateConfig({ nextExercise: nextIndex });
-  };
-
-  const displayElapsedTime = async (time: number, totalTime: number) => {
-    const progressEl = document.getElementById(
-      "progress",
-    ) as HTMLProgressElement | null;
-
-    if (progressEl) progressEl.value = (time / totalTime) * 100;
-    if (time <= 3 && time >= 1) await play("beep");
-  };
+  }
 </script>
 
 <style>
-  #title {
-    font-size: 7.5vw;
-    font-weight: bold;
-    line-height: 1;
-  }
-
-  #info {
-    font-size: 2.2em;
+  #workout-screen {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 1em;
+    flex-direction: column;
     align-items: center;
-
-    & div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3em;
-    }
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  #btn-routine-pause {
-    font-size: 1.5em;
-    padding: 0;
-    width: 3.5rem;
-    height: 3.5rem;
+  /* Phase indicator */
+  .phase-indicator {
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.7;
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.2);
+    margin-top: 0.5rem;
+  }
+
+  .phase-indicator.phase-prep { color: #7dd3fc; }
+  .phase-indicator.phase-workout { color: #fff; }
+  .phase-indicator.phase-rest { color: #fca5a5; }
+
+  /* Round dots */
+  .round-dots {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 90vw;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: all 0.3s;
+  }
+
+  .dot.completed {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .dot.current {
+    background: white;
+    transform: scale(1.4);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  }
+
+  /* Exercise name - GIANT */
+  .exercise-display {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  #exercise-name {
+    font-size: clamp(2.5rem, 11vw, 7rem);
+    font-weight: 900;
+    line-height: 1.05;
+    text-align: center;
+    word-break: break-word;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Timer - GIANT */
+  .timer-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+
+  #time-remaining {
+    font-size: clamp(4rem, 18vw, 12rem);
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Progress bar - full width */
+  .progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 100%;
+    background: white;
+    border-radius: 3px;
+    transition: width 0.3s ease-out;
+  }
+
+  /* Next exercise preview */
+  .next-exercise-preview {
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+    opacity: 0.5;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .next-label {
+    margin-right: 0.3rem;
+  }
+
+  /* Pause button - always visible but subtle */
+  .btn-pause {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 3px solid white;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     color: white;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: transform 0.2s, background 0.2s;
+    backdrop-filter: blur(4px);
+  }
 
-    &:active {
-      transform: scale(0.95);
-      background-color: rgba(255, 255, 255, 0.4);
-    }
+  .btn-pause:active {
+    transform: scale(0.92);
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .btn-pause svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Start overlay */
+  .start-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .start-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .start-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 1.5rem 0;
   }
 
   .routine-info {
     display: flex;
     justify-content: space-around;
-    font-size: 2em;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     gap: 1rem;
-
-    & div {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
   }
 
-  .modal-footer {
+  .info-item {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
+    align-items: center;
   }
 
-  .primary-buttons,
-  .secondary-buttons {
+  .info-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+  }
+
+  .info-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.25rem;
+  }
+
+  .start-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .start-actions button {
+    flex: 1;
+    min-height: 56px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.15s, opacity 0.2s;
+  }
+
+  .start-actions button:active {
+    transform: scale(0.96);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color--prep);
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .start-secondary {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    width: 100%;
   }
 
-  .primary-buttons button {
-    flex: 1;
-    margin-bottom: 0;
-    min-height: 4rem;
-    font-size: 1.2rem;
-  }
-
-  .secondary-buttons :global(button) {
-    min-height: 3.5rem;
-    min-width: 3.5rem;
+  .start-secondary :global(button) {
+    min-width: 48px;
+    min-height: 48px;
     padding: 0.5rem;
+  }
+
+  /* Pause overlay */
+  .pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .pause-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .pause-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .pause-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pause-actions button {
+    min-height: 56px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.15s;
+  }
+
+  .pause-actions button:active {
+    transform: scale(0.96);
+  }
+
+  .btn-exit {
+    background: transparent;
+    color: var(--color-rest);
+    border: 1px solid var(--color-rest) !important;
   }
 
   /* Landscape optimization */
   @media (orientation: landscape) and (max-height: 500px) {
-    dialog article {
-      width: 90vw;
-      max-width: 800px;
-      padding: 1rem;
+    .phase-indicator {
+      font-size: 0.85rem;
+      margin-top: 0;
     }
 
-    .routine-info {
-      margin-bottom: 0.5rem;
-      font-size: 1.5em;
+    .round-dots {
+      margin-top: 0.25rem;
     }
 
-    .modal-footer {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+    .exercise-display {
+      padding: 0 2rem;
     }
 
-    .secondary-buttons {
-      width: auto;
+    #exercise-name {
+      font-size: clamp(2rem, 8vw, 5rem);
     }
 
-    .primary-buttons {
-      width: auto;
-      flex: 1;
+    #time-remaining {
+      font-size: clamp(3rem, 14vh, 8rem);
+    }
+
+    .next-exercise-preview {
+      margin-bottom: 0;
+    }
+
+    .start-card,
+    .pause-card {
+      padding: 1.25rem;
     }
   }
 
-  /* Screens less than 300px */
-  @media (width <= 450px) {
-    #title {
-      font-size: 3em;
+  /* Very small screens */
+  @media (max-width: 320px) {
+    #exercise-name {
+      font-size: 2rem;
+    }
+    #time-remaining {
+      font-size: 3.5rem;
     }
   }
 </style>

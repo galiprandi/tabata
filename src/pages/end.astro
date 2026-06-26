@@ -1,51 +1,210 @@
 ---
 import Layout from '@app/layouts/layout.astro'
-import BackToHome from '@components/BackToHome.astro'
 import Play from '@icons/Play.icon.astro'
+import GoToHome from '@components/GoToHome.astro'
 ---
+
 <Layout>
-  <section class="display"><h1>🎉 <span data-i18n="Congrats">Congrats</span> 🎉</h1></section>
-  <footer>
-    <div class="columns">
-      <button id="startAgain"><Play /><span data-i18n="Start Again">Start Again</span></button>
-      <BackToHome />
+  <section class="end-screen">
+    <div class="celebration">
+      <div class="emoji">🎉</div>
+      <h1>¡Felicitaciones!</h1>
+      <p class="subtitle">Rutina completada</p>
     </div>
-  </footer>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-value" id="stat-duration">-</span>
+        <span class="stat-label">Duración</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="stat-rounds">-</span>
+        <span class="stat-label">Rondas</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="stat-exercises">-</span>
+        <span class="stat-label">Ejercicios</span>
+      </div>
+    </div>
+
+    <div class="end-actions">
+      <button id="startAgain" class="btn-primary">
+        <Play />
+        <span>Otra vez</span>
+      </button>
+      <GoToHome />
+    </div>
+  </section>
 </Layout>
 
-<script is:inline>
+<script>
   import { play } from '@assets/audio'
   import { RoutineStorageService } from '../assets/routine'
   import { WorkoutLogService } from '../assets/workoutLog'
-  
+  import { RoutineService } from '../assets/routine/RoutineService'
+
   document.addEventListener('DOMContentLoaded', () => {
     play('end')
-    
-    // Register workout in history
+
     const activeRoutineId = RoutineStorageService.getActiveRoutineId()
     if (activeRoutineId) {
       const routines = RoutineStorageService.getRoutines()
       const activeRoutine = routines.find((r) => r.id === activeRoutineId)
-      
+
       if (activeRoutine) {
-        // Calculate estimated duration
+        const config = activeRoutine.config
+        const exercises = activeRoutine.exercises
+
         const totalDuration = (
-          activeRoutine.config.prepDuration +
-          (activeRoutine.config.workDuration + activeRoutine.config.restDuration) * activeRoutine.config.rounds * activeRoutine.exercises.length
+          config.prepDuration +
+          (config.workDuration + config.restDuration) * config.rounds * exercises.length
         )
-        
+
+        // Register workout in history
         WorkoutLogService.addLog(activeRoutine, totalDuration)
+
+        // Display stats
+        const minutes = Math.floor(totalDuration / 60)
+        const seconds = totalDuration % 60
+        const durationEl = document.getElementById('stat-duration')
+        if (durationEl) {
+          durationEl.textContent = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
+        }
+
+        const roundsEl = document.getElementById('stat-rounds')
+        if (roundsEl) roundsEl.textContent = config.rounds.toString()
+
+        const exercisesEl = document.getElementById('stat-exercises')
+        if (exercisesEl) exercisesEl.textContent = exercises.length.toString()
       }
     }
-    
+
     document.getElementById('startAgain')?.addEventListener('click', () => {
+      RoutineService.updateConfig({ nextExercise: 0 })
       location.href = '/tabata/start'
     })
   })
 </script>
+
 <style>
-  h1 { color: white; font-size: 8vw; font-weight: bold; }
-  button#startAgain { min-width: 10em; }
-  .columns { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-  @media (min-width: 450px) { .columns { flex-direction: row; justify-content: center; } }
+  .end-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+  }
+
+  .celebration {
+    text-align: center;
+  }
+
+  .emoji {
+    font-size: clamp(3rem, 12vw, 6rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .celebration h1 {
+    font-size: clamp(1.75rem, 7vw, 3rem);
+    font-weight: 800;
+    color: white;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .stats-grid {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    justify-content: center;
+  }
+
+  .stat-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+  }
+
+  .stat-value {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+  }
+
+  .end-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .end-actions button {
+    width: 100%;
+    min-height: 56px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.15s;
+  }
+
+  .end-actions button:active {
+    transform: scale(0.96);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color--prep);
+  }
+
+  .end-actions :global(button:not(.btn-primary)) {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    .end-screen {
+      flex-direction: row;
+      gap: 2rem;
+    }
+
+    .stats-grid {
+      flex-direction: column;
+      max-width: 200px;
+    }
+
+    .end-actions {
+      max-width: 200px;
+    }
+  }
 </style>
