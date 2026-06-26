@@ -1,0 +1,117 @@
+---
+import type { Routine } from '../assets/routine/RoutineTypes';
+
+interface Props {
+  routine: Routine;
+}
+
+const { routine } = Astro.props;
+---
+
+<div class="quick-actions" data-routine-id={routine.id}>
+  <button class="action-btn share-btn" data-action="share" title="Share routine">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="5" r="3"></circle>
+      <circle cx="6" cy="12" r="3"></circle>
+      <circle cx="18" cy="19" r="3"></circle>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+    </svg>
+  </button>
+  <button class="action-btn edit-btn" data-action="edit" title="Edit routine">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4-4 9.5-9.5a2.121 2.121 0 0 1 3-3L18.5 2.5Z"></path>
+    </svg>
+  </button>
+  <button class="action-btn delete-btn" data-action="delete" title="Delete routine">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21"></polyline>
+      <path d="M21 3 9 12 13 12 13"></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .quick-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #64748b;
+  }
+
+  .action-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  .action-btn:active {
+    transform: scale(0.95);
+  }
+
+  .share-btn:hover {
+    color: #3b82f6;
+    border-color: #3b82f6;
+    background: #eff6ff;
+  }
+
+  .edit-btn:hover {
+    color: #f59e0b;
+    border-color: #f59e0b;
+    background: #fff7ed;
+  }
+
+  .delete-btn:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+    background: #fef2f2;
+  }
+</style>
+
+<script>
+  const quickActions = document.querySelector('.quick-actions');
+  if (quickActions) {
+    const routineId = quickActions.closest('[data-routine-id]')?.getAttribute('data-routine-id');
+    
+    quickActions.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      const button = target.closest('.action-btn') as HTMLButtonElement;
+      
+      if (!button) return;
+      
+      const action = button.dataset.action;
+      
+      if (action === 'share') {
+        // Share routine - will be handled by parent component
+        const shareEvent = new CustomEvent('share-routine', {
+          detail: { routineId }
+        });
+        document.dispatchEvent(shareEvent);
+      } else if (action === 'edit') {
+        // Edit routine - will be handled by parent component
+        const editEvent = new CustomEvent('edit-routine', {
+          detail: { routineId }
+        });
+        document.dispatchEvent(editEvent);
+      } else if (action === 'delete') {
+        // Delete routine - will be handled by parent component
+        const deleteEvent = new CustomEvent('delete-routine', {
+          detail: { routineId }
+        });
+        document.dispatchEvent(deleteEvent);
+      }
+    });
+  }
+</script>

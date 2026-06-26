@@ -1,0 +1,154 @@
+---
+import type { Routine } from '../assets/routine/RoutineTypes';
+import QuickActions from './QuickActions.astro';
+
+interface Props {
+  routines: Routine[];
+}
+
+const { routines } = Astro.props;
+---
+
+<div class="routine-table-container">
+  <table class="routine-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Exercises</th>
+        <th>Timing</th>
+        <th>Rounds</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {routines.map((routine) => (
+        <tr class="routine-row" data-routine-id={routine.id}>
+          <td class="routine-name">{routine.name}</td>
+          <td class="routine-exercises">
+            <div class="exercises-list">
+              {routine.exercises.slice(0, 3).map((ex) => (
+                <span class="exercise-tag">{ex}</span>
+              ))}
+              {routine.exercises.length > 3 && (
+                <span class="exercise-count">+{routine.exercises.length - 3}</span>
+              )}
+            </div>
+          </td>
+          <td class="routine-timing">
+            <div class="timing-info">
+              <span>Prep: {routine.config.prepDuration}s</span>
+              <span>Work: {routine.config.workDuration}s</span>
+              <span>Rest: {routine.config.restDuration}s</span>
+            </div>
+          </td>
+          <td class="routine-rounds">{routine.config.rounds}</td>
+          <td class="routine-actions">
+            <QuickActions routine={routine} />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  
+  {routines.length === 0 && (
+    <div class="empty-state">
+      <p>No routines found. Create your first routine to get started.</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .routine-table-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .routine-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .routine-table thead {
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .routine-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .routine-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.2s;
+  }
+
+  .routine-table tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  .routine-table td {
+    padding: 1rem;
+    vertical-align: middle;
+  }
+
+  .routine-name {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .exercises-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .exercise-tag {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .exercise-count {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .timing-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+
+  .routine-rounds {
+    font-weight: 600;
+    color: #1e293b;
+    text-align: center;
+  }
+
+  .routine-actions {
+    text-align: right;
+  }
+
+  .empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: #64748b;
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+---
+
+<div class="search-bar">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+  <input 
+    type="text" 
+    placeholder="Search by name or exercise..." 
+    class="search-input"
+    data-search-input
+  />
+</div>
+
+<style>
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    width: 400px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-bar:focus-within {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .search-icon {
+    color: #64748b;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: transparent;
+  }
+
+  .search-input::placeholder {
+    color: #94a3b8;
+  }
+</style>
+
+<script>
+  const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+
+  if (searchInput) {
+    let debounceTimer: number;
+
+    searchInput.addEventListener('input', (e) => {
+      const query = (e.target as HTMLInputElement).value;
+      
+      clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(() => {
+        // Dispatch search event
+        const searchEvent = new CustomEvent('search', { 
+          detail: { query } 
+        });
+        document.dispatchEvent(searchEvent);
+      }, 300);
+    });
+  }
+</script>

@@ -1,0 +1,226 @@
+---
+import TrainerLayout from '../components/TrainerLayout.astro'
+import RoutineTable from '../components/RoutineTable.astro'
+import SearchBar from '../components/SearchBar.astro'
+---
+
+<TrainerLayout>
+  <div class="trainer-header">
+    <h1>Trainer Dashboard</h1>
+    <div class="header-actions">
+      <SearchBar />
+      <button class="btn btn-primary" data-action="create">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Create Routine
+      </button>
+    </div>
+  </div>
+  
+  <RoutineTable routines={[]} />
+</TrainerLayout>
+
+<script is:inline>
+  import { RoutineStorageService } from '../assets/routine'
+
+  // Load routines on client side
+  const routines = RoutineStorageService.getRoutines()
+  
+  // Render routines in the table
+  function renderRoutines(routinesToRender) {
+    const tableBody = document.querySelector('.routine-table tbody')
+    if (!tableBody) return
+    
+    if (routinesToRender.length === 0) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 3rem; color: #64748b;">
+            No routines found. Create your first routine to get started.
+          </td>
+        </tr>
+      `
+      return
+    }
+    
+    tableBody.innerHTML = routinesToRender.map((routine) => `
+      <tr class="routine-row" data-routine-id="${routine.id}">
+        <td class="routine-name">${routine.name}</td>
+        <td class="routine-exercises">
+          <div class="exercises-list">
+            ${routine.exercises.slice(0, 3).map((ex) => `<span class="exercise-tag">${ex}</span>`).join('')}
+            ${routine.exercises.length > 3 ? `<span class="exercise-count">+${routine.exercises.length - 3}</span>` : ''}
+          </div>
+        </td>
+        <td class="routine-timing">
+          <div class="timing-info">
+            <span>Prep: ${routine.config.prepDuration}s</span>
+            <span>Work: ${routine.config.workDuration}s</span>
+            <span>Rest: ${routine.config.restDuration}s</span>
+          </div>
+        </td>
+        <td class="routine-rounds">${routine.config.rounds}</td>
+        <td class="routine-actions">
+          <div class="quick-actions" data-routine-id="${routine.id}">
+            <button class="action-btn share-btn" data-action="share" title="Share routine">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+            </button>
+            <button class="action-btn edit-btn" data-action="edit" title="Edit routine">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4-4 9.5-9.5a2.121 2.121 0 0 1 3-3L18.5 2.5Z"></path>
+              </svg>
+            </button>
+            <button class="action-btn delete-btn" data-action="delete" title="Delete routine">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21"></polyline>
+                <path d="M21 3 9 12 13 12 13"></path>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('')
+  }
+
+  function filterRoutines(query) {
+    const allRoutines = RoutineStorageService.getRoutines()
+    let filteredRoutines = []
+    
+    if (!query.trim()) {
+      filteredRoutines = [...allRoutines]
+    } else {
+      const lowerQuery = query.toLowerCase()
+      filteredRoutines = allRoutines.filter((routine) => {
+        const matchesName = routine.name.toLowerCase().includes(lowerQuery)
+        const matchesExercises = routine.exercises.some((ex) => 
+          ex.toLowerCase().includes(lowerQuery)
+        )
+        return matchesName || matchesExercises
+      })
+    }
+    
+    renderRoutines(filteredRoutines)
+  }
+
+  function handleShareRoutine(e) {
+    const { routineId } = e.detail
+    const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
+    
+    if (routine) {
+      // Import compress dynamically to avoid SSR issues
+      import('../assets/routineSharing').then(({ compressRoutine }) => {
+        const result = compressRoutine(routine)
+        if (result.success && result.url) {
+          navigator.clipboard.writeText(result.url)
+          alert('Share link copied to clipboard!')
+        } else {
+          alert('Failed to generate share link')
+        }
+      })
+    }
+  }
+
+  function handleEditRoutine(e) {
+    const { routineId } = e.detail
+    // Redirect to settings to edit the routine
+    window.location.href = `/settings?edit=${routineId}`
+  }
+
+  function handleDeleteRoutine(e) {
+    const { routineId } = e.detail
+    const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
+    
+    if (routine && confirm(`Are you sure you want to delete "${routine.name}"?`)) {
+      RoutineStorageService.deleteRoutine(routineId)
+      // Refresh the page
+      window.location.reload()
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initial render
+    renderRoutines(routines)
+    
+    // Listen for search events
+    document.addEventListener('search', (e) => {
+      filterRoutines(e.detail.query)
+    })
+
+    // Listen for routine action events
+    document.addEventListener('share-routine', handleShareRoutine)
+    document.addEventListener('edit-routine', handleEditRoutine)
+    document.addEventListener('delete-routine', handleDeleteRoutine)
+
+    // Handle create routine button
+    const createButton = document.querySelector('[data-action="create"]')
+    if (createButton) {
+      createButton.addEventListener('click', () => {
+        window.location.href = '/settings'
+      })
+    }
+  })
+</script>
+
+<style>
+  .trainer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .trainer-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+</style>
