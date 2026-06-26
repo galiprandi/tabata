@@ -1,0 +1,243 @@
+---
+---
+
+<div class="analysis-tools-panel">
+  <button class="panel-toggle" data-action="toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    Analysis Tools
+  </button>
+  
+  <div class="panel-content" style="display: none;">
+    <div class="tools-tabs">
+      <button class="tool-tab active" data-tool="filters">Filters</button>
+      <button class="tool-tab" data-tool="export">Export</button>
+      <button class="tool-tab" data-tool="annotations">Annotations</button>
+    </div>
+    
+    <div class="tool-content" data-tool="filters">
+      <div class="filters-container">
+        <div class="advanced-filters-wrapper">
+          <h4>Advanced Filters</h4>
+          <div class="filter-group">
+            <label>Date Range</label>
+            <div class="date-inputs">
+              <input type="date" class="date-input" data-filter="from" />
+              <span>to</span>
+              <input type="date" class="date-input" data-filter="to" />
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-primary" data-action="apply">Apply Filters</button>
+            <button class="btn btn-secondary" data-action="reset">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tool-content" data-tool="export" style="display: none;">
+      <div class="export-container">
+        <div class="data-export-wrapper">
+          <h4>Export Data</h4>
+          <div class="export-group">
+            <label>Format</label>
+            <select class="export-select" data-export="format">
+              <option value="csv">CSV</option>
+              <option value="json">JSON</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" data-action="export">Export</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tool-content" data-tool="annotations" style="display: none;">
+      <div class="annotations-container">
+        <div class="annotations-wrapper">
+          <h4>Annotations</h4>
+          <textarea class="annotation-textarea" placeholder="Add your feedback..." rows="3"></textarea>
+          <button class="btn btn-primary" data-action="save-note">Save Note</button>
+          <div class="annotations-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .analysis-tools-panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .panel-toggle {
+    width: 100%;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+  }
+
+  .panel-toggle:hover {
+    background: #e2e8f0;
+  }
+
+  .panel-content {
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .tools-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+
+  .tool-tab {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.2s;
+  }
+
+  .tool-tab:hover {
+    background: #f8fafc;
+    color: #1e293b;
+  }
+
+  .tool-tab.active {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .advanced-filters-wrapper h4,
+  .data-export-wrapper h4,
+  .annotations-wrapper h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .filter-group,
+  .export-group {
+    margin-bottom: 1rem;
+  }
+
+  .filter-group label,
+  .export-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .date-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .date-input,
+  .export-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .annotation-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+  }
+
+  .btn-secondary:hover {
+    background: #f8fafc;
+  }
+</style>
+
+<script>
+  const toggleButton = document.querySelector('[data-action="toggle"]') as HTMLButtonElement
+  const panelContent = document.querySelector('.panel-content') as HTMLElement
+  const toolTabs = document.querySelectorAll('.tool-tab') as NodeListOf<HTMLButtonElement>
+  
+  toggleButton.addEventListener('click', () => {
+    const isHidden = panelContent.style.display === 'none'
+    panelContent.style.display = isHidden ? 'block' : 'none'
+  })
+  
+  toolTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      toolTabs.forEach((t) => t.classList.remove('active'))
+      tab.classList.add('active')
+      
+      const tool = tab.dataset.tool
+      
+      // Hide all tool contents
+      document.querySelectorAll('.tool-content').forEach((content) => {
+        (content as HTMLElement).style.display = 'none'
+      })
+      
+      // Show selected tool content
+      const selectedContent = document.querySelector(`[data-tool="${tool}"]`)
+      if (selectedContent) {
+        (selectedContent as HTMLElement).style.display = 'block'
+      }
+    })
+  })
+</script>

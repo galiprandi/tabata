@@ -1,0 +1,75 @@
+---
+---
+
+<div class="data-export">
+  <h4>Export Data</h4>
+  
+  <div class="export-group">
+    <label>Format</label>
+    <select class="export-select" data-export="format">
+      <option value="csv">CSV</option>
+      <option value="json">JSON</option>
+    </select>
+  </div>
+  
+  <div class="export-group">
+    <label>Data to Export</label>
+    <select class="export-select" data-export="data">
+      <option value="all">All Data</option>
+      <option value="filtered">Filtered Data</option>
+    </select>
+  </div>
+  
+  <button class="btn btn-primary" data-action="export">Export</button>
+</div>
+
+<style>
+  .data-export h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .export-group {
+    margin-bottom: 1rem;
+  }
+
+  .export-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .export-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+
+  .btn-primary:hover {
+    background: #2563eb;
+  }
+</style>
