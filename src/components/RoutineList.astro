@@ -291,63 +291,81 @@ import EditItemIcon from "./EditItemIcon.astro";
 </script>
 
 <style>
+  #routine-list h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+  }
+
   .routine-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background-color 0.2s;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.75rem;
+    transition: background 0.2s;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+      background: var(--surface-hover);
     }
 
     &.active {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-left: 3px solid #4CAF50;
+      background: rgba(247, 193, 121, 0.1);
+      border-color: var(--color-accent);
     }
 
     .routine-info {
       flex-grow: 1;
+      text-align: left;
 
       .routine-name {
-        font-weight: bold;
-        font-size: 1.1em;
-        margin-bottom: 0.25em;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+        color: var(--text-primary);
       }
 
       .routine-details {
         display: flex;
-        gap: 1em;
-        font-size: 0.9em;
-        opacity: 0.8;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
       }
     }
 
     .routine-actions {
       display: flex;
-      gap: 0.5em;
+      gap: 0.5rem;
 
       button {
-        color: white;
+        color: var(--text-primary);
         border: 0;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 0.5em;
-        border-radius: 4px;
+        background: var(--surface-hover);
+        padding: 0.5rem;
+        border-radius: var(--radius-sm);
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: background 0.2s;
+        min-width: var(--touch-target);
+        min-height: var(--touch-target);
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.2);
         }
 
         &.select {
-          background-color: #4CAF50;
+          background: var(--color-accent);
+          color: var(--color--prep);
         }
 
         &.delete {
-          color: #ff6b6b;
+          color: var(--color-rest);
         }
       }
     }
@@ -355,14 +373,23 @@ import EditItemIcon from "./EditItemIcon.astro";
 
   #empty-routines-state {
     text-align: center;
-    padding: 2em;
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    margin: 1em 0;
+    padding: 2.5rem 2rem;
+    border: 2px dashed var(--surface-border);
+    border-radius: var(--radius-lg);
+    margin: 1rem 0;
+    background: var(--surface);
 
     & p {
-      margin-bottom: 1.5em;
-      opacity: 0.8;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
     }
+  }
+
+  #routine-list > .buttons button {
+    min-height: var(--touch-target-lg);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
   }
 </style>

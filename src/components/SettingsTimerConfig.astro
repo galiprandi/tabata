@@ -167,6 +167,10 @@ const className = vertical ? "vertical" : "horizontal";
     justify-content: center;
     align-items: center;
     gap: 1em;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
 
     &.vertical {
       flex-direction: column;
@@ -177,7 +181,10 @@ const className = vertical ? "vertical" : "horizontal";
       justify-content: space-evenly;
       align-items: center;
       flex-grow: 2;
-      font-size: 1.6em;
+      font-size: 1.4em;
+      width: 100%;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--surface-border);
 
       & > div {
         & svg {
@@ -209,7 +216,8 @@ const className = vertical ? "vertical" : "horizontal";
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      gap: 1em;
+      gap: 0.75em;
+      width: 100%;
     }
 
     & label {
@@ -220,12 +228,20 @@ const className = vertical ? "vertical" : "horizontal";
         position: absolute;
         top: 50%;
         transform: translate(10px, -50%);
+        opacity: 0.6;
       }
 
       & input {
         margin: 0;
         text-align: center;
         padding-left: 2.5em;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-weight: 600;
+        min-height: var(--touch-target-lg);
       }
     }
   }
@@ -236,10 +252,12 @@ const className = vertical ? "vertical" : "horizontal";
   #roundsContainer {
     display: flex;
     gap: 0.5em;
+    align-items: center;
   }
 
   #rounds {
-    background-color: var(--pico-primary-background);
+    background-color: rgba(247, 193, 121, 0.15);
+    border-color: var(--color-accent);
   }
 
   @media (width > 450px) {

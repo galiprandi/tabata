@@ -13,7 +13,7 @@
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--surface-border);
     padding-bottom: 0.5rem;
   }
 
@@ -21,22 +21,23 @@
     padding: 0.5rem 1rem;
     background: transparent;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #64748b;
+    color: var(--text-secondary);
     transition: all 0.2s;
+    min-height: var(--touch-target);
   }
 
   .tab-button:hover {
-    background: #f8fafc;
-    color: #1e293b;
+    background: var(--surface-hover);
+    color: var(--text-primary);
   }
 
   .tab-button.active {
-    background: #3b82f6;
-    color: white;
+    background: var(--color-accent);
+    color: var(--text-primary);
   }
 </style>
 

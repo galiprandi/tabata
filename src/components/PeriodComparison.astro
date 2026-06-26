@@ -18,16 +18,16 @@
 
 <style>
   .period-comparison {
-    background: white;
-    border-radius: 8px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
   }
 
   .period-comparison h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 1rem;
   }
 
@@ -39,10 +39,11 @@
 
   .period-select {
     padding: 0.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: white;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-elevated);
     font-size: 0.875rem;
+    min-height: var(--touch-target);
   }
 
   .comparison-results {
@@ -53,22 +54,22 @@
 
   .comparison-metric {
     padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    background: var(--surface-elevated);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--surface-border);
     text-align: center;
   }
 
   .metric-label {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
   }
 
   .metric-value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-primary);
   }
 
   .metric-delta {
@@ -77,10 +78,10 @@
   }
 
   .metric-delta.positive {
-    color: #10b981;
+    color: var(--color-work);
   }
 
   .metric-delta.negative {
-    color: #ef4444;
+    color: var(--color-rest);
   }
 </style>

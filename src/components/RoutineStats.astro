@@ -48,23 +48,23 @@
 
 <style>
   .routine-stats {
-    background: white;
-    border-radius: 8px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
   }
 
   .routine-stats h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 1rem;
   }
 
   .empty-state {
     text-align: center;
     padding: 2rem;
-    color: #64748b;
+    color: var(--text-secondary);
   }
 
   .stats-list {
@@ -75,14 +75,14 @@
 
   .stat-item {
     padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    background: var(--surface-elevated);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-border);
   }
 
   .stat-name {
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
   }
 
@@ -99,24 +99,24 @@
   }
 
   .metric-label {
-    color: #64748b;
+    color: var(--text-secondary);
   }
 
   .metric-value {
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
   }
 
   .stat-progress {
     height: 4px;
-    background: #e2e8f0;
-    border-radius: 2px;
+    background: var(--surface-border);
+    border-radius: var(--radius-sm);
     overflow: hidden;
   }
 
   .progress-bar {
     height: 100%;
-    background: #3b82f6;
+    background: var(--color-accent);
     transition: width 0.3s;
   }
 </style>

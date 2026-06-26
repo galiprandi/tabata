@@ -92,6 +92,21 @@ import AudioControl from '../components/AudioControl.astro'
     --pico-color: white !important;
     --pico-h1-color: white !important;
     --color-links: white;
+
+    /* Modern UI tokens */
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.1);
+    --surface-border: rgba(255, 255, 255, 0.12);
+    --surface-elevated: rgba(255, 255, 255, 0.08);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --text-primary: white;
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --touch-target: 48px;
+    --touch-target-lg: 56px;
   }
 
   * {
@@ -111,7 +126,7 @@ import AudioControl from '../components/AudioControl.astro'
       -apple-system,
       sans-serif;
     text-align: center;
-    color: white;
+    color: var(--text-primary);
     transition: background-color 0.5s;
     overscroll-behavior-y: contain;
   }
@@ -172,8 +187,8 @@ import AudioControl from '../components/AudioControl.astro'
   button,
   .button,
   [role="button"] {
-    min-height: 48px;
-    min-width: 48px;
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -262,6 +277,85 @@ import AudioControl from '../components/AudioControl.astro'
   progress[value]::-webkit-progress-value {
     margin: auto;
     border-radius: 5px;
+  }
+
+  /* Modern card style - reusable across all views */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+
+  .card-elevated {
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+  }
+
+  /* Modern overlay style - reusable for modals */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+
+  /* Modern button styles */
+  .btn-modern {
+    min-height: var(--touch-target-lg);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform 0.15s, opacity 0.2s;
+  }
+
+  .btn-modern:active {
+    transform: scale(0.96);
+  }
+
+  .btn-modern.primary {
+    background: var(--color-accent);
+    color: var(--color--prep);
+  }
+
+  .btn-modern.secondary {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--surface-border);
+  }
+
+  .btn-modern.danger {
+    background: transparent;
+    color: var(--color-rest);
+    border: 1px solid var(--color-rest);
+  }
+
+  /* Stat label style */
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .stat-value {
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
   }
 </style>
 

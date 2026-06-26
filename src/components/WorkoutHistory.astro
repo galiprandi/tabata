@@ -57,10 +57,10 @@
 
 <style>
   .workout-history {
-    background: white;
-    border-radius: 8px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
   }
 
   .history-header {
@@ -73,34 +73,40 @@
   .history-header h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin: 0;
   }
 
   .btn {
     padding: 0.5rem 1rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background: white;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--text-primary);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
+    min-height: var(--touch-target);
     transition: all 0.2s;
   }
 
+  .btn:hover {
+    background: var(--surface-hover);
+  }
+
   .btn-danger {
-    color: #ef4444;
-    border-color: #ef4444;
+    color: var(--color-rest);
+    border-color: var(--color-rest);
   }
 
   .btn-danger:hover {
-    background: #fef2f2;
+    background: rgba(204, 102, 119, 0.15);
   }
 
   .empty-state {
     text-align: center;
     padding: 3rem;
-    color: #64748b;
+    color: var(--text-secondary);
   }
 
   .history-list {
@@ -114,14 +120,14 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    background: var(--surface-elevated);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--surface-border);
   }
 
   .history-date {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     white-space: nowrap;
   }
 
@@ -131,18 +137,18 @@
 
   .history-routine {
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
   }
 
   .history-exercises {
     font-size: 0.875rem;
-    color: #64748b;
+    color: var(--text-secondary);
     margin-top: 0.25rem;
   }
 
   .history-duration {
     font-weight: 600;
-    color: #3b82f6;
+    color: var(--color-accent);
     white-space: nowrap;
   }
 </style>

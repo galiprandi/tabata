@@ -89,6 +89,9 @@ const { title, description } = Astro.props
   .help-modal article {
     width: 90vw;
     max-width: 600px;
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-xl);
   }
 
   .help-modal .content {
@@ -99,8 +102,10 @@ const { title, description } = Astro.props
 
   .btn-close-dialog {
     width: 100%;
-    min-height: 3.5rem;
-    font-size: 1.2rem;
+    min-height: var(--touch-target-lg);
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
   }
 
   @media (orientation: landscape) and (max-height: 500px) {

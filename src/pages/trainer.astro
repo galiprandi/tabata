@@ -240,14 +240,14 @@ import SearchBar from '@components/SearchBar.astro'
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
     border: 1px solid var(--color-accent);
-    border-radius: var(--pico-border-radius, 8px);
+    border-radius: var(--radius-md);
     background: var(--color-accent);
     color: var(--color--prep);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
-    min-height: 48px;
+    min-height: var(--touch-target-lg);
   }
 
   .btn-create:hover {
@@ -265,16 +265,16 @@ import SearchBar from '@components/SearchBar.astro'
   }
 
   .routine-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
     padding: 1.25rem;
     transition: border-color 0.2s, background 0.2s;
   }
 
   .routine-card:hover {
     border-color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.09);
+    background: var(--surface-hover);
   }
 
   .card-header {
@@ -303,18 +303,18 @@ import SearchBar from '@components/SearchBar.astro'
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.7);
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s;
   }
 
   .action-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--surface-hover);
     border-color: rgba(255, 255, 255, 0.3);
   }
 
@@ -353,16 +353,16 @@ import SearchBar from '@components/SearchBar.astro'
     background: rgba(68, 170, 153, 0.2);
     color: var(--color-work);
     padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.8rem;
     font-weight: 500;
   }
 
   .exercise-count {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.6);
+    background: var(--surface-hover);
+    color: var(--text-secondary);
     padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.8rem;
     font-weight: 500;
   }
@@ -380,20 +380,20 @@ import SearchBar from '@components/SearchBar.astro'
     gap: 0.15rem;
     padding: 0.6rem 0.4rem;
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
 
   .timing-label {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-muted);
   }
 
   .timing-value {
     font-size: 1rem;
     font-weight: 700;
-    color: white;
+    color: var(--text-primary);
   }
 
   .empty-state {
@@ -402,7 +402,7 @@ import SearchBar from '@components/SearchBar.astro'
     align-items: center;
     gap: 1rem;
     padding: 3rem 1rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-muted);
     text-align: center;
   }
 

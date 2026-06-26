@@ -39,12 +39,18 @@ import AudioOffIcon from "./AudioOffIcon.astro";
 
   button {
     font-size: 1.7em;
-    color: white;
-    background: none;
-    border: 0;
-    padding: 0;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 50%;
+    padding: 0.5rem;
     cursor: pointer;
     display: none;
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
   }
 </style>
 

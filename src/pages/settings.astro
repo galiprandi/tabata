@@ -41,12 +41,24 @@ import GoToHistory from '@components/GoToHistory.astro'
     grid-template-columns: 9em 1fr;
     gap: 1.5em;
     align-items: start;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .routine-section {
     display: flex;
     flex-direction: column;
     gap: 1.5em;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
   }
 
   @media (width <= 450px) {
