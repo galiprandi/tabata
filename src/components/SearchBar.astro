@@ -6,11 +6,12 @@
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
-  <input 
-    type="text" 
-    placeholder="Search by name or exercise..." 
+  <input
+    type="text"
+    placeholder="Buscar rutina o ejercicio..."
     class="search-input"
     data-search-input
+    aria-label="Buscar rutina o ejercicio"
   />
 </div>
 
@@ -18,22 +19,23 @@
   .search-bar {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    background: white;
-    border: 1px solid #e2e8f0;
+    gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 8px;
     padding: 0.5rem 1rem;
-    width: 400px;
+    flex: 1;
+    min-width: 0;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
 
   .search-bar:focus-within {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(247, 193, 121, 0.15);
   }
 
   .search-icon {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.5);
     flex-shrink: 0;
   }
 
@@ -41,13 +43,14 @@
     flex: 1;
     border: none;
     outline: none;
-    font-size: 0.875rem;
-    color: #1e293b;
+    font-size: 0.95rem;
+    color: white;
     background: transparent;
+    min-width: 0;
   }
 
   .search-input::placeholder {
-    color: #94a3b8;
+    color: rgba(255, 255, 255, 0.4);
   }
 </style>
 
@@ -59,12 +62,11 @@
 
     searchInput.addEventListener('input', (e) => {
       const query = (e.target as HTMLInputElement).value;
-      
+
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
-        // Dispatch search event
-        const searchEvent = new CustomEvent('search', { 
-          detail: { query } 
+        const searchEvent = new CustomEvent('search', {
+          detail: { query }
         });
         document.dispatchEvent(searchEvent);
       }, 300);
