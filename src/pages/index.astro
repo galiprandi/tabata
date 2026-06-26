@@ -4,6 +4,8 @@ import Layout from '../layouts/layout.astro'
 import InstallApp from '@components/InstallApp.astro'
 import ShareApp from '@components/ShareApp.astro'
 import GoToSettings from '@components/GoToSettings.astro'
+import GoToHistory from '@components/GoToHistory.astro'
+import GoToTrainer from '@components/GoToTrainer.astro'
 import RoutineSelector from '@components/RoutineSelector.astro'
 import RoutinePreview from '@components/RoutinePreview.astro'
 import SaveConfirmation from '@components/SaveConfirmation.astro'
@@ -18,11 +20,13 @@ import ProgressView from '@components/ProgressView.astro'
 
   <nav class="buttons">
     <GoToSettings />
+    <GoToHistory />
     <GoToTrain />
   </nav>
 
   <footer>
     <ShareApp />
+    <GoToTrainer />
     <InstallApp />
   </footer>
 
@@ -139,14 +143,16 @@ import ProgressView from '@components/ProgressView.astro'
     }
   }
 
-  function updateProgressView(progressData) {
+  function updateProgressView(progressResult) {
     const progressModal = document.getElementById('shared-progress-modal')
-    if (!progressModal) return
+    if (!progressModal || !progressResult.progress) return
+
+    const progress = progressResult.progress
 
     // Update user pseudo
     const userElement = document.querySelector('[data-user-pseudo]')
     if (userElement) {
-      userElement.textContent = progressData.userPseudo ? `Shared by ${progressData.userPseudo}` : 'Shared Progress'
+      userElement.textContent = progress.userPseudo ? `Shared by ${progress.userPseudo}` : 'Shared Progress'
     }
 
     // Update stats
@@ -155,15 +161,15 @@ import ProgressView from '@components/ProgressView.astro'
     const uniqueRoutinesEl = document.querySelector('[data-stat="uniqueRoutines"]')
     const streakEl = document.querySelector('[data-stat="streak"]')
     
-    if (totalWorkoutsEl) totalWorkoutsEl.textContent = progressData.summary.totalWorkouts.toString()
-    if (totalDurationEl) totalDurationEl.textContent = `${Math.floor(progressData.summary.totalDuration / 60)}m`
-    if (uniqueRoutinesEl) uniqueRoutinesEl.textContent = progressData.summary.uniqueRoutines.toString()
-    if (streakEl) streakEl.textContent = progressData.summary.streak.toString()
+    if (totalWorkoutsEl) totalWorkoutsEl.textContent = progress.summary.totalWorkouts.toString()
+    if (totalDurationEl) totalDurationEl.textContent = `${Math.floor(progress.summary.totalDuration / 60)}m`
+    if (uniqueRoutinesEl) uniqueRoutinesEl.textContent = progress.summary.uniqueRoutines.toString()
+    if (streakEl) streakEl.textContent = progress.summary.streak.toString()
 
     // Update workout list
     const workoutList = document.querySelector('.workout-list')
     if (workoutList) {
-      workoutList.innerHTML = progressData.workoutLogs.map((log) => `
+      workoutList.innerHTML = progress.workoutLogs.map((log) => `
         <div class="workout-item">
           <div class="workout-date">
             ${new Date(log.date).toLocaleDateString()}
@@ -217,8 +223,21 @@ import ProgressView from '@components/ProgressView.astro'
 
     // Check for shared progress in URL
     const progressData = decompressProgress()
-    if (progressData.success && progressData.url) {
+    if (progressData.success && progressData.progress) {
       updateProgressView(progressData)
+    }
+
+    // Close progress modal handler
+    const progressModal = document.getElementById('shared-progress-modal')
+    if (progressModal) {
+      progressModal.addEventListener('click', (e) => {
+        if (e.target === progressModal) {
+          const url = new URL(window.location.href)
+          url.searchParams.delete('progress')
+          window.history.replaceState({}, '', url.toString())
+          progressModal.style.display = 'none'
+        }
+      })
     }
   })
 </script>

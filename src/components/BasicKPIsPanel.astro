@@ -2,73 +2,120 @@
 ---
 
 <div class="basic-kpis-panel">
-  <h3>Key Performance Indicators</h3>
+  <h3>Indicadores clave</h3>
   <div class="kpis-grid"></div>
 </div>
 
 <style>
   .basic-kpis-panel {
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .basic-kpis-panel h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 1rem;
+    color: white;
+    margin: 0 0 1rem 0;
   }
 
   .kpis-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
   }
 
   .kpi-card {
     padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .kpi-name {
-    font-size: 0.875rem;
-    color: #64748b;
-    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
   }
 
   .kpi-value {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: #1e293b;
+    color: white;
   }
 
   .kpi-unit {
-    font-size: 0.875rem;
-    color: #64748b;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
     margin-left: 0.25rem;
   }
-
-  .kpi-trend {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-  }
-
-  .kpi-trend.up {
-    color: #10b981;
-  }
-
-  .kpi-trend.down {
-    color: #ef4444;
-  }
-
-  .kpi-trend.stable {
-    color: #64748b;
-  }
 </style>
+
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+
+  function renderKPIs(logs: any[]) {
+    const grid = document.querySelector('.kpis-grid')
+    if (!grid) return
+
+    const totalWorkouts = logs.length
+    const totalDuration = logs.reduce((sum, log) => sum + log.duration, 0)
+    const totalMinutes = Math.floor(totalDuration / 60)
+    const uniqueRoutines = new Set(logs.map((log) => log.routineSnapshot.name)).size
+
+    // Calculate streak
+    const dates = [...new Set(logs.map((log) => {
+      const d = new Date(log.date)
+      d.setHours(0, 0, 0, 0)
+      return d.getTime()
+    }))].sort((a, b) => b - a)
+
+    let streak = 0
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const oneDay = 24 * 60 * 60 * 1000
+    let checkDate = today.getTime()
+
+    if (dates.length > 0 && dates[0] !== checkDate) {
+      checkDate -= oneDay
+    }
+
+    for (const date of dates) {
+      if (date === checkDate) {
+        streak++
+        checkDate -= oneDay
+      } else if (date < checkDate) {
+        break
+      }
+    }
+
+    const kpis = [
+      { name: 'Entrenamientos', value: totalWorkouts, unit: '' },
+      { name: 'Tiempo total', value: totalMinutes, unit: 'min' },
+      { name: 'Rutinas únicas', value: uniqueRoutines, unit: '' },
+      { name: 'Racha', value: streak, unit: 'días' },
+    ]
+
+    grid.innerHTML = kpis.map((kpi) => `
+      <div class="kpi-card">
+        <div class="kpi-name">${kpi.name}</div>
+        <div class="kpi-value">${kpi.value}<span class="kpi-unit">${kpi.unit}</span></div>
+      </div>
+    `).join('')
+  }
+
+  // Initial render
+  renderKPIs(WorkoutLogService.getLogs())
+
+  // Listen for filter changes
+  document.addEventListener('filters-applied', (e: Event) => {
+    const detail = (e as CustomEvent).detail
+    if (detail?.filteredLogs) {
+      renderKPIs(detail.filteredLogs)
+    }
+  })
+</script>

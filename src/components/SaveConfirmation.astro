@@ -102,18 +102,19 @@
 </style>
 
 <script>
-  const cancelButton = document.querySelector('.btn-cancel') as HTMLButtonElement;
-  const confirmButton = document.querySelector('.btn-confirm') as HTMLButtonElement;
+  const confirmation = document.querySelector('.save-confirmation');
+  const cancelButton = document.querySelector('.save-confirmation .btn-cancel') as HTMLButtonElement;
+  const confirmButton = document.querySelector('.save-confirmation .btn-confirm') as HTMLButtonElement;
 
-  if (cancelButton) {
+  if (cancelButton && confirmation) {
     cancelButton.addEventListener('click', () => {
-      cancelButton.dispatchEvent(new CustomEvent('cancel'));
+      confirmation.dispatchEvent(new CustomEvent('cancel', { bubbles: true }));
     });
   }
 
-  if (confirmButton) {
+  if (confirmButton && confirmation) {
     confirmButton.addEventListener('click', () => {
-      confirmButton.dispatchEvent(new CustomEvent('confirm'));
+      confirmation.dispatchEvent(new CustomEvent('confirm', { bubbles: true }));
     });
   }
 </script>

@@ -2,31 +2,31 @@
 ---
 
 <div class="timeline-chart">
-  <h3>Workout Timeline</h3>
+  <h3>Línea de tiempo</h3>
   <div class="chart-container">
     <svg class="chart-svg" viewBox="0 0 600 200"></svg>
   </div>
   <div class="chart-legend">
     <div class="legend-item">
-      <div class="legend-color" style="background: #3b82f6;"></div>
-      <span>Workouts</span>
+      <div class="legend-color"></div>
+      <span>Entrenamientos</span>
     </div>
   </div>
 </div>
 
 <style>
   .timeline-chart {
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .timeline-chart h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 1rem;
+    color: white;
+    margin: 0 0 1rem 0;
   }
 
   .chart-container {
@@ -49,13 +49,68 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.875rem;
-    color: #64748b;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .legend-color {
     width: 12px;
     height: 12px;
     border-radius: 2px;
+    background: var(--color-work);
   }
 </style>
+
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+
+  function renderChart(logs: any[]) {
+    const svg = document.querySelector('.chart-svg') as SVGElement
+    if (!svg) return
+
+    if (logs.length === 0) {
+      svg.innerHTML = '<text x="300" y="100" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="14">Sin datos</text>'
+      return
+    }
+
+    // Group by day
+    const byDay = new Map<string, number>()
+    logs.forEach((log) => {
+      const d = new Date(log.date)
+      d.setHours(0, 0, 0, 0)
+      const key = d.toISOString().split('T')[0]
+      byDay.set(key, (byDay.get(key) || 0) + 1)
+    })
+
+    const days = Array.from(byDay.entries()).sort((a, b) => a[0].localeCompare(b[0]))
+    const maxCount = Math.max(...days.map((d) => d[1]), 1)
+
+    const width = 600
+    const height = 200
+    const padding = 30
+    const chartWidth = width - padding * 2
+    const chartHeight = height - padding * 2
+
+    const points = days.map((day, i) => {
+      const x = padding + (i / Math.max(days.length - 1, 1)) * chartWidth
+      const y = padding + chartHeight - (day[1] / maxCount) * chartHeight
+      return { x, y, count: day[1] }
+    })
+
+    const pathData = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+    const bars = points.map((p) => `<rect x="${p.x - 3}" y="${p.y}" width="6" height="${padding + chartHeight - p.y}" fill="var(--color-work)" opacity="0.7" rx="2"/>`).join('')
+    const line = `<path d="${pathData}" fill="none" stroke="var(--color-work)" stroke-width="2"/>`
+    const dots = points.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="3" fill="white" stroke="var(--color-work)" stroke-width="2"/>`).join('')
+
+    svg.innerHTML = bars + line + dots
+  }
+
+  renderChart(WorkoutLogService.getLogs())
+
+  document.addEventListener('filters-applied', (e: Event) => {
+    const detail = (e as CustomEvent).detail
+    if (detail?.filteredLogs) {
+      renderChart(detail.filteredLogs)
+    }
+  })
+</script>

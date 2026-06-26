@@ -2,23 +2,23 @@
 ---
 
 <div class="basic-trend-analysis">
-  <h3>Trend Analysis</h3>
+  <h3>Tendencias</h3>
   <div class="trends-list"></div>
 </div>
 
 <style>
   .basic-trend-analysis {
-    background: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .basic-trend-analysis h3 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 1rem;
+    color: white;
+    margin: 0 0 1rem 0;
   }
 
   .trends-list {
@@ -32,14 +32,15 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .trend-metric {
     font-weight: 600;
-    color: #1e293b;
+    color: white;
+    font-size: 0.9rem;
   }
 
   .trend-indicator {
@@ -49,23 +50,113 @@
   }
 
   .trend-direction {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .trend-change {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: 600;
   }
 
   .trend-change.up {
-    color: #10b981;
+    color: var(--color-work);
   }
 
   .trend-change.down {
-    color: #ef4444;
+    color: var(--color-rest);
   }
 
   .trend-change.stable {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.5);
   }
 </style>
+
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+
+  function renderTrends(logs: any[]) {
+    const list = document.querySelector('.trends-list')
+    if (!list) return
+
+    if (logs.length === 0) {
+      list.innerHTML = '<p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">Sin datos suficientes</p>'
+      return
+    }
+
+    const now = Date.now()
+    const oneWeek = 7 * 24 * 60 * 60 * 1000
+    const recentLogs = logs.filter((log) => log.date > now - oneWeek)
+    const olderLogs = logs.filter((log) => log.date <= now - oneWeek && log.date > now - oneWeek * 2)
+
+    const recentAvg = recentLogs.length > 0 ? recentLogs.reduce((s, l) => s + l.duration, 0) / recentLogs.length : 0
+    const olderAvg = olderLogs.length > 0 ? olderLogs.reduce((s, l) => s + l.duration, 0) / olderLogs.length : 0
+
+    const durationDiff = recentAvg - olderAvg
+    const durationPct = olderAvg > 0 ? Math.round((durationDiff / olderAvg) * 100) : 0
+
+    const recentFreq = recentLogs.length
+    const olderFreq = olderLogs.length
+    const freqDiff = recentFreq - olderFreq
+
+    const uniqueRoutines = new Set(logs.map((l) => l.routineSnapshot.name)).size
+    const uniqueExercises = new Set(logs.flatMap((l) => l.routineSnapshot.exercises)).size
+
+    function trendIcon(diff: number) {
+      if (diff > 0) return '↗'
+      if (diff < 0) return '↘'
+      return '→'
+    }
+
+    function trendClass(diff: number) {
+      if (diff > 0) return 'up'
+      if (diff < 0) return 'down'
+      return 'stable'
+    }
+
+    const trends = [
+      {
+        metric: 'Frecuencia semanal',
+        direction: trendIcon(freqDiff),
+        change: `${recentFreq} esta semana`,
+        cls: trendClass(freqDiff),
+      },
+      {
+        metric: 'Duración promedio',
+        direction: trendIcon(durationDiff),
+        change: `${Math.round(recentAvg / 60)}min (${durationPct > 0 ? '+' : ''}${durationPct}%)`,
+        cls: trendClass(durationDiff),
+      },
+      {
+        metric: 'Variedad de rutinas',
+        direction: '→',
+        change: `${uniqueRoutines} rutinas`,
+        cls: 'stable',
+      },
+      {
+        metric: 'Variedad de ejercicios',
+        direction: '→',
+        change: `${uniqueExercises} ejercicios`,
+        cls: 'stable',
+      },
+    ]
+
+    list.innerHTML = trends.map((t) => `
+      <div class="trend-item">
+        <div class="trend-metric">${t.metric}</div>
+        <div class="trend-indicator">
+          <span class="trend-direction">${t.direction}</span>
+          <span class="trend-change ${t.cls}">${t.change}</span>
+        </div>
+      </div>
+    `).join('')
+  }
+
+  renderTrends(WorkoutLogService.getLogs())
+
+  document.addEventListener('filters-applied', (e: Event) => {
+    const detail = (e as CustomEvent).detail
+    if (detail?.filteredLogs) {
+      renderTrends(detail.filteredLogs)
+    }
+  })
+</script>

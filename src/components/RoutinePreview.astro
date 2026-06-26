@@ -189,20 +189,19 @@ const { routine } = Astro.props;
 </style>
 
 <script>
-  const cancelButton = document.querySelector('.btn-cancel') as HTMLButtonElement;
-  const saveButton = document.querySelector('.btn-save') as HTMLButtonElement;
+  const preview = document.querySelector('.routine-preview');
+  const cancelButton = document.querySelector('.routine-preview .btn-cancel') as HTMLButtonElement;
+  const saveButton = document.querySelector('.routine-preview .btn-save') as HTMLButtonElement;
 
-  if (cancelButton) {
+  if (cancelButton && preview) {
     cancelButton.addEventListener('click', () => {
-      // This will be handled by the parent component
-      cancelButton.dispatchEvent(new CustomEvent('cancel'));
+      preview.dispatchEvent(new CustomEvent('cancel', { bubbles: true }));
     });
   }
 
-  if (saveButton) {
+  if (saveButton && preview) {
     saveButton.addEventListener('click', () => {
-      // This will be handled by the parent component
-      saveButton.dispatchEvent(new CustomEvent('save'));
+      preview.dispatchEvent(new CustomEvent('save', { bubbles: true }));
     });
   }
 </script>

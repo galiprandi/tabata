@@ -19,6 +19,7 @@ export interface SharedProgress {
 export interface ShareProgressResult {
   success: boolean;
   url?: string;
+  progress?: SharedProgress;
   error?: string;
 }
 
@@ -180,7 +181,7 @@ export function decompressProgress(): ShareProgressResult {
       return { success: false, error: 'Invalid progress data structure' };
     }
 
-    return { success: true, url: window.location.href };
+    return { success: true, url: window.location.href, progress };
   } catch (error) {
     return { success: false, error: 'Failed to decompress progress data' };
   }

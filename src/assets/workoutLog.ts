@@ -220,9 +220,9 @@ export class WorkoutLogService {
 
     const now = Date.now();
     const oneWeek = 7 * 24 * 60 * 60 * 1000;
-    const oneMonthAgo = now - oneWeek;
+    const oneWeekAgo = now - oneWeek;
 
-    const recentLogs = logs.filter((log) => log.date > oneMonthAgo);
+    const recentLogs = logs.filter((log) => log.date > oneWeekAgo);
     return recentLogs.length;
   }
 }
