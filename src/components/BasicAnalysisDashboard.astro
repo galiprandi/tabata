@@ -1,0 +1,58 @@
+---
+import BasicKPIsPanel from './BasicKPIsPanel.astro'
+import BasicTrendAnalysis from './BasicTrendAnalysis.astro'
+import TimelineChart from './TimelineChart.astro'
+---
+
+<div class="basic-analysis-dashboard">
+  <h2>Basic Analysis</h2>
+  
+  <div class="dashboard-grid">
+    <div class="dashboard-section">
+      <BasicKPIsPanel />
+    </div>
+    
+    <div class="dashboard-section">
+      <BasicTrendAnalysis />
+    </div>
+    
+    <div class="dashboard-section full-width">
+      <TimelineChart />
+    </div>
+  </div>
+</div>
+
+<style>
+  .basic-analysis-dashboard {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .basic-analysis-dashboard h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .dashboard-section {
+    min-height: 200px;
+  }
+
+  .dashboard-section.full-width {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

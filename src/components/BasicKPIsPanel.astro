@@ -1,0 +1,74 @@
+---
+---
+
+<div class="basic-kpis-panel">
+  <h3>Key Performance Indicators</h3>
+  <div class="kpis-grid"></div>
+</div>
+
+<style>
+  .basic-kpis-panel {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .basic-kpis-panel h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .kpis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .kpi-card {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .kpi-name {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .kpi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .kpi-unit {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-left: 0.25rem;
+  }
+
+  .kpi-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+
+  .kpi-trend.up {
+    color: #10b981;
+  }
+
+  .kpi-trend.down {
+    color: #ef4444;
+  }
+
+  .kpi-trend.stable {
+    color: #64748b;
+  }
+</style>
