@@ -7,15 +7,15 @@ import EditItemIcon from "./EditItemIcon.astro";
 <section id="routine-list">
   <h2 data-i18n="My Routines">My Routines</h2>
   <section id="routines-list">
-    <span aria-busy="true">Loading...</span>
+    <span aria-busy="true" data-i18n="Loading...">Loading...</span>
   </section>
 
   <section class="buttons">
     <button
       id="add-new-routine"
       class="secondary"
-      title="Add new routine"
-      aria-label="Add new routine"
+      data-i18n-title="Add new routine"
+      data-i18n-aria-label="Add new routine"
     >
       <Plus />
       <span data-i18n="New Routine">New Routine</span>
@@ -40,12 +40,13 @@ import EditItemIcon from "./EditItemIcon.astro";
 
       <form>
         <fieldset role="group">
-          <label for="routine-name">Routine Name</label>
+          <label for="routine-name" data-i18n="Routine Name">Routine Name</label>
           <input
             type="text"
             id="routine-name"
             name="routine-name"
             placeholder="e.g., Full Body, Cardio"
+            data-i18n-placeholder="e.g., Full Body, Cardio"
             required
           />
         </fieldset>
@@ -70,10 +71,18 @@ import EditItemIcon from "./EditItemIcon.astro";
         </div>
       </div>
       <div class="routine-actions">
-        <button class="select" title="Select routine" aria-label="Select routine">
+        <button
+          class="select"
+          data-i18n-title="Select routine"
+          data-i18n-aria-label="Select routine"
+        >
           ✓
         </button>
-        <button class="edit" title="Edit routine" aria-label="Edit routine">
+        <button
+          class="edit"
+          data-i18n-title="Edit routine"
+          data-i18n-aria-label="Edit routine"
+        >
           <EditItemIcon />
         </button>
         <button class="share" title="Share routine" aria-label="Share routine">
@@ -85,7 +94,11 @@ import EditItemIcon from "./EditItemIcon.astro";
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
           </svg>
         </button>
-        <button class="delete" title="Delete routine" aria-label="Delete routine">
+        <button
+          class="delete"
+          data-i18n-title="Delete routine"
+          data-i18n-aria-label="Delete routine"
+        >
           <TrashIcon />
         </button>
       </div>
@@ -97,6 +110,8 @@ import EditItemIcon from "./EditItemIcon.astro";
   import { RoutineStorageService } from "../assets/routine";
   import { compressRoutine } from "../assets/routineSharing";
   import { onClick } from "@assets/domHelpers";
+  import { t, initTranslation } from "../assets/dictionary";
+  import { play } from "@assets/audio";
 
   const routineModal = document.getElementById(
     "routine-modal",
@@ -135,7 +150,8 @@ import EditItemIcon from "./EditItemIcon.astro";
     routinesList.innerHTML = "";
 
     routines.forEach((routine) => {
-      const clone = template.content.cloneNode(true) as HTMLDivElement;
+      const clone = template.content.cloneNode(true) as DocumentFragment;
+      initTranslation(clone);
       const item = clone.querySelector(".routine-item") as HTMLDivElement;
       const nameElement = item.querySelector(".routine-name") as HTMLDivElement;
       const timeElement = item.querySelector(".routine-time") as HTMLDivElement;
@@ -151,19 +167,21 @@ import EditItemIcon from "./EditItemIcon.astro";
       }
 
       item.querySelectorAll("button").forEach((button) => {
-        const { className } = button;
         button.addEventListener("click", async () => {
-          if (className.includes("select")) {
+          await play("tap", true);
+          if (button.classList.contains("select")) {
             RoutineStorageService.setActiveRoutineId(routine.id);
             updateRoutineList();
           }
-          if (className.includes("edit")) {
+          if (button.classList.contains("edit")) {
+            const title = routineModal.querySelector(".title");
+            if (title) title.textContent = t("Edit Routine");
             routineNameInput.value = routine.name;
             routineModal.dataset.routineId = routine.id;
             routineModal.showModal();
             routineNameInput.focus();
           }
-          if (className.includes("share")) {
+          if (button.classList.contains("share")) {
             const result = compressRoutine(routine);
             if (result.success && result.url) {
               try {
@@ -186,8 +204,15 @@ import EditItemIcon from "./EditItemIcon.astro";
               }
             }
           }
-          if (className.includes("delete")) {
-            if (confirm(`Are you sure you want to delete "${routine.name}"?`)) {
+          if (button.classList.contains("delete")) {
+            if (
+              confirm(
+                t('Are you sure you want to delete "{name}"?').replace(
+                  "{name}",
+                  routine.name,
+                ),
+              )
+            ) {
               RoutineStorageService.deleteRoutine(routine.id);
               updateRoutineList();
             }
@@ -203,27 +228,35 @@ import EditItemIcon from "./EditItemIcon.astro";
     if (!routineModal) throw new Error("Modal not found");
     if (!routineNameInput) throw new Error("Input not found");
 
-    onClick("#add-new-routine", () => {
+    onClick("#add-new-routine", async () => {
+      await play("tap", true);
+      const title = routineModal.querySelector(".title");
+      if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.showModal();
       routineNameInput.focus();
     });
 
-    onClick("#add-first-routine", () => {
+    onClick("#add-first-routine", async () => {
+      await play("tap", true);
+      const title = routineModal.querySelector(".title");
+      if (title) title.textContent = t("New Routine");
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.showModal();
       routineNameInput.focus();
     });
 
-    onClick("#routine-modal-cancel", () => {
+    onClick("#routine-modal-cancel", async () => {
+      await play("tap", true);
       routineNameInput.value = "";
       delete routineModal.dataset.routineId;
       routineModal.close();
     });
 
-    onClick("#routine-modal-save", () => {
+    onClick("#routine-modal-save", async () => {
+      await play("tap", true);
       const name = routineNameInput.value.trim();
       if (!name) return;
 

@@ -95,6 +95,119 @@ export const dictionary = {
     en: "Add Exercise",
     es: "Agregar Ejercicio",
   },
+  "New Routine": {
+    en: "New Routine",
+    es: "Nueva Rutina",
+  },
+  "Edit Routine": {
+    en: "Edit Routine",
+    es: "Editar Rutina",
+  },
+  "New Exercise": {
+    en: "New Exercise",
+    es: "Nuevo Ejercicio",
+  },
+  "Edit Exercise": {
+    en: "Edit Exercise",
+    es: "Editar Ejercicio",
+  },
+  "Add new routine": {
+    en: "Add new routine",
+    es: "Agregar nueva rutina",
+  },
+  "Create Routine": {
+    en: "Create Routine",
+    es: "Crear Rutina",
+  },
+  "Select routine": {
+    en: "Select routine",
+    es: "Seleccionar rutina",
+  },
+  "Edit routine": {
+    en: "Edit routine",
+    es: "Editar rutina",
+  },
+  "Delete routine": {
+    en: "Delete routine",
+    es: "Eliminar rutina",
+  },
+  'Are you sure you want to delete "{name}"?': {
+    en: 'Are you sure you want to delete "{name}"?',
+    es: '¿Estás seguro de que quieres eliminar "{name}"?',
+  },
+  "Edit exercise": {
+    en: "Edit exercise",
+    es: "Editar ejercicio",
+  },
+  "Delete exercise": {
+    en: "Delete exercise",
+    es: "Eliminar ejercicio",
+  },
+  "Duplicate exercise": {
+    en: "Duplicate exercise",
+    es: "Duplicar ejercicio",
+  },
+  "Move exercise up": {
+    en: "Move exercise up",
+    es: "Mover ejercicio arriba",
+  },
+  "Move exercise down": {
+    en: "Move exercise down",
+    es: "Mover ejercicio abajo",
+  },
+  "Click to hear exercise name": {
+    en: "Click to hear exercise name",
+    es: "Haz clic para escuchar el nombre del ejercicio",
+  },
+  "Add new exercise": {
+    en: "Add new exercise",
+    es: "Agregar nuevo ejercicio",
+  },
+  "No routines yet. Create your first routine!": {
+    en: "No routines yet. Create your first routine!",
+    es: "Aún no hay rutinas. ¡Crea tu primera rutina!",
+  },
+  "My Routines": {
+    en: "My Routines",
+    es: "Mis Rutinas",
+  },
+  "Save exercise": {
+    en: "Save exercise",
+    es: "Guardar ejercicio",
+  },
+  "Routine Name": {
+    en: "Routine Name",
+    es: "Nombre de la rutina",
+  },
+  "e.g., Full Body, Cardio": {
+    en: "e.g., Full Body, Cardio",
+    es: "ej: Cuerpo completo, Cardio",
+  },
+  "Exercise Name": {
+    en: "Exercise Name",
+    es: "Nombre del Ejercicio",
+  },
+  "Exercise?": {
+    en: "Exercise?",
+    es: "¿Ejercicio?",
+  },
+  "Loading...": {
+    en: "Loading...",
+    es: "Cargando...",
+  },
+  "No routine selected": {
+    en: "No routine selected",
+    es: "Ninguna rutina seleccionada",
+  },
+  "Turn audio on": {
+    en: "Turn audio on",
+    es: "Activar audio",
+  },
+  "Turn audio off": { en: "Turn audio off", es: "Desactivar audio" },
+  Congrats: { en: "Congrats", es: "Felicidades" },
+  "Are you sure reset all?": { en: "Are you sure you want to reset all settings to default?", es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?" },
+  "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
+  "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
@@ -109,13 +222,31 @@ export const t = (key: keyof typeof dictionary) => {
   }
 };
 
-export const initTranslation = () => {
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
+export const initTranslation = (
+  root: HTMLElement | Document | DocumentFragment = document,
+) => {
+  root.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = `${el?.getAttribute("data-i18n")}` as DictionaryKeys;
     el.textContent = t(key);
   });
 
-  document.querySelectorAll("[data-tooltip]").forEach((el) => {
+  root.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key =
+      `${el?.getAttribute("data-i18n-placeholder")}` as DictionaryKeys;
+    el.setAttribute("placeholder", t(key));
+  });
+
+  root.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
+    const key = `${el?.getAttribute("data-i18n-aria-label")}` as DictionaryKeys;
+    el.setAttribute("aria-label", t(key));
+  });
+
+  root.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    const key = `${el?.getAttribute("data-i18n-title")}` as DictionaryKeys;
+    el.setAttribute("title", t(key));
+  });
+
+  root.querySelectorAll("[data-tooltip]").forEach((el) => {
     const tooltip = `${el?.getAttribute("data-tooltip")}` as DictionaryKeys;
     el.setAttribute("data-tooltip", t(tooltip));
   });

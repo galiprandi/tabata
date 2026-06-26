@@ -23,8 +23,8 @@ const className = vertical ? "vertical" : "horizontal";
     </div>
     <button
       id="reset-settings"
-      title="Reset to default settings"
-      aria-label="Reset to default settings"
+      data-i18n-title="Reset to default settings"
+      data-i18n-aria-label="Reset to default settings"
     >
       <RestoreIcon />
     </button>
@@ -99,6 +99,7 @@ const className = vertical ? "vertical" : "horizontal";
   import { getSettings, updateSettings } from "../assets/main";
   import { defaultSettings } from "../assets/defaultSettings";
   import { updateTotalWorkouts, updateRoutineStats } from "../assets/settings";
+  import { t } from "../assets/dictionary";
   const { prepDuration, workDuration, restDuration, rounds } = getSettings();
 
   function Init() {
@@ -149,7 +150,7 @@ const className = vertical ? "vertical" : "horizontal";
     });
 
     document.getElementById("reset-settings")?.addEventListener("click", () => {
-      if (confirm("Are you sure you want to reset all settings to default?")) {
+      if (confirm(t("Are you sure reset all?"))) {
         updateSettings(defaultSettings);
         window.location.reload();
       }

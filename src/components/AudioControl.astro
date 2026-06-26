@@ -1,13 +1,25 @@
 ---
-import AudioOnIcon from './AudioOnIcon.astro'
-import AudioOffIcon from './AudioOffIcon.astro'
+import AudioOnIcon from "./AudioOnIcon.astro";
+import AudioOffIcon from "./AudioOffIcon.astro";
 ---
 
 <div id="enable-audio">
-  <button id="btn-on" aria-label="Turn audio on" title="Turn audio on">
+  <button
+    id="btn-on"
+    data-i18n-aria-label="Turn audio off"
+    data-i18n-title="Turn audio off"
+    aria-label="Turn audio off"
+    title="Turn audio off"
+  >
     <AudioOnIcon />
   </button>
-  <button id="btn-off" aria-label="Turn audio off" title="Turn audio off">
+  <button
+    id="btn-off"
+    data-i18n-aria-label="Turn audio on"
+    data-i18n-title="Turn audio on"
+    aria-label="Turn audio on"
+    title="Turn audio on"
+  >
     <AudioOffIcon />
   </button>
   <audio id="player">
@@ -22,12 +34,12 @@ import AudioOffIcon from './AudioOffIcon.astro'
     right: 0;
     padding: 0.8rem;
     cursor: pointer;
+    z-index: 1000;
   }
 
   button {
     font-size: 1.7em;
     color: white;
-    min-width: unset !important;
     background: none;
     border: 0;
     padding: 0;
@@ -41,34 +53,36 @@ import AudioOffIcon from './AudioOffIcon.astro'
     getAudioStatus,
     setAudioEnable,
     setAudioDisable,
-  } from '../assets/audio'
-  const btnOn = document.getElementById('btn-on') as HTMLButtonElement | null
-  const btnOff = document.getElementById('btn-off') as HTMLButtonElement | null
+  } from "../assets/audio";
+  const btnOn = document.getElementById("btn-on") as HTMLButtonElement | null;
+  const btnOff = document.getElementById("btn-off") as HTMLButtonElement | null;
 
   const toggleAudio = async () => {
-    const enable = getAudioStatus()
+    const enable = getAudioStatus();
 
-    if (enable) setAudioDisable()
-    else setAudioEnable()
-    updateIcon()
-  }
+    if (enable) setAudioDisable();
+    else setAudioEnable();
+    updateIcon();
+  };
 
   const updateIcon = async () => {
-    if (!btnOn || !btnOff) return
-    const enable = getAudioStatus()
+    if (!btnOn || !btnOff) return;
+    const enable = getAudioStatus();
 
     if (enable) {
-      btnOn.style.display = 'block'
-      btnOff.style.display = 'none'
+      btnOn.style.display = "inline-flex";
+      btnOff.style.display = "none";
     } else {
-      btnOn.style.display = 'none'
-      btnOff.style.display = 'block'
+      btnOn.style.display = "none";
+      btnOff.style.display = "inline-flex";
     }
-  }
+  };
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    if (btnOn) btnOn.addEventListener('click', toggleAudio)
-    if (btnOff) btnOff.addEventListener('click', toggleAudio)
-    updateIcon()
-  })
+  document.addEventListener("DOMContentLoaded", async () => {
+    const { initTranslation } = await import("../assets/dictionary");
+    if (btnOn) btnOn.addEventListener("click", toggleAudio);
+    if (btnOff) btnOff.addEventListener("click", toggleAudio);
+    updateIcon();
+    initTranslation(document.getElementById("enable-audio")!);
+  });
 </script>

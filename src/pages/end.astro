@@ -1,16 +1,13 @@
 ---
 import Layout from '@app/layouts/layout.astro'
 import BackToHome from '@components/BackToHome.astro'
+import Play from '@icons/Play.icon.astro'
 ---
-
 <Layout>
-  <section class="display">
-    <h1>🎉 Congrats 🎉</h1>
-  </section>
-
+  <section class="display"><h1>🎉 <span data-i18n="Congrats">Congrats</span> 🎉</h1></section>
   <footer>
     <div class="columns">
-      <button id="startAgain">Start Again</button>
+      <button id="startAgain"><Play /><span data-i18n="Start Again">Start Again</span></button>
       <BackToHome />
     </div>
   </footer>
@@ -46,15 +43,9 @@ import BackToHome from '@components/BackToHome.astro'
     })
   })
 </script>
-
 <style>
-  h1 {
-    color: white;
-    font-size: 8vw;
-    font-weight: bold;
-  }
-
-  button#start {
-    min-width: 10em;
-  }
+  h1 { color: white; font-size: 8vw; font-weight: bold; }
+  button#startAgain { min-width: 10em; }
+  .columns { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+  @media (min-width: 450px) { .columns { flex-direction: row; justify-content: center; } }
 </style>
