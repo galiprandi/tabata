@@ -1,0 +1,57 @@
+---
+---
+
+<div class="advanced-analysis-tabs">
+  <button class="tab-button active" data-tab="routines">Routines</button>
+  <button class="tab-button" data-tab="exercises">Exercises</button>
+  <button class="tab-button" data-tab="patterns">Patterns</button>
+  <button class="tab-button" data-tab="comparison">Comparison</button>
+</div>
+
+<style>
+  .advanced-analysis-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+
+  .tab-button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.2s;
+  }
+
+  .tab-button:hover {
+    background: #f8fafc;
+    color: #1e293b;
+  }
+
+  .tab-button.active {
+    background: #3b82f6;
+    color: white;
+  }
+</style>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-button') as NodeListOf<HTMLButtonElement>
+  
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('active'))
+      tab.classList.add('active')
+      
+      // Dispatch event to parent
+      tab.dispatchEvent(new CustomEvent('tab-change', {
+        detail: { tab: tab.dataset.tab }
+      }))
+    })
+  })
+</script>

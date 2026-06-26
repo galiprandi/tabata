@@ -2,6 +2,11 @@
 import BasicKPIsPanel from './BasicKPIsPanel.astro'
 import BasicTrendAnalysis from './BasicTrendAnalysis.astro'
 import TimelineChart from './TimelineChart.astro'
+import AdvancedAnalysisTabs from './AdvancedAnalysisTabs.astro'
+import RoutineComparison from './RoutineComparison.astro'
+import ExerciseAnalysis from './ExerciseAnalysis.astro'
+import TemporalPatterns from './TemporalPatterns.astro'
+import PeriodComparison from './PeriodComparison.astro'
 ---
 
 <div class="basic-analysis-dashboard">
@@ -20,7 +25,45 @@ import TimelineChart from './TimelineChart.astro'
       <TimelineChart />
     </div>
   </div>
+  
+  <div class="advanced-section">
+    <h3>Advanced Analysis</h3>
+    <AdvancedAnalysisTabs />
+    
+    <div class="tab-content" data-tab="routines">
+      <RoutineComparison />
+    </div>
+    
+    <div class="tab-content" data-tab="exercises" style="display: none;">
+      <ExerciseAnalysis />
+    </div>
+    
+    <div class="tab-content" data-tab="patterns" style="display: none;">
+      <TemporalPatterns />
+    </div>
+    
+    <div class="tab-content" data-tab="comparison" style="display: none;">
+      <PeriodComparison />
+    </div>
+  </div>
 </div>
+
+<script>
+  document.addEventListener('tab-change', (e) => {
+    const tab = (e as CustomEvent).detail.tab
+    
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach((content) => {
+      (content as HTMLElement).style.display = 'none'
+    })
+    
+    // Show selected tab content
+    const selectedContent = document.querySelector(`[data-tab="${tab}"]`)
+    if (selectedContent) {
+      (selectedContent as HTMLElement).style.display = 'block'
+    }
+  })
+</script>
 
 <style>
   .basic-analysis-dashboard {
@@ -48,6 +91,21 @@ import TimelineChart from './TimelineChart.astro'
 
   .dashboard-section.full-width {
     grid-column: 1 / -1;
+  }
+
+  .advanced-section {
+    margin-top: 2rem;
+  }
+
+  .advanced-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .tab-content {
+    margin-top: 1rem;
   }
 
   @media (max-width: 768px) {

@@ -1,0 +1,86 @@
+---
+---
+
+<div class="period-comparison">
+  <h3>Period Comparison</h3>
+  <div class="comparison-controls">
+    <select class="period-select" data-period="1">
+      <option value="last7">Last 7 days</option>
+      <option value="last30">Last 30 days</option>
+    </select>
+    <select class="period-select" data-period="2">
+      <option value="previous7">Previous 7 days</option>
+      <option value="previous30">Previous 30 days</option>
+    </select>
+  </div>
+  <div class="comparison-results"></div>
+</div>
+
+<style>
+  .period-comparison {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .period-comparison h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .comparison-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .period-select {
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.875rem;
+  }
+
+  .comparison-results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .comparison-metric {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+  }
+
+  .metric-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .metric-delta {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+
+  .metric-delta.positive {
+    color: #10b981;
+  }
+
+  .metric-delta.negative {
+    color: #ef4444;
+  }
+</style>

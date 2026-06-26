@@ -164,7 +164,7 @@ function calculateTrends(logs: WorkoutLog[]): Trend[] {
  * Calculates KPIs
  */
 function calculateKPIs(
-  logs: WorkoutLog[],
+  _logs: WorkoutLog[],
   consistency: number,
   averageIntensity: number,
   currentStreak: number
