@@ -527,11 +527,11 @@ import GoToHome from "@components/GoToHome.astro";
     margin-right: 0.3rem;
   }
 
-  /* Pause button - always visible but subtle */
+  /* Pause button - top-left to avoid overlap with audio control (top-right) */
   .btn-pause {
     position: fixed;
     top: 1rem;
-    right: 1rem;
+    left: 1rem;
     width: 56px;
     height: 56px;
     border-radius: 50%;
