@@ -16,10 +16,31 @@ import BackToHome from '@components/BackToHome.astro'
   </footer>
 </Layout>
 
-<script>
+<script is:inline>
   import { play } from '@assets/audio'
+  import { RoutineStorageService } from '../assets/routine'
+  import { WorkoutLogService } from '../assets/workoutLog'
+  
   document.addEventListener('DOMContentLoaded', () => {
     play('end')
+    
+    // Register workout in history
+    const activeRoutineId = RoutineStorageService.getActiveRoutineId()
+    if (activeRoutineId) {
+      const routines = RoutineStorageService.getRoutines()
+      const activeRoutine = routines.find((r) => r.id === activeRoutineId)
+      
+      if (activeRoutine) {
+        // Calculate estimated duration
+        const totalDuration = (
+          activeRoutine.config.prepDuration +
+          (activeRoutine.config.workDuration + activeRoutine.config.restDuration) * activeRoutine.config.rounds * activeRoutine.exercises.length
+        )
+        
+        WorkoutLogService.addLog(activeRoutine, totalDuration)
+      }
+    }
+    
     document.getElementById('startAgain')?.addEventListener('click', () => {
       location.href = '/tabata/start'
     })

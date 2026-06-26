@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/layout.astro'
+import StatsDashboard from '../components/StatsDashboard.astro'
+import WorkoutHistory from '../components/WorkoutHistory.astro'
+import RoutineStats from '../components/RoutineStats.astro'
+import ExerciseStats from '../components/ExerciseStats.astro'
+---
+
+<Layout>
+  <section class="history-page">
+    <h1>Workout History</h1>
+    
+    <StatsDashboard />
+    
+    <div class="stats-grid">
+      <RoutineStats />
+      <ExerciseStats />
+    </div>
+    
+    <WorkoutHistory />
+  </section>
+</Layout>
+
+<style>
+  .history-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .history-page h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

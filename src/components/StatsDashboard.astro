@@ -1,0 +1,103 @@
+---
+---
+
+<div class="stats-dashboard">
+  <h2>Overall Statistics</h2>
+  
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-icon">🏋️</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="totalWorkouts">0</div>
+        <div class="stat-label">Total Workouts</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="totalDuration">0m</div>
+        <div class="stat-label">Total Time</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">🔥</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="currentStreak">0</div>
+        <div class="stat-label">Current Streak</div>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value" data-stat="averageWorkoutsPerWeek">0</div>
+        <div class="stat-label">This Week</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+  
+  const stats = WorkoutLogService.getStats()
+  
+  document.querySelector('[data-stat="totalWorkouts"]')!.textContent = stats.totalWorkouts.toString()
+  document.querySelector('[data-stat="totalDuration"]')!.textContent = `${Math.floor(stats.totalDuration / 60)}m`
+  document.querySelector('[data-stat="currentStreak"]')!.textContent = stats.currentStreak.toString()
+  document.querySelector('[data-stat="averageWorkoutsPerWeek"]')!.textContent = stats.averageWorkoutsPerWeek.toString()
+</script>
+
+<style>
+  .stats-dashboard {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .stats-dashboard h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+  }
+</style>

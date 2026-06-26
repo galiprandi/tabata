@@ -1,0 +1,122 @@
+---
+---
+
+<div class="routine-stats">
+  <h2>Routine Statistics</h2>
+  
+  <div class="empty-state" style="display: none;">
+    <p>No workout data yet.</p>
+  </div>
+  
+  <div class="stats-list"></div>
+</div>
+
+<script>
+  import { WorkoutLogService } from '../assets/workoutLog'
+  
+  const routineStats = WorkoutLogService.getRoutineStats()
+  const emptyState = document.querySelector('.empty-state') as HTMLElement
+  const statsList = document.querySelector('.stats-list') as HTMLElement
+  
+  if (routineStats.length === 0) {
+    emptyState!.style.display = 'block'
+  } else {
+    statsList.innerHTML = routineStats.map((stat) => `
+      <div class="stat-item">
+        <div class="stat-name">${stat.name}</div>
+        <div class="stat-metrics">
+          <div class="metric">
+            <span class="metric-label">Workouts:</span>
+            <span class="metric-value">${stat.count}</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Total Time:</span>
+            <span class="metric-value">${Math.floor(stat.totalDuration / 60)}m</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Avg:</span>
+            <span class="metric-value">${Math.floor(stat.averageDuration / 60)}m</span>
+          </div>
+        </div>
+        <div class="stat-progress">
+          <div class="progress-bar" style="width: ${Math.min((stat.count / 10) * 100, 100)}%"></div>
+        </div>
+      </div>
+    `).join('')
+  }
+</script>
+
+<style>
+  .routine-stats {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .routine-stats h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+  }
+
+  .stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-item {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .stat-name {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-metrics {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .metric {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .metric-label {
+    color: #64748b;
+  }
+
+  .metric-value {
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .stat-progress {
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: #3b82f6;
+    transition: width 0.3s;
+  }
+</style>
