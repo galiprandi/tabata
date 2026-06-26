@@ -35,16 +35,18 @@ import SearchBar from '@components/SearchBar.astro'
   </section>
 </Layout>
 
-<script is:inline>
+<script>
   import { RoutineStorageService } from '../assets/routine'
+  import { compressRoutine } from '../assets/routineSharing'
+  import type { Routine } from '../assets/routine/RoutineTypes'
 
-  function escapeHtml(str) {
+  function escapeHtml(str: string): string {
     const div = document.createElement('div')
     div.textContent = str
     return div.innerHTML
   }
 
-  function renderRoutines(routinesToRender) {
+  function renderRoutines(routinesToRender: Routine[]) {
     const list = document.getElementById('routine-list')
     const emptyState = document.getElementById('empty-state')
     if (!list || !emptyState) return
@@ -56,8 +58,8 @@ import SearchBar from '@components/SearchBar.astro'
     }
 
     emptyState.style.display = 'none'
-    list.innerHTML = routinesToRender.map((routine) => {
-      const exercises = routine.exercises.slice(0, 4).map((ex) =>
+    list.innerHTML = routinesToRender.map((routine: Routine) => {
+      const exercises = routine.exercises.slice(0, 4).map((ex: string) =>
         `<span class="exercise-tag">${escapeHtml(ex)}</span>`
       ).join('')
       const extra = routine.exercises.length > 4
@@ -121,7 +123,7 @@ import SearchBar from '@components/SearchBar.astro'
     }).join('')
   }
 
-  function filterRoutines(query) {
+  function filterRoutines(query: string) {
     const allRoutines = RoutineStorageService.getRoutines()
     let filtered = allRoutines
 
@@ -136,26 +138,24 @@ import SearchBar from '@components/SearchBar.astro'
     renderRoutines(filtered)
   }
 
-  function handleShare(routineId) {
+  function handleShare(routineId: string) {
     const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
     if (!routine) return
 
-    import('../assets/routineSharing').then(({ compressRoutine }) => {
-      const result = compressRoutine(routine)
-      if (result.success && result.url) {
-        navigator.clipboard.writeText(result.url)
-        alert('Link copiado al portapapeles')
-      } else {
-        alert('No se pudo generar el link')
-      }
-    })
+    const result = compressRoutine(routine)
+    if (result.success && result.url) {
+      navigator.clipboard.writeText(result.url)
+      alert('Link copiado al portapapeles')
+    } else {
+      alert('No se pudo generar el link')
+    }
   }
 
-  function handleEdit(routineId) {
+  function handleEdit(routineId: string) {
     window.location.href = `/tabata/settings?edit=${routineId}`
   }
 
-  function handleDelete(routineId) {
+  function handleDelete(routineId: string) {
     const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
     if (routine && confirm(`¿Eliminar "${routine.name}"?`)) {
       RoutineStorageService.deleteRoutine(routineId)
@@ -166,22 +166,27 @@ import SearchBar from '@components/SearchBar.astro'
   document.addEventListener('DOMContentLoaded', () => {
     renderRoutines(RoutineStorageService.getRoutines())
 
-    document.addEventListener('search', (e) => {
-      filterRoutines(e.detail.query)
+    document.addEventListener('search', (e: Event) => {
+      const detail = (e as CustomEvent).detail
+      filterRoutines(detail.query)
     })
 
-    document.getElementById('routine-list').addEventListener('click', (e) => {
-      const btn = e.target.closest('.action-btn')
-      if (!btn) return
-      const actions = btn.closest('.quick-actions')
-      const routineId = actions?.getAttribute('data-routine-id')
-      const action = btn.getAttribute('data-action')
-      if (!routineId) return
+    const routineList = document.getElementById('routine-list')
+    if (routineList) {
+      routineList.addEventListener('click', (e: Event) => {
+        const target = e.target as HTMLElement
+        const btn = target.closest('.action-btn') as HTMLButtonElement | null
+        if (!btn) return
+        const actions = btn.closest('.quick-actions')
+        const routineId = actions?.getAttribute('data-routine-id')
+        const action = btn.getAttribute('data-action')
+        if (!routineId) return
 
-      if (action === 'share') handleShare(routineId)
-      else if (action === 'edit') handleEdit(routineId)
-      else if (action === 'delete') handleDelete(routineId)
-    })
+        if (action === 'share') handleShare(routineId)
+        else if (action === 'edit') handleEdit(routineId)
+        else if (action === 'delete') handleDelete(routineId)
+      })
+    }
 
     const createBtn = document.querySelector('[data-action="create"]')
     if (createBtn) {
