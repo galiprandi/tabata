@@ -208,6 +208,7 @@ export const dictionary = {
   "Are you sure reset all?": { en: "Are you sure you want to reset all settings to default?", es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?" },
   "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
   "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
+  "See history": { en: "See history", es: "Ver historial" },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
