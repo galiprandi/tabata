@@ -1,0 +1,20 @@
+
+> tabata@0.0.1 dev /app
+> astro dev --host
+
+[vite] connected.
+21:05:36 [types] Generated 1ms
+[vite] connected.
+21:05:36 [vite] Re-optimizing dependencies because vite config has changed
+21:05:36 [vite] Port 4321 is in use, trying another one...
+ astro  v6.4.8 ready in 1972 ms
+┃ Local    http://localhost:4322/tabata
+┃ Network  http://192.168.0.2:4322/tabata
+21:05:36 watching for file changes...
+21:06:36 [200] /trainer 39ms
+21:06:36 [vite] ✨ new dependencies optimized: lz-string
+21:06:36 [vite] ✨ optimized dependencies changed. reloading
+21:06:36 [200] /trainer 11ms
+21:07:33 [watch] src/assets/dictionary.ts
+21:08:00 [watch] src/pages/trainer.astro
+21:08:45 [watch] src/pages/trainer.astro
