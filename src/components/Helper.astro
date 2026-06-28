@@ -4,68 +4,58 @@ import HelpIcon from '@components/HelpIcon.astro'
 const { title, description } = Astro.props
 ---
 
-<button
-  title={title}
-  class="btn-open-dialog"
-  data-title={title}
-  data-description={description}
-  data-i18n-aria-label="Open help"
-  data-i18n-title="Open help"
->
-  <HelpIcon />
-</button>
-
-<dialog class="help-modal">
-  <article>
-    <header>
-      <h3 class="title"></h3>
-    </header>
-    <div class="content">
-      <p class="description"></p>
-    </div>
-    <footer>
-      <button
-        data-i18n-title="Close"
-        data-i18n="Close"
-        class="contrast btn-close-dialog">Close</button
-      >
-    </footer>
-  </article>
-</dialog>
+<div class="helper-container">
+  <button
+    title={title}
+    class="btn-open-dialog"
+    data-title={title}
+    data-description={description}
+    data-i18n-aria-label="Open help"
+    data-i18n-title="Open help"
+  >
+    <HelpIcon />
+  </button>
+  <dialog class="help-modal">
+    <article>
+      <header><h3 class="title"></h3></header>
+      <div class="content"><p class="description"></p></div>
+      <footer>
+        <button
+          data-i18n-title="Close"
+          data-i18n="Close"
+          class="contrast btn-close-dialog">Close</button
+        >
+      </footer>
+    </article>
+  </dialog>
+</div>
 
 <script>
-  const dialog = document.querySelector(
-    '.help-modal'
-  ) as HTMLDialogElement | null
-  const btnOpen = document.querySelectorAll(
-    '.btn-open-dialog'
-  ) as NodeListOf<HTMLButtonElement> | null
-  const btnClose = document.querySelector(
-    '.btn-close-dialog'
-  ) as HTMLButtonElement | null
-
-  if (dialog && btnOpen) {
-    btnOpen.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const title = btn.getAttribute('data-title')
-        const description = btn.getAttribute('data-description')
-
-        const titleEl = dialog.querySelector('.title')
-        const descEl = dialog.querySelector('.description')
-
-        if (titleEl && title) titleEl.textContent = title
-        if (descEl && description) descEl.textContent = description
-
-        dialog.showModal()
-      })
+  import { t, initTranslation } from '@assets/dictionary'
+  document.querySelectorAll('.helper-container').forEach(container => {
+    const btnOpen = container.querySelector('.btn-open-dialog') as any
+    const dialog = container.querySelector('.help-modal') as any
+    const btnClose = container.querySelector('.btn-close-dialog') as any
+    initTranslation(container as any)
+    btnOpen.addEventListener('click', () => {
+      dialog.querySelector('.title').textContent = t(btnOpen.dataset.title)
+      dialog.querySelector('.description').textContent = t(
+        btnOpen.dataset.description
+      )
+      dialog.showModal()
+      btnClose.focus()
     })
-  }
-
-  if (dialog && btnClose) {
     btnClose.addEventListener('click', () => {
       dialog.close()
+      btnOpen.focus()
     })
-  }
+    dialog.addEventListener('click', e => {
+      if (e.target === dialog) {
+        dialog.close()
+        btnOpen.focus()
+      }
+    })
+  })
 </script>
 
 <style>

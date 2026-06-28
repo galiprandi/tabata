@@ -3,10 +3,8 @@ export const dictionary = {
     en: "Add new item to the list",
     es: "Agregar nuevo elemento a la lista",
   },
-  Cancel: {
-    en: "Cancel",
-    es: "Cancelar",
-  },
+  Cancel: { en: "Cancel", es: "Cancelar" },
+  Close: { en: "Close", es: "Cerrar" },
   "Config Routine": {
     en: "Config Routine",
     es: "Configurar Rutina",
@@ -209,6 +207,27 @@ export const dictionary = {
   "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
   "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
   "See history": { en: "See history", es: "Ver historial" },
+  "Open help": { en: "Open help", es: "Abrir ayuda" },
+  "Working Time": { en: "Working Time", es: "Tiempo de trabajo" },
+  "Rest Time": { en: "Rest Time", es: "Tiempo de descanso" },
+  "Exercise in Round": { en: "Exercise in Round", es: "Ejercicios por ronda" },
+  "Preparation time prior to the start of the round.": {
+    en: "Preparation time prior to the start of the round.",
+    es: "Tiempo de preparación antes del inicio de la ronda.",
+  },
+  "Working time for each exercise.": {
+    en: "Working time for each exercise.",
+    es: "Tiempo de trabajo para cada ejercicio.",
+  },
+  "Rest time for each exercise.": {
+    en: "Rest time for each exercise.",
+    es: "Tiempo de descanso para cada ejercicio.",
+  },
+  "The total number of exercises per round, which defines the total work time of the round.":
+    {
+      en: "The total number of exercises per round, which defines the total work time of the round.",
+      es: "El número total de ejercicios por ronda, que define el tiempo total de trabajo de la ronda.",
+    },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
