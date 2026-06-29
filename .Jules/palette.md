@@ -22,3 +22,8 @@
 
 **Learning:** When using shared templates with multiple action buttons, identifying buttons by simple substrings (e.g., `className.includes("up")`) is brittle and can lead to multiple actions being triggered if class names overlap (e.g., "up" matching "duplicate").
 **Action:** Use `element.classList.contains()` for exact class matching to ensure one button triggers exactly one intended action.
+
+## 2025-07-15 - [Modal Focus Management]
+
+**Learning:** To ensure keyboard accessibility in help components, focus must be programmatically shifted to the close button when a dialog opens and returned to the trigger button when it closes.
+**Action:** When implementing native `<dialog>` elements, use `dialog.showModal()`, focus the close button immediately, and use a `once: true` listener on the 'close' event to restore focus.

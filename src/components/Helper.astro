@@ -34,6 +34,8 @@ const { title, description } = Astro.props
 </dialog>
 
 <script>
+  import { play } from '@assets/audio'
+
   const dialog = document.querySelector(
     '.help-modal'
   ) as HTMLDialogElement | null
@@ -46,7 +48,8 @@ const { title, description } = Astro.props
 
   if (dialog && btnOpen) {
     btnOpen.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
+        await play('tap', true)
         const title = btn.getAttribute('data-title')
         const description = btn.getAttribute('data-description')
 
@@ -57,12 +60,16 @@ const { title, description } = Astro.props
         if (descEl && description) descEl.textContent = description
 
         dialog.showModal()
+        btnClose?.focus()
+
+        dialog.addEventListener('close', () => btn.focus(), { once: true })
       })
     })
   }
 
   if (dialog && btnClose) {
-    btnClose.addEventListener('click', () => {
+    btnClose.addEventListener('click', async () => {
+      await play('tap', true)
       dialog.close()
     })
   }
