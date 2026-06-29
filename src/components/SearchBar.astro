@@ -1,17 +1,31 @@
 ---
+
 ---
 
 <div class="search-bar">
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="search-icon"
+  >
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
   <input
     type="text"
-    placeholder="Buscar rutina o ejercicio..."
+    placeholder="Search routine or exercise..."
     class="search-input"
     data-search-input
-    aria-label="Buscar rutina o ejercicio"
+    data-i18n-placeholder="Search routine or exercise..."
+    data-i18n-aria-label="Search routine or exercise..."
+    aria-label="Search routine or exercise..."
   />
 </div>
 
@@ -27,7 +41,9 @@
     flex: 1;
     min-width: 0;
     min-height: var(--touch-target-lg);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
   }
 
   .search-bar:focus-within {
@@ -56,18 +72,20 @@
 </style>
 
 <script>
-  const searchInput = document.querySelector('.search-input') as HTMLInputElement;
+  const searchInput = document.querySelector(
+    ".search-input",
+  ) as HTMLInputElement;
 
   if (searchInput) {
     let debounceTimer: number;
 
-    searchInput.addEventListener('input', (e) => {
+    searchInput.addEventListener("input", (e) => {
       const query = (e.target as HTMLInputElement).value;
 
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
-        const searchEvent = new CustomEvent('search', {
-          detail: { query }
+        const searchEvent = new CustomEvent("search", {
+          detail: { query },
         });
         document.dispatchEvent(searchEvent);
       }, 300);

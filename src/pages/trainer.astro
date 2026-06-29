@@ -1,77 +1,114 @@
 ---
-import Layout from '../layouts/layout.astro'
-import GoToHome from '@components/GoToHome.astro'
-import SearchBar from '@components/SearchBar.astro'
+import Layout from "../layouts/layout.astro";
+import GoToHome from "@components/GoToHome.astro";
+import SearchBar from "@components/SearchBar.astro";
 ---
 
 <Layout>
   <nav class="top-nav">
     <GoToHome />
-    <h1>Trainer</h1>
+    <h1 data-i18n="Trainer">Trainer</h1>
     <span class="nav-spacer"></span>
   </nav>
 
   <section class="trainer-content">
     <div class="toolbar">
       <SearchBar />
-      <button class="btn-create" data-action="create">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button
+        class="btn-create"
+        data-action="create"
+        data-i18n-title="Add new routine"
+        data-i18n-aria-label="Add new routine"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
-        <span>Nueva rutina</span>
+        <span data-i18n="New Routine">New Routine</span>
       </button>
     </div>
 
     <div id="routine-list" class="routine-list"></div>
 
     <div id="empty-state" class="empty-state">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="48"
+        height="48"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+        ></path>
         <circle cx="12" cy="13" r="3"></circle>
       </svg>
-      <p>No hay rutinas. Creá la primera para empezar.</p>
+      <p data-i18n="No routines. Create the first one to start.">
+        No routines. Create the first one to start.
+      </p>
     </div>
   </section>
 </Layout>
 
 <script>
-  import { RoutineStorageService } from '../assets/routine'
-  import { compressRoutine } from '../assets/routineSharing'
-  import type { Routine } from '../assets/routine/RoutineTypes'
+  import { RoutineStorageService } from "../assets/routine";
+  import { compressRoutine } from "../assets/routineSharing";
+  import type { Routine } from "../assets/routine/RoutineTypes";
+  import { t, initTranslation } from "../assets/dictionary";
+  import { play } from "../assets/audio";
 
   function escapeHtml(str: string): string {
-    const div = document.createElement('div')
-    div.textContent = str
-    return div.innerHTML
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
   }
 
   function renderRoutines(routinesToRender: Routine[]) {
-    const list = document.getElementById('routine-list')
-    const emptyState = document.getElementById('empty-state')
-    if (!list || !emptyState) return
+    const list = document.getElementById("routine-list");
+    const emptyState = document.getElementById("empty-state");
+    if (!list || !emptyState) return;
 
     if (routinesToRender.length === 0) {
-      list.innerHTML = ''
-      emptyState.style.display = 'flex'
-      return
+      list.innerHTML = "";
+      emptyState.style.display = "flex";
+      return;
     }
 
-    emptyState.style.display = 'none'
-    list.innerHTML = routinesToRender.map((routine: Routine) => {
-      const exercises = routine.exercises.slice(0, 4).map((ex: string) =>
-        `<span class="exercise-tag">${escapeHtml(ex)}</span>`
-      ).join('')
-      const extra = routine.exercises.length > 4
-        ? `<span class="exercise-count">+${routine.exercises.length - 4}</span>`
-        : ''
+    emptyState.style.display = "none";
+    list.innerHTML = routinesToRender
+      .map((routine: Routine) => {
+        const exercises = routine.exercises
+          .slice(0, 4)
+          .map(
+            (ex: string) =>
+              `<span class="exercise-tag">${escapeHtml(ex)}</span>`,
+          )
+          .join("");
+        const extra =
+          routine.exercises.length > 4
+            ? `<span class="exercise-count">+${routine.exercises.length - 4}</span>`
+            : "";
 
-      return `
+        return `
         <article class="routine-card" data-routine-id="${routine.id}">
           <header class="card-header">
             <h2 class="routine-name">${escapeHtml(routine.name)}</h2>
             <div class="quick-actions" data-routine-id="${routine.id}">
-              <button class="action-btn share-btn" data-action="share" aria-label="Compartir rutina">
+              <button class="action-btn share-btn" data-action="share" data-i18n-title="Share routine" data-i18n-aria-label="Share routine">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="18" cy="5" r="3"></circle>
                   <circle cx="6" cy="12" r="3"></circle>
@@ -80,13 +117,13 @@ import SearchBar from '@components/SearchBar.astro'
                   <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
                 </svg>
               </button>
-              <button class="action-btn edit-btn" data-action="edit" aria-label="Editar rutina">
+              <button class="action-btn edit-btn" data-action="edit" data-i18n-title="Edit routine" data-i18n-aria-label="Edit routine">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
               </button>
-              <button class="action-btn delete-btn" data-action="delete" aria-label="Eliminar rutina">
+              <button class="action-btn delete-btn" data-action="delete" data-i18n-title="Delete routine" data-i18n-aria-label="Delete routine">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="3 6 5 6 21"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -113,88 +150,107 @@ import SearchBar from '@components/SearchBar.astro'
                 <span class="timing-value">${routine.config.restDuration}s</span>
               </div>
               <div class="timing-item">
-                <span class="timing-label">Rondas</span>
+                <span class="timing-label" data-i18n="Rounds">Rounds</span>
                 <span class="timing-value">${routine.config.rounds}</span>
               </div>
             </div>
           </div>
         </article>
-      `
-    }).join('')
+      `;
+      })
+      .join("");
+    initTranslation(list);
   }
 
   function filterRoutines(query: string) {
-    const allRoutines = RoutineStorageService.getRoutines()
-    let filtered = allRoutines
+    const allRoutines = RoutineStorageService.getRoutines();
+    let filtered = allRoutines;
 
     if (query.trim()) {
-      const q = query.toLowerCase()
-      filtered = allRoutines.filter((r) =>
-        r.name.toLowerCase().includes(q) ||
-        r.exercises.some((ex) => ex.toLowerCase().includes(q))
-      )
+      const q = query.toLowerCase();
+      filtered = allRoutines.filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.exercises.some((ex) => ex.toLowerCase().includes(q)),
+      );
     }
 
-    renderRoutines(filtered)
+    renderRoutines(filtered);
   }
 
-  function handleShare(routineId: string) {
-    const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
-    if (!routine) return
+  async function handleShare(routineId: string) {
+    await play("tap", true);
+    const routine = RoutineStorageService.getRoutines().find(
+      (r) => r.id === routineId,
+    );
+    if (!routine) return;
 
-    const result = compressRoutine(routine)
+    const result = compressRoutine(routine);
     if (result.success && result.url) {
-      navigator.clipboard.writeText(result.url)
-      alert('Link copiado al portapapeles')
+      navigator.clipboard.writeText(result.url);
+      alert(t("Link copied to clipboard"));
     } else {
-      alert('No se pudo generar el link')
+      alert(t("Failed to generate link"));
     }
   }
 
-  function handleEdit(routineId: string) {
-    window.location.href = `/tabata/settings?edit=${routineId}`
+  async function handleEdit(routineId: string) {
+    await play("tap", true);
+    window.location.href = `/tabata/settings?edit=${routineId}`;
   }
 
-  function handleDelete(routineId: string) {
-    const routine = RoutineStorageService.getRoutines().find((r) => r.id === routineId)
-    if (routine && confirm(`¿Eliminar "${routine.name}"?`)) {
-      RoutineStorageService.deleteRoutine(routineId)
-      renderRoutines(RoutineStorageService.getRoutines())
+  async function handleDelete(routineId: string) {
+    await play("tap", true);
+    const routine = RoutineStorageService.getRoutines().find(
+      (r) => r.id === routineId,
+    );
+    if (
+      routine &&
+      confirm(
+        t('Are you sure you want to delete "{name}"?').replace(
+          "{name}",
+          routine.name,
+        ),
+      )
+    ) {
+      RoutineStorageService.deleteRoutine(routineId);
+      renderRoutines(RoutineStorageService.getRoutines());
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    renderRoutines(RoutineStorageService.getRoutines())
+  document.addEventListener("DOMContentLoaded", () => {
+    renderRoutines(RoutineStorageService.getRoutines());
 
-    document.addEventListener('search', (e: Event) => {
-      const detail = (e as CustomEvent).detail
-      filterRoutines(detail.query)
-    })
+    document.addEventListener("search", (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      filterRoutines(detail.query);
+    });
 
-    const routineList = document.getElementById('routine-list')
+    const routineList = document.getElementById("routine-list");
     if (routineList) {
-      routineList.addEventListener('click', (e: Event) => {
-        const target = e.target as HTMLElement
-        const btn = target.closest('.action-btn') as HTMLButtonElement | null
-        if (!btn) return
-        const actions = btn.closest('.quick-actions')
-        const routineId = actions?.getAttribute('data-routine-id')
-        const action = btn.getAttribute('data-action')
-        if (!routineId) return
+      routineList.addEventListener("click", async (e: Event) => {
+        const target = e.target as HTMLElement;
+        const btn = target.closest(".action-btn") as HTMLButtonElement | null;
+        if (!btn) return;
+        const actions = btn.closest(".quick-actions");
+        const routineId = actions?.getAttribute("data-routine-id");
+        const action = btn.getAttribute("data-action");
+        if (!routineId) return;
 
-        if (action === 'share') handleShare(routineId)
-        else if (action === 'edit') handleEdit(routineId)
-        else if (action === 'delete') handleDelete(routineId)
-      })
+        if (action === "share") await handleShare(routineId);
+        else if (action === "edit") await handleEdit(routineId);
+        else if (action === "delete") await handleDelete(routineId);
+      });
     }
 
-    const createBtn = document.querySelector('[data-action="create"]')
+    const createBtn = document.querySelector('[data-action="create"]');
     if (createBtn) {
-      createBtn.addEventListener('click', () => {
-        window.location.href = '/tabata/settings'
-      })
+      createBtn.addEventListener("click", async () => {
+        await play("tap", true);
+        window.location.href = "/tabata/settings";
+      });
     }
-  })
+  });
 </script>
 
 <style>
@@ -246,7 +302,9 @@ import SearchBar from '@components/SearchBar.astro'
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
+    transition:
+      opacity 0.2s,
+      transform 0.1s;
     min-height: var(--touch-target-lg);
   }
 
@@ -269,7 +327,9 @@ import SearchBar from '@components/SearchBar.astro'
     border: 1px solid var(--surface-border);
     border-radius: var(--radius-lg);
     padding: 1.25rem;
-    transition: border-color 0.2s, background 0.2s;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
   }
 
   .routine-card:hover {

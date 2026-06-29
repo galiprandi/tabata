@@ -203,31 +203,27 @@ export const dictionary = {
   },
   "Turn audio off": { en: "Turn audio off", es: "Desactivar audio" },
   Congrats: { en: "Congrats", es: "Felicidades" },
-  "Are you sure reset all?": { en: "Are you sure you want to reset all settings to default?", es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?" },
+  "Are you sure reset all?": {
+    en: "Are you sure you want to reset all settings to default?",
+    es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?",
+  },
   "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
   "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
-  "See history": { en: "See history", es: "Ver historial" },
-  "Open help": { en: "Open help", es: "Abrir ayuda" },
-  "Working Time": { en: "Working Time", es: "Tiempo de trabajo" },
-  "Rest Time": { en: "Rest Time", es: "Tiempo de descanso" },
-  "Exercise in Round": { en: "Exercise in Round", es: "Ejercicios por ronda" },
-  "Preparation time prior to the start of the round.": {
-    en: "Preparation time prior to the start of the round.",
-    es: "Tiempo de preparación antes del inicio de la ronda.",
+  Trainer: { en: "Trainer", es: "Entrenador" },
+  Rounds: { en: "Rounds", es: "Rondas" },
+  "Search routine or exercise...": {
+    en: "Search routine or exercise...",
+    es: "Buscar rutina o ejercicio...",
   },
-  "Working time for each exercise.": {
-    en: "Working time for each exercise.",
-    es: "Tiempo de trabajo para cada ejercicio.",
+  "Share routine": { en: "Share routine", es: "Compartir rutina" },
+  "Link copied to clipboard": {
+    en: "Link copied to clipboard",
+    es: "Enlace copiado al portapapeles",
   },
-  "Rest time for each exercise.": {
-    en: "Rest time for each exercise.",
-    es: "Tiempo de descanso para cada ejercicio.",
+  "Failed to generate link": {
+    en: "Failed to generate link",
+    es: "Error al generar el enlace",
   },
-  "The total number of exercises per round, which defines the total work time of the round.":
-    {
-      en: "The total number of exercises per round, which defines the total work time of the round.",
-      es: "El número total de ejercicios por ronda, que define el tiempo total de trabajo de la ronda.",
-    },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
