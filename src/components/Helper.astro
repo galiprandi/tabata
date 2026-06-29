@@ -31,21 +31,42 @@ const { title, description } = Astro.props
 </div>
 
 <script>
-  import { t, initTranslation } from '@assets/dictionary'
-  document.querySelectorAll('.helper-container').forEach(container => {
-    const btnOpen = container.querySelector('.btn-open-dialog') as any
-    const dialog = container.querySelector('.help-modal') as any
-    const btnClose = container.querySelector('.btn-close-dialog') as any
-    initTranslation(container as any)
-    btnOpen.addEventListener('click', () => {
-      dialog.querySelector('.title').textContent = t(btnOpen.dataset.title)
-      dialog.querySelector('.description').textContent = t(
-        btnOpen.dataset.description
-      )
-      dialog.showModal()
-      btnClose.focus()
+  import { play } from '@assets/audio'
+
+  const dialog = document.querySelector(
+    '.help-modal'
+  ) as HTMLDialogElement | null
+  const btnOpen = document.querySelectorAll(
+    '.btn-open-dialog'
+  ) as NodeListOf<HTMLButtonElement> | null
+  const btnClose = document.querySelector(
+    '.btn-close-dialog'
+  ) as HTMLButtonElement | null
+
+  if (dialog && btnOpen) {
+    btnOpen.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        await play('tap', true)
+        const title = btn.getAttribute('data-title')
+        const description = btn.getAttribute('data-description')
+
+        const titleEl = dialog.querySelector('.title')
+        const descEl = dialog.querySelector('.description')
+
+        if (titleEl && title) titleEl.textContent = title
+        if (descEl && description) descEl.textContent = description
+
+        dialog.showModal()
+        btnClose?.focus()
+
+        dialog.addEventListener('close', () => btn.focus(), { once: true })
+      })
     })
-    btnClose.addEventListener('click', () => {
+  }
+
+  if (dialog && btnClose) {
+    btnClose.addEventListener('click', async () => {
+      await play('tap', true)
       dialog.close()
       btnOpen.focus()
     })
