@@ -3,10 +3,8 @@ export const dictionary = {
     en: "Add new item to the list",
     es: "Agregar nuevo elemento a la lista",
   },
-  Cancel: {
-    en: "Cancel",
-    es: "Cancelar",
-  },
+  Cancel: { en: "Cancel", es: "Cancelar" },
+  Close: { en: "Close", es: "Cerrar" },
   "Config Routine": {
     en: "Config Routine",
     es: "Configurar Rutina",

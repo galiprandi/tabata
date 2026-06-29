@@ -93,6 +93,67 @@ import AudioControl from '../components/AudioControl.astro'
     --pico-h1-color: white !important;
     --color-links: white;
 
+    /* Override Pico pumpkin dark theme to match training view colors */
+    --pico-background-color: #052940;
+    --pico-color: #ffffff;
+    --pico-muted-color: rgba(255, 255, 255, 0.6);
+    --pico-muted-border-color: rgba(255, 255, 255, 0.12);
+    --pico-primary: #f7c179;
+    --pico-primary-background: #f7c179;
+    --pico-primary-border: #f7c179;
+    --pico-primary-hover: rgba(247, 193, 121, 0.85);
+    --pico-primary-hover-background: rgba(247, 193, 121, 0.85);
+    --pico-primary-hover-border: rgba(247, 193, 121, 0.85);
+    --pico-primary-focus: rgba(247, 193, 121, 0.4);
+    --pico-primary-inverse: #052940;
+    --pico-secondary: rgba(255, 255, 255, 0.6);
+    --pico-secondary-background: rgba(255, 255, 255, 0.1);
+    --pico-secondary-border: rgba(255, 255, 255, 0.12);
+    --pico-secondary-hover: rgba(255, 255, 255, 0.15);
+    --pico-secondary-hover-background: rgba(255, 255, 255, 0.15);
+    --pico-secondary-hover-border: rgba(255, 255, 255, 0.15);
+    --pico-secondary-inverse: #ffffff;
+    --pico-contrast: #ffffff;
+    --pico-contrast-background: rgba(255, 255, 255, 0.08);
+    --pico-contrast-border: rgba(255, 255, 255, 0.12);
+    --pico-contrast-hover: #ffffff;
+    --pico-contrast-hover-background: rgba(255, 255, 255, 0.12);
+    --pico-contrast-hover-border: rgba(255, 255, 255, 0.12);
+    --pico-contrast-inverse: #ffffff;
+    --pico-h1-color: #ffffff;
+    --pico-h2-color: #ffffff;
+    --pico-h3-color: #ffffff;
+    --pico-h4-color: rgba(255, 255, 255, 0.9);
+    --pico-h5-color: rgba(255, 255, 255, 0.8);
+    --pico-h6-color: rgba(255, 255, 255, 0.7);
+    --pico-card-background-color: rgba(255, 255, 255, 0.06);
+    --pico-card-border-color: rgba(255, 255, 255, 0.12);
+    --pico-form-element-background-color: rgba(0, 0, 0, 0.2);
+    --pico-form-element-border-color: rgba(255, 255, 255, 0.12);
+    --pico-form-element-color: #ffffff;
+    --pico-form-element-placeholder-color: rgba(255, 255, 255, 0.4);
+    --pico-form-element-active-background-color: rgba(0, 0, 0, 0.3);
+    --pico-form-element-active-border-color: #f7c179;
+    --pico-form-element-focus-color: #f7c179;
+    --pico-form-element-selected-background-color: rgba(247, 193, 121, 0.2);
+    --pico-modal-overlay-background-color: rgba(0, 0, 0, 0.85);
+    --pico-modal-overlay-backdrop-filter: blur(8px);
+    --pico-progress-background-color: rgba(0, 0, 0, 0.25);
+    --pico-progress-color: #f7c179;
+    --pico-dropdown-background-color: rgba(10, 15, 25, 0.95);
+    --pico-dropdown-border-color: rgba(255, 255, 255, 0.12);
+    --pico-dropdown-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    --pico-switch-background-color: rgba(255, 255, 255, 0.15);
+    --pico-switch-checked-background-color: #f7c179;
+    --pico-code-background-color: rgba(0, 0, 0, 0.25);
+    --pico-mark-background-color: rgba(247, 193, 121, 0.2);
+    --pico-mark-color: #ffffff;
+    --pico-ins-color: #44aa99;
+    --pico-del-color: #cc6677;
+    --pico-box-shadow: 0.0145rem 0.029rem 0.174rem rgba(0, 0, 0, 0.1), 0.0625rem 0.125rem 0.75rem rgba(0, 0, 0, 0.15);
+    --pico-border-radius: 0.5rem;
+    --pico-transition: 0.2s ease-in-out;
+
     /* Modern UI tokens */
     --surface: rgba(255, 255, 255, 0.06);
     --surface-hover: rgba(255, 255, 255, 0.1);
@@ -356,6 +417,91 @@ import AudioControl from '../components/AudioControl.astro'
     font-weight: 800;
     color: var(--text-primary);
     line-height: 1;
+  }
+
+  /* Dialog (modal) styling - match modern dark theme */
+  dialog[open] {
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(8px);
+    color: var(--text-primary);
+  }
+
+  dialog article {
+    background: transparent;
+    border: 0;
+    color: var(--text-primary);
+  }
+
+  dialog article header,
+  dialog article footer {
+    color: var(--text-primary);
+  }
+
+  dialog article header h3 {
+    color: var(--text-primary);
+  }
+
+  /* Input styling - match modern dark theme */
+  input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="file"]) {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--surface-border);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="file"]):focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(247, 193, 121, 0.15);
+  }
+
+  input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Select styling */
+  select {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--surface-border);
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Table styling */
+  table {
+    border-color: var(--surface-border);
+  }
+
+  td,
+  th {
+    color: var(--text-primary);
+    border-color: var(--surface-border);
+  }
+
+  /* Fieldset and label */
+  label {
+    color: var(--text-secondary);
+  }
+
+  /* Heading defaults */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+  }
+
+  /* Small text */
+  small {
+    color: var(--text-secondary);
+  }
+
+  /* Pico button overrides for consistency */
+  button:not(.btn-modern):not(.btn-pause):not(.action-btn):not(.select):not(.edit):not(.delete):not(.share):not(.up):not(.down):not(.duplicate):not(.btn-open-dialog):not(.btn-close-dialog):not(.icon) {
+    border-radius: var(--radius-md);
+    transition: transform 0.15s, opacity 0.2s;
+  }
+
+  button:not(.btn-modern):not(.btn-pause):not(.action-btn):not(.select):not(.edit):not(.delete):not(.share):not(.up):not(.down):not(.duplicate):not(.btn-open-dialog):not(.btn-close-dialog):not(.icon):active {
+    transform: scale(0.96);
   }
 </style>
 
