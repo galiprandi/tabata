@@ -4,34 +4,31 @@ import HelpIcon from '@components/HelpIcon.astro'
 const { title, description } = Astro.props
 ---
 
-<button
-  title={title}
-  class="btn-open-dialog"
-  data-title={title}
-  data-description={description}
-  data-i18n-aria-label="Open help"
-  data-i18n-title="Open help"
->
-  <HelpIcon />
-</button>
-
-<dialog class="help-modal">
-  <article>
-    <header>
-      <h3 class="title"></h3>
-    </header>
-    <div class="content">
-      <p class="description"></p>
-    </div>
-    <footer>
-      <button
-        data-i18n-title="Close"
-        data-i18n="Close"
-        class="contrast btn-close-dialog">Close</button
-      >
-    </footer>
-  </article>
-</dialog>
+<div class="helper-container">
+  <button
+    title={title}
+    class="btn-open-dialog"
+    data-title={title}
+    data-description={description}
+    data-i18n-aria-label="Open help"
+    data-i18n-title="Open help"
+  >
+    <HelpIcon />
+  </button>
+  <dialog class="help-modal">
+    <article>
+      <header><h3 class="title"></h3></header>
+      <div class="content"><p class="description"></p></div>
+      <footer>
+        <button
+          data-i18n-title="Close"
+          data-i18n="Close"
+          class="contrast btn-close-dialog">Close</button
+        >
+      </footer>
+    </article>
+  </dialog>
+</div>
 
 <script>
   import { play } from '@assets/audio'
@@ -71,8 +68,15 @@ const { title, description } = Astro.props
     btnClose.addEventListener('click', async () => {
       await play('tap', true)
       dialog.close()
+      btnOpen.focus()
     })
-  }
+    dialog.addEventListener('click', e => {
+      if (e.target === dialog) {
+        dialog.close()
+        btnOpen.focus()
+      }
+    })
+  })
 </script>
 
 <style>

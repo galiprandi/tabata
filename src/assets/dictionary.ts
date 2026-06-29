@@ -3,10 +3,8 @@ export const dictionary = {
     en: "Add new item to the list",
     es: "Agregar nuevo elemento a la lista",
   },
-  Cancel: {
-    en: "Cancel",
-    es: "Cancelar",
-  },
+  Cancel: { en: "Cancel", es: "Cancelar" },
+  Close: { en: "Close", es: "Cerrar" },
   "Config Routine": {
     en: "Config Routine",
     es: "Configurar Rutina",
@@ -205,10 +203,27 @@ export const dictionary = {
   },
   "Turn audio off": { en: "Turn audio off", es: "Desactivar audio" },
   Congrats: { en: "Congrats", es: "Felicidades" },
-  "Are you sure reset all?": { en: "Are you sure you want to reset all settings to default?", es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?" },
+  "Are you sure reset all?": {
+    en: "Are you sure you want to reset all settings to default?",
+    es: "¿Estás seguro de que quieres restablecer todos los ajustes por defecto?",
+  },
   "Start Again": { en: "Start Again", es: "Empezar de nuevo" },
   "Back to Home": { en: "Back to Home", es: "Volver al inicio" },
-  "See history": { en: "See history", es: "Ver historial" },
+  Trainer: { en: "Trainer", es: "Entrenador" },
+  Rounds: { en: "Rounds", es: "Rondas" },
+  "Search routine or exercise...": {
+    en: "Search routine or exercise...",
+    es: "Buscar rutina o ejercicio...",
+  },
+  "Share routine": { en: "Share routine", es: "Compartir rutina" },
+  "Link copied to clipboard": {
+    en: "Link copied to clipboard",
+    es: "Enlace copiado al portapapeles",
+  },
+  "Failed to generate link": {
+    en: "Failed to generate link",
+    es: "Error al generar el enlace",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
