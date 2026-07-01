@@ -1,7 +1,7 @@
 ---
-import HelpIcon from '@components/HelpIcon.astro'
+import HelpIcon from "@components/HelpIcon.astro";
 
-const { title, description } = Astro.props
+const { title, description } = Astro.props;
 ---
 
 <div class="helper-container">
@@ -31,52 +31,50 @@ const { title, description } = Astro.props
 </div>
 
 <script>
-  import { play } from '@assets/audio'
+  import { play } from "@assets/audio";
 
   const dialog = document.querySelector(
-    '.help-modal'
-  ) as HTMLDialogElement | null
+    ".help-modal",
+  ) as HTMLDialogElement | null;
   const btnOpen = document.querySelectorAll(
-    '.btn-open-dialog'
-  ) as NodeListOf<HTMLButtonElement> | null
+    ".btn-open-dialog",
+  ) as NodeListOf<HTMLButtonElement> | null;
   const btnClose = document.querySelector(
-    '.btn-close-dialog'
-  ) as HTMLButtonElement | null
+    ".btn-close-dialog",
+  ) as HTMLButtonElement | null;
 
   if (dialog && btnOpen) {
-    btnOpen.forEach(btn => {
-      btn.addEventListener('click', async () => {
-        await play('tap', true)
-        const title = btn.getAttribute('data-title')
-        const description = btn.getAttribute('data-description')
+    btnOpen.forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await play("tap", true);
+        const title = btn.getAttribute("data-title");
+        const description = btn.getAttribute("data-description");
 
-        const titleEl = dialog.querySelector('.title')
-        const descEl = dialog.querySelector('.description')
+        const titleEl = dialog.querySelector(".title");
+        const descEl = dialog.querySelector(".description");
 
-        if (titleEl && title) titleEl.textContent = title
-        if (descEl && description) descEl.textContent = description
+        if (titleEl && title) titleEl.textContent = title;
+        if (descEl && description) descEl.textContent = description;
 
-        dialog.showModal()
-        btnClose?.focus()
+        dialog.showModal();
+        btnClose?.focus();
 
-        dialog.addEventListener('close', () => btn.focus(), { once: true })
-      })
-    })
+        dialog.addEventListener("close", () => btn.focus(), { once: true });
+      });
+    });
   }
 
   if (dialog && btnClose) {
-    btnClose.addEventListener('click', async () => {
-      await play('tap', true)
-      dialog.close()
-      btnOpen.focus()
-    })
-    dialog.addEventListener('click', e => {
+    btnClose.addEventListener("click", async () => {
+      await play("tap", true);
+      dialog.close();
+    });
+    dialog.addEventListener("click", (e) => {
       if (e.target === dialog) {
-        dialog.close()
-        btnOpen.focus()
+        dialog.close();
       }
-    })
-  })
+    });
+  }
 </script>
 
 <style>

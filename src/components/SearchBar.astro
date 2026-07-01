@@ -27,6 +27,28 @@
     data-i18n-aria-label="Search routine or exercise..."
     aria-label="Search routine or exercise..."
   />
+  <button
+    class="clear-button"
+    id="clear-search"
+    data-i18n-title="Clear search"
+    data-i18n-aria-label="Clear search"
+    style="display: none;"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
 </div>
 
 <style>
@@ -69,18 +91,50 @@
   .search-input::placeholder {
     color: var(--text-muted);
   }
+
+  #clear-search {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.2rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  #clear-search:hover {
+    background-color: var(--surface-hover);
+    color: var(--text-primary);
+  }
 </style>
 
 <script>
+  import { play } from "@assets/audio";
+
   const searchInput = document.querySelector(
     ".search-input",
   ) as HTMLInputElement;
+  const clearButton = document.getElementById(
+    "clear-search",
+  ) as HTMLButtonElement;
 
-  if (searchInput) {
+  if (searchInput && clearButton) {
     let debounceTimer: number;
+
+    const updateClearButtonVisibility = () => {
+      clearButton.style.display = searchInput.value ? "inline-flex" : "none";
+    };
 
     searchInput.addEventListener("input", (e) => {
       const query = (e.target as HTMLInputElement).value;
+      updateClearButtonVisibility();
 
       clearTimeout(debounceTimer);
       debounceTimer = window.setTimeout(() => {
@@ -90,5 +144,20 @@
         document.dispatchEvent(searchEvent);
       }, 300);
     });
+
+    clearButton.addEventListener("click", async () => {
+      await play("tap", true);
+      searchInput.value = "";
+      updateClearButtonVisibility();
+      searchInput.focus();
+
+      const searchEvent = new CustomEvent("search", {
+        detail: { query: "" },
+      });
+      document.dispatchEvent(searchEvent);
+    });
+
+    // Initial state
+    updateClearButtonVisibility();
   }
 </script>

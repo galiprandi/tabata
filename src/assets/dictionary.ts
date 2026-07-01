@@ -224,6 +224,10 @@ export const dictionary = {
     en: "Failed to generate link",
     es: "Error al generar el enlace",
   },
+  "Clear search": {
+    en: "Clear search",
+    es: "Limpiar búsqueda",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
