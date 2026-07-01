@@ -1,30 +1,48 @@
 ---
+import TrashIcon from "./TrashIcon.astro";
 ---
 
 <div class="workout-history">
   <div class="history-header">
-    <h2>Workout History</h2>
-    <button class="btn btn-danger" data-action="clear">Clear History</button>
+    <h2 data-i18n="Workout History">Workout History</h2>
+    <button
+      class="btn btn-danger"
+      data-action="clear"
+      data-i18n-title="Clear History"
+      data-i18n-aria-label="Clear History"
+    >
+      <TrashIcon />
+      <span data-i18n="Clear History">Clear History</span>
+    </button>
   </div>
-  
+
   <div class="empty-state" style="display: none;">
-    <p>No workouts recorded yet. Start training to see your history!</p>
+    <p data-i18n="No workouts recorded yet. Start training to see your history!">
+      No workouts recorded yet. Start training to see your history!
+    </p>
   </div>
-  
+
   <div class="history-list"></div>
 </div>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
-  
-  const logs = WorkoutLogService.getLogs()
-  const emptyState = document.querySelector('.workout-history .empty-state') as HTMLElement
-  const historyList = document.querySelector('.workout-history .history-list') as HTMLElement
-  
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { t } from "../assets/dictionary";
+
+  const logs = WorkoutLogService.getLogs();
+  const emptyState = document.querySelector(
+    ".workout-history .empty-state",
+  ) as HTMLElement;
+  const historyList = document.querySelector(
+    ".workout-history .history-list",
+  ) as HTMLElement;
+
   if (logs.length === 0) {
-    emptyState!.style.display = 'block'
+    emptyState!.style.display = "block";
   } else {
-    historyList.innerHTML = logs.map((log) => `
+    historyList.innerHTML = logs
+      .map(
+        (log) => `
       <div class="history-item" data-log-id="${log.id}">
         <div class="history-date">
           ${new Date(log.date).toLocaleDateString()}
@@ -32,26 +50,36 @@
         <div class="history-details">
           <div class="history-routine">${log.routineSnapshot.name}</div>
           <div class="history-exercises">
-            ${log.routineSnapshot.exercises.slice(0, 3).join(', ')}
-            ${log.routineSnapshot.exercises.length > 3 ? ` +${log.routineSnapshot.exercises.length - 3} more` : ''}
+            ${log.routineSnapshot.exercises.slice(0, 3).join(", ")}
+            ${log.routineSnapshot.exercises.length > 3 ? ` +${log.routineSnapshot.exercises.length - 3} more` : ""}
           </div>
         </div>
         <div class="history-duration">
           ${Math.floor(log.duration / 60)}m ${log.duration % 60}s
         </div>
       </div>
-    `).join('')
+    `,
+      )
+      .join("");
   }
-  
-  const clearButton = document.querySelector('[data-action="clear"]') as HTMLButtonElement
-  
+
+  const clearButton = document.querySelector(
+    '[data-action="clear"]',
+  ) as HTMLButtonElement;
+
   if (clearButton) {
-    clearButton.addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all workout history? This cannot be undone.')) {
-        WorkoutLogService.clearLogs()
-        window.location.reload()
+    clearButton.addEventListener("click", () => {
+      if (
+        confirm(
+          t(
+            "Are you sure you want to clear all workout history? This cannot be undone.",
+          ),
+        )
+      ) {
+        WorkoutLogService.clearLogs();
+        window.location.reload();
       }
-    })
+    });
   }
 </script>
 
@@ -101,6 +129,10 @@
 
   .btn-danger:hover {
     background: rgba(204, 102, 119, 0.15);
+  }
+
+  .btn svg {
+    margin-right: 0.5rem;
   }
 
   .empty-state {

@@ -2,39 +2,42 @@
 ---
 
 <div class="routine-stats">
-  <h2>Routine Statistics</h2>
-  
+  <h2 data-i18n="Routine Statistics">Routine Statistics</h2>
+
   <div class="empty-state" style="display: none;">
-    <p>No workout data yet.</p>
+    <p data-i18n="No workout data yet.">No workout data yet.</p>
   </div>
-  
+
   <div class="stats-list"></div>
 </div>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
-  
-  const routineStats = WorkoutLogService.getRoutineStats()
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { t } from "../assets/dictionary";
+
+  const routineStats = WorkoutLogService.getRoutineStats();
   const emptyState = document.querySelector('.empty-state') as HTMLElement
   const statsList = document.querySelector('.stats-list') as HTMLElement
   
   if (routineStats.length === 0) {
-    emptyState!.style.display = 'block'
+    emptyState!.style.display = "block";
   } else {
-    statsList.innerHTML = routineStats.map((stat) => `
+    statsList.innerHTML = routineStats
+      .map(
+        (stat) => `
       <div class="stat-item">
         <div class="stat-name">${stat.name}</div>
         <div class="stat-metrics">
           <div class="metric">
-            <span class="metric-label">Workouts:</span>
+            <span class="metric-label">${t("Workouts:")}</span>
             <span class="metric-value">${stat.count}</span>
           </div>
           <div class="metric">
-            <span class="metric-label">Total Time:</span>
+            <span class="metric-label">${t("Total Time")}:</span>
             <span class="metric-value">${Math.floor(stat.totalDuration / 60)}m</span>
           </div>
           <div class="metric">
-            <span class="metric-label">Avg:</span>
+            <span class="metric-label">${t("Avg:")}</span>
             <span class="metric-value">${Math.floor(stat.averageDuration / 60)}m</span>
           </div>
         </div>
@@ -42,7 +45,9 @@
           <div class="progress-bar" style="width: ${Math.min((stat.count / 10) * 100, 100)}%"></div>
         </div>
       </div>
-    `).join('')
+    `,
+      )
+      .join("");
   }
 </script>
 
