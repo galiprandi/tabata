@@ -11,7 +11,7 @@ import GoToHome from '../components/GoToHome.astro'
 <Layout>
   <nav class="top-nav">
     <GoToHome />
-    <h1>Historial</h1>
+    <h1 data-i18n="History">History</h1>
     <span class="nav-spacer"></span>
   </nav>
 
@@ -32,23 +32,24 @@ import GoToHome from '../components/GoToHome.astro'
 </Layout>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
-  import { compressProgress, getDateRanges } from '../assets/progressSharing'
-  
-  document.addEventListener('share-progress', () => {
-    const logs = WorkoutLogService.getLogs()
-    const ranges = getDateRanges()
-    
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { compressProgress, getDateRanges } from "../assets/progressSharing";
+  import { t } from "../assets/dictionary";
+
+  document.addEventListener("share-progress", () => {
+    const logs = WorkoutLogService.getLogs();
+    const ranges = getDateRanges();
+
     // For now, use the first range (Last 7 days)
-    const result = compressProgress(logs, ranges[0], 'My Progress')
-    
+    const result = compressProgress(logs, ranges[0], "My Progress");
+
     if (result.success && result.url) {
-      navigator.clipboard.writeText(result.url)
-      alert('Progress link copied to clipboard!')
+      navigator.clipboard.writeText(result.url);
+      alert(t("Progress link copied to clipboard!"));
     } else {
-      alert('Failed to generate progress link')
+      alert(t("Failed to generate progress link"));
     }
-  })
+  });
 </script>
 
 <style>
