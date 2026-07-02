@@ -228,6 +228,18 @@ export const dictionary = {
     en: "Clear search",
     es: "Limpiar búsqueda",
   },
+  "See history": {
+    en: "See history",
+    es: "Ver historial",
+  },
+  "Trainer Mode": {
+    en: "Trainer Mode",
+    es: "Modo entrenador",
+  },
+  "Configure routine": {
+    en: "Configure routine",
+    es: "Configurar rutina",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
