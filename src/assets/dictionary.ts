@@ -228,14 +228,42 @@ export const dictionary = {
     en: "Clear search",
     es: "Limpiar búsqueda",
   },
-  "See history": {
-    en: "See history",
-    es: "Ver historial",
+  History: { en: "History", es: "Historial" },
+  "See history": { en: "See history", es: "Ver historial" },
+  "Workout History": { en: "Workout History", es: "Historial de entrenamientos" },
+  "Clear History": { en: "Clear History", es: "Limpiar historial" },
+  "No workouts recorded yet. Start training to see your history!": {
+    en: "No workouts recorded yet. Start training to see your history!",
+    es: "Aún no hay entrenamientos registrados. ¡Empieza a entrenar para ver tu historial!",
   },
-  "Trainer Mode": {
-    en: "Trainer Mode",
-    es: "Modo entrenador",
+  "Are you sure you want to clear all workout history? This cannot be undone.": {
+    en: "Are you sure you want to clear all workout history? This cannot be undone.",
+    es: "¿Estás seguro de que quieres borrar todo el historial de entrenamientos? Esto no se puede deshacer.",
   },
+  "Trainer Mode": { en: "Trainer Mode", es: "Modo Entrenador" },
+  "No routines. Create the first one to start.": {
+    en: "No routines. Create the first one to start.",
+    es: "No hay rutinas. Crea la primera para empezar.",
+  },
+  "Overall Statistics": { en: "Overall Statistics", es: "Estadísticas generales" },
+  "Total Workouts": { en: "Total Workouts", es: "Total de entrenamientos" },
+  "Total Time": { en: "Total Time", es: "Tiempo total" },
+  "Current Streak": { en: "Current Streak", es: "Racha actual" },
+  "This Week": { en: "This Week", es: "Esta semana" },
+  "Progress link copied to clipboard!": {
+    en: "Progress link copied to clipboard!",
+    es: "¡Enlace de progreso copiado al portapapeles!",
+  },
+  "Failed to generate progress link": {
+    en: "Failed to generate progress link",
+    es: "Error al generar el enlace de progreso",
+  },
+  "Routine Statistics": { en: "Routine Statistics", es: "Estadísticas de rutinas" },
+  "Exercise Statistics": { en: "Exercise Statistics", es: "Estadísticas de ejercicios" },
+  "No workout data yet.": { en: "No workout data yet.", es: "Aún no hay datos de entrenamiento." },
+  "Workouts:": { en: "Workouts:", es: "Entrenamientos:" },
+  "Avg:": { en: "Avg:", es: "Promedio:" },
+  "Frequency:": { en: "Frequency:", es: "Frecuencia:" },
   "Configure routine": {
     en: "Configure routine",
     es: "Configurar rutina",
