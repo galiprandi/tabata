@@ -268,6 +268,10 @@ export const dictionary = {
     en: "Configure routine",
     es: "Configurar rutina",
   },
+  "Share this app": {
+    en: "Share this app",
+    es: "Compartir esta aplicación",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];

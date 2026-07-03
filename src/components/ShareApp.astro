@@ -6,6 +6,8 @@ import CloseIcon from "./CloseIcon.astro";
   id="share_app"
   title="Share this app with your friends!"
   aria-label="Share this app"
+  data-i18n-title="Share this app with your friends!"
+  data-i18n-aria-label="Share this app"
 >
   <img
     id="qr_link"
@@ -17,11 +19,15 @@ import CloseIcon from "./CloseIcon.astro";
 </button>
 
 <dialog id="dialog">
-  <button id="dialog_close" data-i18n-aria-label="Close">
+  <button id="dialog_close" data-i18n-aria-label="Close" data-i18n-title="Close">
     <CloseIcon />
   </button>
   <div>
-    <button id="btn_share_big" aria-label="Share this app">
+    <button
+      id="btn_share_big"
+      aria-label="Share this app"
+      data-i18n-aria-label="Share this app"
+    >
       <img
         id="qr_link_big"
         src="/tabata/qr_link.svg"
@@ -125,9 +131,22 @@ import CloseIcon from "./CloseIcon.astro";
       dialog?.close();
     });
 
-    onClick("#qr_link", async () => {
+    onClick("#share_app", async () => {
       await play("tap", true);
-      dialog?.showModal();
+      if (dialog) {
+        const btnOpen = document.getElementById("share_app");
+        dialog.showModal();
+        const closeBtn = document.getElementById("dialog_close");
+        closeBtn?.focus();
+
+        dialog.addEventListener(
+          "close",
+          () => {
+            btnOpen?.focus();
+          },
+          { once: true },
+        );
+      }
     });
   });
 </script>
