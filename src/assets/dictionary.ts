@@ -264,6 +264,10 @@ export const dictionary = {
   "Workouts:": { en: "Workouts:", es: "Entrenamientos:" },
   "Avg:": { en: "Avg:", es: "Promedio:" },
   "Frequency:": { en: "Frequency:", es: "Frecuencia:" },
+  "Configure routine": {
+    en: "Configure routine",
+    es: "Configurar rutina",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];

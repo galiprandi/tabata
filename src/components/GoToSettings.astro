@@ -5,10 +5,12 @@ import Config from './icons/Config.icon.astro'
 <button
   id="btn-routine-config"
   class="contrast outline icon"
-  title="Config Routine"
+  title="Configure routine"
   aria-label="Configure routine"
-  ><Config /></button
->
+  data-i18n-title="Configure routine"
+  data-i18n-aria-label="Configure routine"
+  data-tooltip="Configure routine"
+><Config /></button>
 
 <script>
   import { onClick } from '@assets/domHelpers'
