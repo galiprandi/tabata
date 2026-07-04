@@ -207,7 +207,7 @@ import UpIcon from "./UpIcon.astro";
             button.disabled = true;
 
           button.addEventListener("click", async () => {
-            if (button.classList.contains("delete")) removeWorkout(index);
+            if (button.classList.contains("delete")) await removeWorkout(index);
             if (button.classList.contains("duplicate")) duplicateWorkout(index);
             if (button.classList.contains("down")) moveWorkout(index, "down");
             if (button.classList.contains("up")) moveWorkout(index, "up");
@@ -266,12 +266,21 @@ import UpIcon from "./UpIcon.astro";
       });
     };
 
-    const removeWorkout = (index: number) => {
+    const removeWorkout = async (index: number) => {
+      const { t } = await import("../assets/dictionary");
       const exercises = RoutineService.getExercises();
       const item = exercises[index];
-      if (!confirm(`Are you sure you want to remove "${item}"?`)) return;
+      if (
+        !confirm(
+          t('Are you sure you want to delete "{name}"?').replace(
+            "{name}",
+            item,
+          ),
+        )
+      )
+        return;
       RoutineService.removeExercise(index);
-      init();
+      await init();
     };
 
     const moveWorkout = (fromIdx: number, direction: "up" | "down") => {

@@ -272,6 +272,14 @@ export const dictionary = {
     en: "Share this app",
     es: "Compartir esta aplicación",
   },
+  "Reset to default settings": {
+    en: "Reset to default settings",
+    es: "Restablecer ajustes por defecto",
+  },
+  "Open help": {
+    en: "Open help",
+    es: "Abrir ayuda",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
