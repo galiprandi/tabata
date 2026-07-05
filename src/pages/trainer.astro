@@ -41,25 +41,48 @@ import SearchBar from "@components/SearchBar.astro";
     <div id="routine-list" class="routine-list"></div>
 
     <div id="empty-state" class="empty-state">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path
-          d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
-        ></path>
-        <circle cx="12" cy="13" r="3"></circle>
-      </svg>
-      <p data-i18n="No routines. Create the first one to start.">
-        No routines. Create the first one to start.
-      </p>
+      <div id="no-routines-msg">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+          ></path>
+          <circle cx="12" cy="13" r="3"></circle>
+        </svg>
+        <p data-i18n="No routines. Create the first one to start.">
+          No routines. Create the first one to start.
+        </p>
+      </div>
+      <div id="no-results-msg" style="display: none;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <p data-i18n="No results found for your search">
+          No results found for your search
+        </p>
+      </div>
     </div>
   </section>
 </Layout>
@@ -77,14 +100,24 @@ import SearchBar from "@components/SearchBar.astro";
     return div.innerHTML;
   }
 
-  function renderRoutines(routinesToRender: Routine[]) {
+  function renderRoutines(routinesToRender: Routine[], isSearch = false) {
     const list = document.getElementById("routine-list");
     const emptyState = document.getElementById("empty-state");
-    if (!list || !emptyState) return;
+    const noRoutinesMsg = document.getElementById("no-routines-msg");
+    const noResultsMsg = document.getElementById("no-results-msg");
+
+    if (!list || !emptyState || !noRoutinesMsg || !noResultsMsg) return;
 
     if (routinesToRender.length === 0) {
       list.innerHTML = "";
       emptyState.style.display = "flex";
+      if (isSearch) {
+        noRoutinesMsg.style.display = "none";
+        noResultsMsg.style.display = "block";
+      } else {
+        noRoutinesMsg.style.display = "block";
+        noResultsMsg.style.display = "none";
+      }
       return;
     }
 
@@ -166,7 +199,8 @@ import SearchBar from "@components/SearchBar.astro";
     const allRoutines = RoutineStorageService.getRoutines();
     let filtered = allRoutines;
 
-    if (query.trim()) {
+    const isSearch = query.trim().length > 0;
+    if (isSearch) {
       const q = query.toLowerCase();
       filtered = allRoutines.filter(
         (r) =>
@@ -175,7 +209,7 @@ import SearchBar from "@components/SearchBar.astro";
       );
     }
 
-    renderRoutines(filtered);
+    renderRoutines(filtered, isSearch);
   }
 
   async function handleShare(routineId: string) {
