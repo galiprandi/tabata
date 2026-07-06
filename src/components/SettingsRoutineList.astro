@@ -19,8 +19,11 @@ import UpIcon from "./UpIcon.astro";
     <button
       id="add-new-item"
       class="secondary"
-      data-i18n-title="Add new item to the list"
+      title="Add new exercise"
+      aria-label="Add new exercise"
+      data-i18n-title="Add new exercise"
       data-i18n-aria-label="Add new exercise"
+      data-tooltip="Add new exercise"
       ><Plus /><span data-i18n="Exercise">Exercise</span></button
     >
   </section>
@@ -29,7 +32,15 @@ import UpIcon from "./UpIcon.astro";
     <p data-i18n="No exercises added yet. Start your routine!">
       No exercises added yet. Start your routine!
     </p>
-    <button id="add-first-item" class="secondary">
+    <button
+      id="add-first-item"
+      class="secondary"
+      title="Add exercise"
+      aria-label="Add exercise"
+      data-i18n-title="Add Exercise"
+      data-i18n-aria-label="Add Exercise"
+      data-tooltip="Add Exercise"
+    >
       <Plus />
       <span data-i18n="Add Exercise">Add Exercise</span>
     </button>
@@ -89,6 +100,7 @@ import UpIcon from "./UpIcon.astro";
             class="up"
             data-i18n-title="Move exercise up"
             data-i18n-aria-label="Move exercise up"
+            data-tooltip="Move exercise up"
           >
             <UpIcon />
           </button>
@@ -96,6 +108,7 @@ import UpIcon from "./UpIcon.astro";
             class="down"
             data-i18n-title="Move exercise down"
             data-i18n-aria-label="Move exercise down"
+            data-tooltip="Move exercise down"
           >
             <DownIcon />
           </button>
@@ -103,6 +116,7 @@ import UpIcon from "./UpIcon.astro";
             class="duplicate"
             data-i18n-title="Duplicate exercise"
             data-i18n-aria-label="Duplicate exercise"
+            data-tooltip="Duplicate exercise"
           >
             <CopyIcon />
           </button>
@@ -110,6 +124,7 @@ import UpIcon from "./UpIcon.astro";
             class="edit"
             data-i18n-title="Edit exercise"
             data-i18n-aria-label="Edit exercise"
+            data-tooltip="Edit exercise"
           >
             <EditItemIcon />
           </button>
@@ -117,6 +132,7 @@ import UpIcon from "./UpIcon.astro";
             class="delete"
             data-i18n-title="Delete exercise"
             data-i18n-aria-label="Delete exercise"
+            data-tooltip="Delete exercise"
           >
             <TrashIcon />
           </button>
@@ -128,6 +144,7 @@ import UpIcon from "./UpIcon.astro";
   <script>
     import { updateTextContent } from "../assets/main";
     import { RoutineService } from "../assets/routine/RoutineService";
+    import { play } from "../assets/audio";
 
     import { onClick } from "@assets/domHelpers";
 
@@ -143,8 +160,9 @@ import UpIcon from "./UpIcon.astro";
       "#add-edit-modal form input",
     ) as HTMLInputElement | null;
 
-    formAddEditItems?.addEventListener("submit", (e) => {
+    formAddEditItems?.addEventListener("submit", async (e) => {
       e.preventDefault();
+      await play("tap", true);
       if (!modalAddOrEdit) throw new Error("Modal not found");
       const form = e.target as HTMLFormElement;
       const idx = form.dataset.idx;
@@ -207,6 +225,7 @@ import UpIcon from "./UpIcon.astro";
             button.disabled = true;
 
           button.addEventListener("click", async () => {
+            await play("tap", true);
             if (button.classList.contains("delete")) await removeWorkout(index);
             if (button.classList.contains("duplicate")) duplicateWorkout(index);
             if (button.classList.contains("down")) moveWorkout(index, "down");
@@ -238,6 +257,7 @@ import UpIcon from "./UpIcon.astro";
       if (!formAddEditItems) throw new Error("Form not found");
 
       onClick("#add-new-item", async () => {
+        await play("tap", true);
         const { t } = await import("../assets/dictionary");
         const title = modalAddOrEdit.querySelector(".title");
         if (title) title.textContent = t("New Exercise");
@@ -249,6 +269,7 @@ import UpIcon from "./UpIcon.astro";
       });
 
       onClick("#add-first-item", async () => {
+        await play("tap", true);
         const { t } = await import("../assets/dictionary");
         const title = modalAddOrEdit.querySelector(".title");
         if (title) title.textContent = t("New Exercise");
@@ -259,7 +280,8 @@ import UpIcon from "./UpIcon.astro";
         inputAddEditItems.focus();
       });
 
-      onClick("#add-edit-modal-cancel", () => {
+      onClick("#add-edit-modal-cancel", async () => {
+        await play("tap", true);
         formAddEditItems.dataset.idx = "";
         inputAddEditItems.value = "";
         modalAddOrEdit.close();
