@@ -4,7 +4,7 @@ import TrashIcon from "./TrashIcon.astro";
 import EditItemIcon from "./EditItemIcon.astro";
 ---
 
-<section id="routine-list">
+<section id="my-routines-section">
   <h2 data-i18n="My Routines">My Routines</h2>
   <section id="routines-list">
     <span aria-busy="true" data-i18n="Loading...">Loading...</span>
@@ -75,6 +75,7 @@ import EditItemIcon from "./EditItemIcon.astro";
           class="select"
           data-i18n-title="Select routine"
           data-i18n-aria-label="Select routine"
+          data-tooltip="Select routine"
         >
           ✓
         </button>
@@ -82,6 +83,7 @@ import EditItemIcon from "./EditItemIcon.astro";
           class="edit"
           data-i18n-title="Edit routine"
           data-i18n-aria-label="Edit routine"
+          data-tooltip="Edit routine"
         >
           <EditItemIcon />
         </button>
@@ -105,6 +107,7 @@ import EditItemIcon from "./EditItemIcon.astro";
           class="delete"
           data-i18n-title="Delete routine"
           data-i18n-aria-label="Delete routine"
+          data-tooltip="Delete routine"
         >
           <TrashIcon />
         </button>
@@ -127,6 +130,34 @@ import EditItemIcon from "./EditItemIcon.astro";
     "routine-name",
   ) as HTMLInputElement | null;
 
+  const handleOpenModal = async (
+    trigger: HTMLElement,
+    titleText: string,
+    routineId?: string,
+    routineName?: string,
+  ) => {
+    if (!routineModal || !routineNameInput) return;
+    await play("tap", true);
+    const title = routineModal.querySelector(".title");
+    if (title) title.textContent = titleText;
+    routineNameInput.value = routineName || "";
+    if (routineId) {
+      routineModal.dataset.routineId = routineId;
+    } else {
+      delete routineModal.dataset.routineId;
+    }
+    routineModal.showModal();
+    routineNameInput.focus();
+
+    routineModal.addEventListener(
+      "close",
+      () => {
+        trigger.focus();
+      },
+      { once: true },
+    );
+  };
+
   const updateRoutineList = () => {
     if (!routineModal) throw new Error("Modal not found");
     if (!routineNameInput) throw new Error("Input not found");
@@ -135,7 +166,9 @@ import EditItemIcon from "./EditItemIcon.astro";
     const activeRoutineId = RoutineStorageService.getActiveRoutineId();
     const routinesList = document.getElementById("routines-list");
     const emptyState = document.getElementById("empty-routines-state");
-    const buttonsSection = document.querySelector("#routine-list > .buttons");
+    const buttonsSection = document.querySelector(
+      "#my-routines-section > .buttons",
+    );
     const template = document.getElementById(
       "routine-item-template",
     ) as HTMLTemplateElement;
@@ -181,12 +214,12 @@ import EditItemIcon from "./EditItemIcon.astro";
             updateRoutineList();
           }
           if (button.classList.contains("edit")) {
-            const title = routineModal.querySelector(".title");
-            if (title) title.textContent = t("Edit Routine");
-            routineNameInput.value = routine.name;
-            routineModal.dataset.routineId = routine.id;
-            routineModal.showModal();
-            routineNameInput.focus();
+            await handleOpenModal(
+              button,
+              t("Edit Routine"),
+              routine.id,
+              routine.name,
+            );
           }
           if (button.classList.contains("share")) {
             const result = compressRoutine(routine);
@@ -236,23 +269,13 @@ import EditItemIcon from "./EditItemIcon.astro";
     if (!routineNameInput) throw new Error("Input not found");
 
     onClick("#add-new-routine", async () => {
-      await play("tap", true);
-      const title = routineModal.querySelector(".title");
-      if (title) title.textContent = t("New Routine");
-      routineNameInput.value = "";
-      delete routineModal.dataset.routineId;
-      routineModal.showModal();
-      routineNameInput.focus();
+      const trigger = document.getElementById("add-new-routine");
+      if (trigger) await handleOpenModal(trigger, t("New Routine"));
     });
 
     onClick("#add-first-routine", async () => {
-      await play("tap", true);
-      const title = routineModal.querySelector(".title");
-      if (title) title.textContent = t("New Routine");
-      routineNameInput.value = "";
-      delete routineModal.dataset.routineId;
-      routineModal.showModal();
-      routineNameInput.focus();
+      const trigger = document.getElementById("add-first-routine");
+      if (trigger) await handleOpenModal(trigger, t("New Routine"));
     });
 
     onClick("#routine-modal-cancel", async () => {
@@ -298,7 +321,7 @@ import EditItemIcon from "./EditItemIcon.astro";
 </script>
 
 <style>
-  #routine-list h2 {
+  #my-routines-section h2 {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--text-primary);
@@ -393,7 +416,7 @@ import EditItemIcon from "./EditItemIcon.astro";
     }
   }
 
-  #routine-list > .buttons button {
+  #my-routines-section > .buttons button {
     min-height: var(--touch-target-lg);
     font-size: 1rem;
     font-weight: 600;
