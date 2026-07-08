@@ -300,6 +300,10 @@ export const dictionary = {
     en: "No results found for your search",
     es: "No se encontraron resultados para tu búsqueda",
   },
+  "Share Progress": {
+    en: "Share Progress",
+    es: "Compartir progreso",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
