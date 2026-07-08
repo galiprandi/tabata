@@ -9,7 +9,7 @@ import TrashIcon from "./TrashIcon.astro";
 import UpIcon from "./UpIcon.astro";
 ---
 
-<section id="routine-list">
+<section id="exercises-section">
   <h2 data-i18n="Routine">Routine</h2>
   <section id="workouts-list">
     <span aria-busy="true" data-i18n="Loading...">Loading...</span>
@@ -182,7 +182,9 @@ import UpIcon from "./UpIcon.astro";
       const exercises = RoutineService.getExercises();
       const workoutsList = document.getElementById("workouts-list");
       const emptyState = document.getElementById("empty-routine-state");
-      const buttonsSection = document.querySelector("#routine-list > .buttons");
+      const buttonsSection = document.querySelector(
+        "#exercises-section > .buttons",
+      );
       const template = document.getElementById(
         "workout-item-template",
       ) as HTMLTemplateElement;
@@ -232,12 +234,12 @@ import UpIcon from "./UpIcon.astro";
             if (button.classList.contains("up")) moveWorkout(index, "up");
             if (button.classList.contains("edit")) {
               const { t } = await import("../assets/dictionary");
-              const title = modalAddOrEdit.querySelector(".title");
-              if (title) title.textContent = t("Edit Exercise");
-              formAddEditItems.dataset.idx = index.toString();
-              inputAddEditItems.value = workout;
-              modalAddOrEdit.showModal();
-              inputAddEditItems.focus();
+              await handleOpenModal(
+                button,
+                t("Edit Exercise"),
+                index.toString(),
+                workout,
+              );
             }
           });
         });
@@ -245,6 +247,29 @@ import UpIcon from "./UpIcon.astro";
         workoutsList?.appendChild(clone);
       });
       speechOnTap();
+    };
+
+    const handleOpenModal = async (
+      trigger: HTMLElement,
+      titleText: string,
+      idx?: string,
+      name?: string,
+    ) => {
+      await play("tap", true);
+      const title = modalAddOrEdit?.querySelector(".title");
+      if (title) title.textContent = titleText;
+      if (formAddEditItems) formAddEditItems.dataset.idx = idx || "";
+      if (inputAddEditItems) inputAddEditItems.value = name || "";
+      modalAddOrEdit?.showModal();
+      inputAddEditItems?.focus();
+
+      modalAddOrEdit?.addEventListener(
+        "close",
+        () => {
+          trigger.focus();
+        },
+        { once: true },
+      );
     };
 
     const init = async () => {
@@ -257,27 +282,15 @@ import UpIcon from "./UpIcon.astro";
       if (!formAddEditItems) throw new Error("Form not found");
 
       onClick("#add-new-item", async () => {
-        await play("tap", true);
+        const trigger = document.getElementById("add-new-item");
         const { t } = await import("../assets/dictionary");
-        const title = modalAddOrEdit.querySelector(".title");
-        if (title) title.textContent = t("New Exercise");
-        if (!formAddEditItems) return;
-        formAddEditItems.dataset.idx = "";
-        inputAddEditItems.value = "";
-        modalAddOrEdit.showModal();
-        inputAddEditItems.focus();
+        if (trigger) await handleOpenModal(trigger, t("New Exercise"));
       });
 
       onClick("#add-first-item", async () => {
-        await play("tap", true);
+        const trigger = document.getElementById("add-first-item");
         const { t } = await import("../assets/dictionary");
-        const title = modalAddOrEdit.querySelector(".title");
-        if (title) title.textContent = t("New Exercise");
-        if (!formAddEditItems) return;
-        formAddEditItems.dataset.idx = "";
-        inputAddEditItems.value = "";
-        modalAddOrEdit.showModal();
-        inputAddEditItems.focus();
+        if (trigger) await handleOpenModal(trigger, t("New Exercise"));
       });
 
       onClick("#add-edit-modal-cancel", async () => {
@@ -332,7 +345,7 @@ import UpIcon from "./UpIcon.astro";
   </script>
 
   <style>
-    #routine-list h2 {
+    #exercises-section h2 {
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--text-primary);
@@ -493,7 +506,7 @@ import UpIcon from "./UpIcon.astro";
       }
     }
 
-    #routine-list > .buttons button {
+    #exercises-section > .buttons button {
       min-height: var(--touch-target-lg);
       font-size: 1rem;
       font-weight: 600;

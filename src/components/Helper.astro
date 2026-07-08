@@ -12,6 +12,7 @@ const { title, description } = Astro.props;
     data-description={description}
     data-i18n-aria-label="Open help"
     data-i18n-title="Open help"
+    data-tooltip={title || "Open help"}
   >
     <HelpIcon />
   </button>
