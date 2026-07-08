@@ -221,8 +221,23 @@ import SearchBar from "@components/SearchBar.astro";
 
     const result = compressRoutine(routine);
     if (result.success && result.url) {
-      navigator.clipboard.writeText(result.url);
-      alert(t("Link copied to clipboard"));
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: routine.name,
+            text: t("Share routine"),
+            url: result.url,
+          });
+        } catch (err) {
+          if ((err as Error).name !== "AbortError") {
+            navigator.clipboard.writeText(result.url);
+            alert(t("Link copied to clipboard"));
+          }
+        }
+      } else {
+        navigator.clipboard.writeText(result.url);
+        alert(t("Link copied to clipboard"));
+      }
     } else {
       alert(t("Failed to generate link"));
     }

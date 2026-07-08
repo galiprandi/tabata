@@ -27,3 +27,8 @@
 
 **Learning:** To ensure keyboard accessibility in help components, focus must be programmatically shifted to the close button when a dialog opens and returned to the trigger button when it closes.
 **Action:** When implementing native `<dialog>` elements, use `dialog.showModal()`, focus the close button immediately, and use a `once: true` listener on the 'close' event to restore focus.
+
+## 2025-08-15 - [Native Sharing UX]
+
+**Learning:** Implementing the native Web Share API (`navigator.share`) significantly improves the sharing experience on mobile devices, making it feel like a first-class app interaction. A robust fallback to clipboard copying ensures functionality on all platforms.
+**Action:** Use native sharing when possible, providing translatable titles and text, and always include a clipboard fallback with user feedback (e.g., localized alerts).
