@@ -1,15 +1,15 @@
 ---
-import GoToTrain from '@components/GoToTrain.astro'
-import Layout from '../layouts/layout.astro'
-import InstallApp from '@components/InstallApp.astro'
-import ShareApp from '@components/ShareApp.astro'
-import GoToSettings from '@components/GoToSettings.astro'
-import GoToHistory from '@components/GoToHistory.astro'
-import GoToTrainer from '@components/GoToTrainer.astro'
-import RoutineSelector from '@components/RoutineSelector.astro'
-import RoutinePreview from '@components/RoutinePreview.astro'
-import SaveConfirmation from '@components/SaveConfirmation.astro'
-import ProgressView from '@components/ProgressView.astro'
+import GoToTrain from "@components/GoToTrain.astro";
+import Layout from "../layouts/layout.astro";
+import InstallApp from "@components/InstallApp.astro";
+import ShareApp from "@components/ShareApp.astro";
+import GoToSettings from "@components/GoToSettings.astro";
+import GoToHistory from "@components/GoToHistory.astro";
+import GoToTrainer from "@components/GoToTrainer.astro";
+import RoutineSelector from "@components/RoutineSelector.astro";
+import RoutinePreview from "@components/RoutinePreview.astro";
+import SaveConfirmation from "@components/SaveConfirmation.astro";
+import ProgressView from "@components/ProgressView.astro";
 ---
 
 <Layout>
@@ -34,7 +34,11 @@ import ProgressView from '@components/ProgressView.astro'
     <RoutinePreview routine={undefined} />
   </div>
 
-  <div id="save-confirmation-modal" class="modal-overlay" style="display: none;">
+  <div
+    id="save-confirmation-modal"
+    class="modal-overlay"
+    style="display: none;"
+  >
     <SaveConfirmation />
   </div>
 
@@ -43,133 +47,171 @@ import ProgressView from '@components/ProgressView.astro'
   </div>
 </Layout>
 
-<script is:inline>
-  import { play } from '@assets/audio'
-  import { onClick } from '@assets/domHelpers'
-  import { RoutineStorageService } from '../assets/routine'
-  import { sharedRoutineToRoutine, getSharedRoutineFromURL } from '../assets/routineSharing'
-  import { decompressProgress } from '../assets/progressSharing'
+<script>
+  import { play } from "@assets/audio";
+  import { onClick } from "@assets/domHelpers";
+  import { RoutineStorageService } from "../assets/routine";
+  import {
+    sharedRoutineToRoutine,
+    getSharedRoutineFromURL,
+  } from "../assets/routineSharing";
+  import {
+    decompressProgress,
+    type SharedProgress,
+  } from "../assets/progressSharing";
+  import { t, initTranslation } from "../assets/dictionary";
+  import type { SharedRoutine } from "../assets/routineSharing";
+  import type { WorkoutLog } from "../assets/workoutLog";
 
-  let savedRoutineId = null
+  let savedRoutineId: string | null = null;
 
-  function handleSaveSharedRoutine(sharedRoutine) {
-    const routine = sharedRoutineToRoutine(sharedRoutine)
+  function handleSaveSharedRoutine(sharedRoutine: SharedRoutine) {
+    const routine = sharedRoutineToRoutine(sharedRoutine);
     RoutineStorageService.createRoutine(
       routine.name,
       routine.config,
-      routine.exercises
-    )
-    savedRoutineId = routine.id
+      routine.exercises,
+    );
+    savedRoutineId = routine.id;
 
     // Show confirmation modal
-    const sharedModal = document.getElementById('shared-routine-modal')
-    const confirmationModal = document.getElementById('save-confirmation-modal')
-    if (sharedModal) sharedModal.style.display = 'none'
-    if (confirmationModal) confirmationModal.style.display = 'flex'
+    const sharedModal = document.getElementById("shared-routine-modal");
+    const confirmationModal = document.getElementById(
+      "save-confirmation-modal",
+    );
+    if (sharedModal) sharedModal.style.display = "none";
+    if (confirmationModal) confirmationModal.style.display = "flex";
   }
 
   function handleCancelSharedRoutine() {
     // Remove the ?r= parameter from URL
-    const url = new URL(window.location.href)
-    url.searchParams.delete('r')
-    window.history.replaceState({}, '', url.toString())
+    const url = new URL(window.location.href);
+    url.searchParams.delete("r");
+    window.history.replaceState({}, "", url.toString());
 
-    const sharedModal = document.getElementById('shared-routine-modal')
-    if (sharedModal) sharedModal.style.display = 'none'
+    const sharedModal = document.getElementById("shared-routine-modal");
+    if (sharedModal) sharedModal.style.display = "none";
   }
 
   function handleConfirmSetActive() {
     if (savedRoutineId) {
-      RoutineStorageService.setActiveRoutineId(savedRoutineId)
+      RoutineStorageService.setActiveRoutineId(savedRoutineId);
     }
 
     // Remove the ?r= parameter from URL
-    const url = new URL(window.location.href)
-    url.searchParams.delete('r')
-    window.history.replaceState({}, '', url.toString())
+    const url = new URL(window.location.href);
+    url.searchParams.delete("r");
+    window.history.replaceState({}, "", url.toString());
 
-    const confirmationModal = document.getElementById('save-confirmation-modal')
-    if (confirmationModal) confirmationModal.style.display = 'none'
+    const confirmationModal = document.getElementById(
+      "save-confirmation-modal",
+    );
+    if (confirmationModal) confirmationModal.style.display = "none";
 
     // Reload to update the UI
-    window.location.reload()
+    window.location.reload();
   }
 
   function handleCancelSetActive() {
     // Remove the ?r= parameter from URL
-    const url = new URL(window.location.href)
-    url.searchParams.delete('r')
-    window.history.replaceState({}, '', url.toString())
+    const url = new URL(window.location.href);
+    url.searchParams.delete("r");
+    window.history.replaceState({}, "", url.toString());
 
-    const confirmationModal = document.getElementById('save-confirmation-modal')
-    if (confirmationModal) confirmationModal.style.display = 'none'
+    const confirmationModal = document.getElementById(
+      "save-confirmation-modal",
+    );
+    if (confirmationModal) confirmationModal.style.display = "none";
 
     // Reload to update the UI
-    window.location.reload()
+    window.location.reload();
   }
 
-  function updateRoutinePreview(routine) {
-    const previewComponent = document.querySelector('.routine-preview')
+  function updateRoutinePreview(routine: SharedRoutine) {
+    const previewComponent = document.querySelector(
+      ".routine-preview",
+    ) as HTMLElement;
     if (previewComponent && routine) {
       // Update the preview with the routine data
-      const nameElement = previewComponent.querySelector('.routine-name')
-      const exercisesList = previewComponent.querySelector('.exercises-list')
-      const timingGrid = previewComponent.querySelector('.timing-grid')
-      
-      if (nameElement) nameElement.textContent = routine.name
+      const nameElement = previewComponent.querySelector(".routine-name");
+      const exercisesList = previewComponent.querySelector(".exercises-list");
+      const timingGrid = previewComponent.querySelector(".timing-grid");
+
+      if (nameElement) nameElement.textContent = routine.name;
       if (exercisesList) {
-        exercisesList.innerHTML = routine.exercises.map((ex) => `<li>${ex}</li>`).join('')
+        exercisesList.innerHTML = routine.exercises
+          .map((ex: string) => `<li>${ex}</li>`)
+          .join("");
       }
       if (timingGrid) {
         timingGrid.innerHTML = `
           <div class="timing-item">
-            <span class="label">Prep</span>
+            <span class="label" data-i18n="Prep">${t("Prep")}</span>
             <span class="value">${routine.config.prepDuration}s</span>
           </div>
           <div class="timing-item">
-            <span class="label">Work</span>
+            <span class="label" data-i18n="Work">${t("Work")}</span>
             <span class="value">${routine.config.workDuration}s</span>
           </div>
           <div class="timing-item">
-            <span class="label">Rest</span>
+            <span class="label" data-i18n="Rest">${t("Rest")}</span>
             <span class="value">${routine.config.restDuration}s</span>
           </div>
           <div class="timing-item">
-            <span class="label">Rounds</span>
+            <span class="label" data-i18n="Rounds">${t("Rounds")}</span>
             <span class="value">${routine.config.rounds}</span>
           </div>
-        `
+        `;
       }
+      initTranslation(previewComponent);
     }
   }
 
-  function updateProgressView(progressResult) {
-    const progressModal = document.getElementById('shared-progress-modal')
-    if (!progressModal || !progressResult.progress) return
+  function updateProgressView(progressResult: {
+    success: boolean;
+    progress: SharedProgress;
+  }) {
+    const progressModal = document.getElementById(
+      "shared-progress-modal",
+    ) as HTMLElement;
+    if (!progressModal || !progressResult.progress) return;
 
-    const progress = progressResult.progress
+    const progress = progressResult.progress;
 
     // Update user pseudo
-    const userElement = document.querySelector('[data-user-pseudo]')
+    const userElement = document.querySelector("[data-user-pseudo]");
     if (userElement) {
-      userElement.textContent = progress.userPseudo ? `Shared by ${progress.userPseudo}` : 'Shared Progress'
+      userElement.textContent = progress.userPseudo
+        ? t("Shared by {name}").replace("{name}", progress.userPseudo)
+        : t("Shared Progress");
     }
 
     // Update stats
-    const totalWorkoutsEl = document.querySelector('[data-stat="totalWorkouts"]')
-    const totalDurationEl = document.querySelector('[data-stat="totalDuration"]')
-    const uniqueRoutinesEl = document.querySelector('[data-stat="uniqueRoutines"]')
-    const streakEl = document.querySelector('[data-stat="streak"]')
-    
-    if (totalWorkoutsEl) totalWorkoutsEl.textContent = progress.summary.totalWorkouts.toString()
-    if (totalDurationEl) totalDurationEl.textContent = `${Math.floor(progress.summary.totalDuration / 60)}m`
-    if (uniqueRoutinesEl) uniqueRoutinesEl.textContent = progress.summary.uniqueRoutines.toString()
-    if (streakEl) streakEl.textContent = progress.summary.streak.toString()
+    const totalWorkoutsEl = document.querySelector(
+      '[data-stat="totalWorkouts"]',
+    );
+    const totalDurationEl = document.querySelector(
+      '[data-stat="totalDuration"]',
+    );
+    const uniqueRoutinesEl = document.querySelector(
+      '[data-stat="uniqueRoutines"]',
+    );
+    const streakEl = document.querySelector('[data-stat="streak"]');
+
+    if (totalWorkoutsEl)
+      totalWorkoutsEl.textContent = progress.summary.totalWorkouts.toString();
+    if (totalDurationEl)
+      totalDurationEl.textContent = `${Math.floor(progress.summary.totalDuration / 60)}m`;
+    if (uniqueRoutinesEl)
+      uniqueRoutinesEl.textContent = progress.summary.uniqueRoutines.toString();
+    if (streakEl) streakEl.textContent = progress.summary.streak.toString();
 
     // Update workout list
-    const workoutList = document.querySelector('.workout-list')
+    const workoutList = document.querySelector(".workout-list");
     if (workoutList) {
-      workoutList.innerHTML = progress.workoutLogs.map((log) => `
+      workoutList.innerHTML = progress.workoutLogs
+        .map(
+          (log: WorkoutLog) => `
         <div class="workout-item">
           <div class="workout-date">
             ${new Date(log.date).toLocaleDateString()}
@@ -181,65 +223,79 @@ import ProgressView from '@components/ProgressView.astro'
             ${Math.floor(log.duration / 60)}m ${log.duration % 60}s
           </div>
         </div>
-      `).join('')
+      `,
+        )
+        .join("");
     }
 
-    progressModal.style.display = 'flex'
+    initTranslation(progressModal);
+    progressModal.style.display = "flex";
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    onClick('#btn-routine-config', async () => {
-      await play('tap', true)
-      window.location.href = '/tabata/settings'
-    })
+  document.addEventListener("DOMContentLoaded", () => {
+    onClick("#btn-routine-config", async () => {
+      await play("tap", true);
+      window.location.href = "/tabata/settings";
+    });
 
     // Check for shared routine in URL
-    const sharedRoutineData = getSharedRoutineFromURL()
-    const sharedModal = document.getElementById('shared-routine-modal')
-    
-    if (sharedRoutineData && sharedRoutineData.success && sharedRoutineData.routine && sharedModal) {
-      updateRoutinePreview(sharedRoutineData.routine)
-      sharedModal.style.display = 'flex'
-      
+    const sharedRoutineData = getSharedRoutineFromURL();
+    const sharedModal = document.getElementById("shared-routine-modal");
+
+    if (
+      sharedRoutineData &&
+      sharedRoutineData.success &&
+      sharedRoutineData.routine &&
+      sharedModal
+    ) {
+      updateRoutinePreview(sharedRoutineData.routine);
+      sharedModal.style.display = "flex";
+
       // Listen for custom events from RoutinePreview
-      sharedModal.addEventListener('save', () => {
-        handleSaveSharedRoutine(sharedRoutineData.routine)
-      })
-      sharedModal.addEventListener('cancel', () => {
-        handleCancelSharedRoutine()
-      })
+      sharedModal.addEventListener("save", () => {
+        if (sharedRoutineData.routine) {
+          handleSaveSharedRoutine(sharedRoutineData.routine);
+        }
+      });
+      sharedModal.addEventListener("cancel", () => {
+        handleCancelSharedRoutine();
+      });
     }
 
     // Handle save confirmation modal
-    const confirmationModal = document.getElementById('save-confirmation-modal')
+    const confirmationModal = document.getElementById(
+      "save-confirmation-modal",
+    );
     if (confirmationModal) {
-      confirmationModal.addEventListener('confirm', () => {
-        handleConfirmSetActive()
-      })
-      confirmationModal.addEventListener('cancel', () => {
-        handleCancelSetActive()
-      })
+      confirmationModal.addEventListener("confirm", () => {
+        handleConfirmSetActive();
+      });
+      confirmationModal.addEventListener("cancel", () => {
+        handleCancelSetActive();
+      });
     }
 
     // Check for shared progress in URL
-    const progressData = decompressProgress()
+    const progressData = decompressProgress();
     if (progressData.success && progressData.progress) {
-      updateProgressView(progressData)
+      updateProgressView(
+        progressData as { success: true; progress: SharedProgress },
+      );
     }
 
     // Close progress modal handler
-    const progressModal = document.getElementById('shared-progress-modal')
+    const progressModal = document.getElementById("shared-progress-modal");
     if (progressModal) {
-      progressModal.addEventListener('click', (e) => {
+      progressModal.addEventListener("click", (e) => {
         if (e.target === progressModal) {
-          const url = new URL(window.location.href)
-          url.searchParams.delete('progress')
-          window.history.replaceState({}, '', url.toString())
-          progressModal.style.display = 'none'
+          const url = new URL(window.location.href);
+          url.searchParams.delete("progress");
+          window.history.replaceState({}, "", url.toString());
+          progressModal.style.display = "none";
         }
-      })
+      });
     }
-  })
+  });
 </script>
 
 <style>

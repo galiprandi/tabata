@@ -1,5 +1,5 @@
 ---
-import type { SharedRoutine } from '../assets/routineSharing';
+import type { SharedRoutine } from "../assets/routineSharing";
 
 interface Props {
   routine: SharedRoutine | undefined;
@@ -10,37 +10,39 @@ const { routine } = Astro.props;
 
 <div class="routine-preview">
   <div class="preview-header">
-    <h2>Shared Routine</h2>
-    <p class="routine-name">{routine?.name || 'Loading...'}</p>
+    <h2 data-i18n="Shared Routine">Shared Routine</h2>
+    <p class="routine-name">{routine?.name || "Loading..."}</p>
   </div>
 
   <div class="preview-content">
     <div class="preview-section">
-      <h3>Exercises</h3>
+      <h3 data-i18n="Exercises">Exercises</h3>
       <ul class="exercises-list">
-        {routine?.exercises.map((exercise) => (
-          <li>{exercise}</li>
-        )) || <li>Loading exercises...</li>}
+        {
+          routine?.exercises.map((exercise) => <li>{exercise}</li>) || (
+            <li data-i18n="Loading exercises...">Loading exercises...</li>
+          )
+        }
       </ul>
     </div>
 
     <div class="preview-section">
-      <h3>Timing</h3>
+      <h3 data-i18n="Timing">Timing</h3>
       <div class="timing-grid">
         <div class="timing-item">
-          <span class="label">Prep</span>
+          <span class="label" data-i18n="Prep">Prep</span>
           <span class="value">{routine?.config.prepDuration || 0}s</span>
         </div>
         <div class="timing-item">
-          <span class="label">Work</span>
+          <span class="label" data-i18n="Work">Work</span>
           <span class="value">{routine?.config.workDuration || 0}s</span>
         </div>
         <div class="timing-item">
-          <span class="label">Rest</span>
+          <span class="label" data-i18n="Rest">Rest</span>
           <span class="value">{routine?.config.restDuration || 0}s</span>
         </div>
         <div class="timing-item">
-          <span class="label">Rounds</span>
+          <span class="label" data-i18n="Rounds">Rounds</span>
           <span class="value">{routine?.config.rounds || 0}</span>
         </div>
       </div>
@@ -48,8 +50,12 @@ const { routine } = Astro.props;
   </div>
 
   <div class="preview-actions">
-    <button class="btn btn-cancel" data-action="cancel">Cancel</button>
-    <button class="btn btn-save" data-action="save">Save Routine</button>
+    <button class="btn btn-cancel" data-action="cancel" data-i18n="Cancel"
+      >Cancel</button
+    >
+    <button class="btn btn-save" data-action="save" data-i18n="Save Routine"
+      >Save Routine</button
+    >
   </div>
 </div>
 
@@ -164,7 +170,9 @@ const { routine } = Astro.props;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s, opacity 0.2s;
+    transition:
+      transform 0.15s,
+      opacity 0.2s;
     min-height: var(--touch-target-lg);
   }
 
@@ -193,19 +201,23 @@ const { routine } = Astro.props;
 </style>
 
 <script>
-  const preview = document.querySelector('.routine-preview');
-  const cancelButton = document.querySelector('.routine-preview .btn-cancel') as HTMLButtonElement;
-  const saveButton = document.querySelector('.routine-preview .btn-save') as HTMLButtonElement;
+  const preview = document.querySelector(".routine-preview");
+  const cancelButton = document.querySelector(
+    ".routine-preview .btn-cancel",
+  ) as HTMLButtonElement;
+  const saveButton = document.querySelector(
+    ".routine-preview .btn-save",
+  ) as HTMLButtonElement;
 
   if (cancelButton && preview) {
-    cancelButton.addEventListener('click', () => {
-      preview.dispatchEvent(new CustomEvent('cancel', { bubbles: true }));
+    cancelButton.addEventListener("click", () => {
+      preview.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
     });
   }
 
   if (saveButton && preview) {
-    saveButton.addEventListener('click', () => {
-      preview.dispatchEvent(new CustomEvent('save', { bubbles: true }));
+    saveButton.addEventListener("click", () => {
+      preview.dispatchEvent(new CustomEvent("save", { bubbles: true }));
     });
   }
 </script>

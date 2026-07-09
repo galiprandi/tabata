@@ -1,49 +1,51 @@
 ---
-import BasicAnalysisDashboard from './BasicAnalysisDashboard.astro'
+import BasicAnalysisDashboard from "./BasicAnalysisDashboard.astro";
 ---
 
 <div class="progress-view">
-  <h2>Shared Progress</h2>
+  <h2 data-i18n="Shared Progress">Shared Progress</h2>
   <div class="progress-user" data-user-pseudo></div>
-  
+
   <div class="progress-stats">
     <div class="stat-card">
       <div class="stat-icon">🏋️</div>
       <div class="stat-content">
         <div class="stat-value" data-stat="totalWorkouts">0</div>
-        <div class="stat-label">Total Workouts</div>
+        <div class="stat-label" data-i18n="Total Workouts">Total Workouts</div>
       </div>
     </div>
-    
+
     <div class="stat-card">
       <div class="stat-icon">⏱️</div>
       <div class="stat-content">
         <div class="stat-value" data-stat="totalDuration">0m</div>
-        <div class="stat-label">Total Time</div>
+        <div class="stat-label" data-i18n="Total Time">Total Time</div>
       </div>
     </div>
-    
+
     <div class="stat-card">
       <div class="stat-icon">📊</div>
       <div class="stat-content">
         <div class="stat-value" data-stat="uniqueRoutines">0</div>
-        <div class="stat-label">Unique Routines</div>
+        <div class="stat-label" data-i18n="Unique Routines">
+          Unique Routines
+        </div>
       </div>
     </div>
-    
+
     <div class="stat-card">
       <div class="stat-icon">🔥</div>
       <div class="stat-content">
         <div class="stat-value" data-stat="streak">0</div>
-        <div class="stat-label">Current Streak</div>
+        <div class="stat-label" data-i18n="Current Streak">Current Streak</div>
       </div>
     </div>
   </div>
-  
+
   <BasicAnalysisDashboard />
-  
+
   <div class="progress-workouts">
-    <h3>Workout History</h3>
+    <h3 data-i18n="Workout History">Workout History</h3>
     <div class="workout-list"></div>
   </div>
 </div>
