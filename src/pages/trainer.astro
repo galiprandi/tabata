@@ -12,79 +12,315 @@ import SearchBar from "@components/SearchBar.astro";
   </nav>
 
   <section class="trainer-content">
-    <div class="toolbar">
-      <SearchBar />
-      <button
-        class="btn-create"
-        data-action="create"
-        data-i18n-title="Add new routine"
-        data-i18n-aria-label="Add new routine"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span data-i18n="New Routine">New Routine</span>
-      </button>
-    </div>
+    <div class="trainer-desktop-layout">
+      <!-- Left Column: The Library -->
+      <aside class="library-panel">
+        <div class="toolbar">
+          <SearchBar />
+          <button
+            class="btn-create"
+            id="btn-new-routine"
+            data-action="create"
+            data-i18n-title="Add new routine"
+            data-i18n-aria-label="Add new routine"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span data-i18n="New Routine">New Routine</span>
+          </button>
+        </div>
 
-    <div id="routine-list" class="routine-list"></div>
+        <div id="routine-list" class="routine-list"></div>
 
-    <div id="empty-state" class="empty-state">
-      <div id="no-routines-msg">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <path
-            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
-          ></path>
-          <circle cx="12" cy="13" r="3"></circle>
-        </svg>
-        <p data-i18n="No routines. Create the first one to start.">
-          No routines. Create the first one to start.
-        </p>
-      </div>
-      <div id="no-results-msg" style="display: none;">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <p data-i18n="No results found for your search">
-          No results found for your search
-        </p>
-      </div>
+        <div id="empty-state" class="empty-state">
+          <div id="no-routines-msg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+              ></path>
+              <circle cx="12" cy="13" r="3"></circle>
+            </svg>
+            <p data-i18n="No routines. Create the first one to start.">
+              No routines. Create the first one to start.
+            </p>
+          </div>
+          <div id="no-results-msg" style="display: none;">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <p data-i18n="No results found for your search">
+              No results found for your search
+            </p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Interactive Editor / Viewer -->
+      <main class="editor-panel card-elevated" id="editor-panel">
+        <!-- Placeholder when no routine is selected -->
+        <div id="editor-placeholder" class="editor-placeholder">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="placeholder-icon"
+          >
+            <path
+              d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+            ></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            <line x1="9" y1="12" x2="15" y2="12"></line>
+            <line x1="9" y1="16" x2="15" y2="16"></line>
+            <line x1="9" y1="8" x2="12" y2="8"></line>
+          </svg>
+          <h3 data-i18n="No routine selected">No routine selected</h3>
+          <p data-i18n="Select a routine from the list or create a new one to begin.">
+            Select a routine from the list or create a new one to begin.
+          </p>
+        </div>
+
+        <!-- Form content when routine selected -->
+        <div id="editor-content" class="editor-content" style="display: none;">
+          <header class="editor-header">
+            <h2 id="editor-title" data-i18n="Edit Routine">Edit Routine</h2>
+            <div class="editor-header-actions">
+              <button
+                id="editor-btn-share"
+                type="button"
+                class="action-btn share-btn"
+                data-i18n-title="Share routine"
+                data-i18n-aria-label="Share routine"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+              </button>
+              <button
+                id="editor-btn-delete"
+                type="button"
+                class="action-btn delete-btn"
+                data-i18n-title="Delete routine"
+                data-i18n-aria-label="Delete routine"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 6 5 6 21"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <form id="editor-form">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="editor-routine-name" data-i18n="Routine Name"
+                >Routine Name</label
+              >
+              <input
+                type="text"
+                id="editor-routine-name"
+                required
+                placeholder="e.g., Full Body, Cardio"
+                data-i18n-placeholder="e.g., Full Body, Cardio"
+              />
+            </div>
+
+            <!-- Timings -->
+            <h3 class="section-title" data-i18n="Timing">Timing</h3>
+            <div class="timings-grid-inputs">
+              <div class="input-field">
+                <label for="editor-prep" data-i18n="Prep">Prep</label>
+                <input type="number" id="editor-prep" min="0" required />
+              </div>
+              <div class="input-field">
+                <label for="editor-work" data-i18n="Work">Work</label>
+                <input type="number" id="editor-work" min="0" required />
+              </div>
+              <div class="input-field">
+                <label for="editor-rest" data-i18n="Rest">Rest</label>
+                <input type="number" id="editor-rest" min="0" required />
+              </div>
+              <div class="input-field">
+                <label for="editor-rounds" data-i18n="Rounds">Rounds</label>
+                <input type="number" id="editor-rounds" min="1" required />
+              </div>
+            </div>
+
+            <!-- Exercises -->
+            <div class="exercises-section-header">
+              <h3 class="section-title" data-i18n="Exercises">Exercises</h3>
+              <span class="badge" id="exercises-badge">0</span>
+            </div>
+
+            <!-- Add Exercise Bar -->
+            <div class="add-exercise-bar">
+              <input
+                type="text"
+                id="new-exercise-input"
+                placeholder="New Exercise"
+                data-i18n-placeholder="New Exercise"
+              />
+              <button
+                type="button"
+                id="btn-add-exercise"
+                class="btn-create"
+                data-i18n-title="Add Exercise"
+                data-i18n-aria-label="Add Exercise"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="Exercise">Exercise</span>
+              </button>
+            </div>
+
+            <!-- Exercises List Container -->
+            <div
+              id="editor-exercises-list"
+              class="editor-exercises-list"
+            >
+            </div>
+
+            <!-- Switch to Set Active -->
+            <div class="active-setting-checkbox">
+              <label class="checkbox-label">
+                <input type="checkbox" id="editor-is-active" role="switch" />
+                <span data-i18n="Set as Active?">Set as Active?</span>
+              </label>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="editor-footer">
+              <button
+                type="button"
+                id="editor-btn-cancel"
+                class="btn-modern secondary"
+                data-i18n="Cancel"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                id="editor-btn-save"
+                class="btn-modern primary"
+                data-i18n="Save"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   </section>
+
+  <!-- Dialog to edit exercise name -->
+  <dialog id="exercise-modal">
+    <article>
+      <header>
+        <h3 id="exercise-modal-title" data-i18n="Edit Exercise">
+          Edit Exercise
+        </h3>
+      </header>
+      <form id="exercise-modal-form">
+        <fieldset>
+          <label for="exercise-modal-input" data-i18n="Exercise Name"
+            >Exercise Name</label
+          >
+          <input type="text" id="exercise-modal-input" required />
+        </fieldset>
+        <div class="form-buttons">
+          <button
+            type="button"
+            class="secondary"
+            id="exercise-modal-cancel"
+            data-i18n="Cancel"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="primary" data-i18n="Save">Save</button>
+        </div>
+      </form>
+    </article>
+  </dialog>
 </Layout>
 
 <script>
@@ -100,13 +336,39 @@ import SearchBar from "@components/SearchBar.astro";
     return div.innerHTML;
   }
 
-  function renderRoutines(routinesToRender: Routine[], isSearch = false) {
+  // --- STATE MANAGEMENT ---
+  let selectedRoutineId: string | null = null;
+  let currentEditingRoutine: Routine | null = null;
+  let exercisesState: string[] = [];
+  let searchQuery: string = "";
+
+  // Exercise Edit Modal State
+  let activeEditingExerciseIndex: number | null = null;
+  const exerciseModal = document.getElementById("exercise-modal") as HTMLDialogElement | null;
+  const exerciseModalInput = document.getElementById("exercise-modal-input") as HTMLInputElement | null;
+  const exerciseModalForm = document.getElementById("exercise-modal-form") as HTMLFormElement | null;
+
+  // --- RENDERING ROUTINES LIST (LEFT PANEL) ---
+  function renderRoutines() {
     const list = document.getElementById("routine-list");
     const emptyState = document.getElementById("empty-state");
     const noRoutinesMsg = document.getElementById("no-routines-msg");
     const noResultsMsg = document.getElementById("no-results-msg");
 
     if (!list || !emptyState || !noRoutinesMsg || !noResultsMsg) return;
+
+    const allRoutines = RoutineStorageService.getRoutines();
+    let routinesToRender = allRoutines;
+
+    const isSearch = searchQuery.trim().length > 0;
+    if (isSearch) {
+      const q = searchQuery.toLowerCase();
+      routinesToRender = allRoutines.filter(
+        (r) =>
+          r.name.toLowerCase().includes(q) ||
+          r.exercises.some((ex) => ex.toLowerCase().includes(q)),
+      );
+    }
 
     if (routinesToRender.length === 0) {
       list.innerHTML = "";
@@ -130,39 +392,18 @@ import SearchBar from "@components/SearchBar.astro";
             (ex: string) =>
               `<span class="exercise-tag">${escapeHtml(ex)}</span>`,
           )
-          .join("");
+          .join(" ");
         const extra =
           routine.exercises.length > 4
             ? `<span class="exercise-count">+${routine.exercises.length - 4}</span>`
             : "";
 
+        const isActiveCard = routine.id === selectedRoutineId ? "active-card" : "";
+
         return `
-        <article class="routine-card" data-routine-id="${routine.id}">
+        <article class="routine-card ${isActiveCard}" data-routine-id="${routine.id}">
           <header class="card-header">
             <h2 class="routine-name">${escapeHtml(routine.name)}</h2>
-            <div class="quick-actions" data-routine-id="${routine.id}">
-              <button class="action-btn share-btn" data-action="share" data-i18n-title="Share routine" data-i18n-aria-label="Share routine">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-              </button>
-              <button class="action-btn edit-btn" data-action="edit" data-i18n-title="Edit routine" data-i18n-aria-label="Edit routine">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </button>
-              <button class="action-btn delete-btn" data-action="delete" data-i18n-title="Delete routine" data-i18n-aria-label="Delete routine">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-              </button>
-            </div>
           </header>
 
           <div class="card-body">
@@ -192,39 +433,376 @@ import SearchBar from "@components/SearchBar.astro";
       `;
       })
       .join("");
+
     initTranslation(list);
+
+    // Setup routine card click handlers
+    list.querySelectorAll(".routine-card").forEach((card) => {
+      card.addEventListener("click", async () => {
+        const routineId = card.getAttribute("data-routine-id");
+        if (routineId) {
+          await play("tap", true);
+          loadRoutine(routineId);
+        }
+      });
+    });
   }
 
-  function filterRoutines(query: string) {
-    const allRoutines = RoutineStorageService.getRoutines();
-    let filtered = allRoutines;
+  // --- RENDERING EDITOR PANEL (RIGHT PANEL) ---
+  function loadRoutine(routineId: string | null) {
+    selectedRoutineId = routineId;
 
-    const isSearch = query.trim().length > 0;
-    if (isSearch) {
-      const q = query.toLowerCase();
-      filtered = allRoutines.filter(
-        (r) =>
-          r.name.toLowerCase().includes(q) ||
-          r.exercises.some((ex) => ex.toLowerCase().includes(q)),
-      );
+    if (!routineId) {
+      currentEditingRoutine = null;
+      exercisesState = [];
+      updateEditorPanelUI();
+      renderRoutines();
+      return;
     }
 
-    renderRoutines(filtered, isSearch);
-  }
-
-  async function handleShare(routineId: string) {
-    await play("tap", true);
-    const routine = RoutineStorageService.getRoutines().find(
-      (r) => r.id === routineId,
-    );
+    const routines = RoutineStorageService.getRoutines();
+    const routine = routines.find((r) => r.id === routineId);
     if (!routine) return;
 
-    const result = compressRoutine(routine);
+    // Clone routine and exercises state
+    currentEditingRoutine = JSON.parse(JSON.stringify(routine));
+    exercisesState = [...(currentEditingRoutine?.exercises || [])];
+
+    updateEditorPanelUI();
+    renderRoutines();
+  }
+
+  function startNewRoutine() {
+    selectedRoutineId = ""; // empty ID represents new unsaved routine
+    currentEditingRoutine = {
+      id: "",
+      name: t("New Routine"),
+      config: {
+        prepDuration: 10,
+        workDuration: 20,
+        restDuration: 10,
+        rounds: 8,
+        nextExercise: 0,
+      },
+      exercises: [],
+    };
+    exercisesState = [];
+
+    updateEditorPanelUI();
+    renderRoutines();
+
+    // Focus routine name input
+    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
+    if (nameInput) {
+      nameInput.focus();
+    }
+  }
+
+  function updateEditorPanelUI() {
+    const placeholder = document.getElementById("editor-placeholder");
+    const content = document.getElementById("editor-content");
+
+    if (!placeholder || !content) return;
+
+    if (!currentEditingRoutine) {
+      placeholder.style.display = "flex";
+      content.style.display = "none";
+      return;
+    }
+
+    placeholder.style.display = "none";
+    content.style.display = "block";
+
+    // Header Title
+    const title = document.getElementById("editor-title");
+    if (title) {
+      title.textContent = currentEditingRoutine.id ? t("Edit Routine") : t("New Routine");
+    }
+
+    // Input fields
+    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
+    const prepInput = document.getElementById("editor-prep") as HTMLInputElement | null;
+    const workInput = document.getElementById("editor-work") as HTMLInputElement | null;
+    const restInput = document.getElementById("editor-rest") as HTMLInputElement | null;
+    const roundsInput = document.getElementById("editor-rounds") as HTMLInputElement | null;
+    const isActiveCheckbox = document.getElementById("editor-is-active") as HTMLInputElement | null;
+
+    if (nameInput) nameInput.value = currentEditingRoutine.name;
+    if (prepInput) prepInput.value = currentEditingRoutine.config.prepDuration.toString();
+    if (workInput) workInput.value = currentEditingRoutine.config.workDuration.toString();
+    if (restInput) restInput.value = currentEditingRoutine.config.restDuration.toString();
+    if (roundsInput) roundsInput.value = currentEditingRoutine.config.rounds.toString();
+
+    // Checkbox is active
+    if (isActiveCheckbox) {
+      const activeId = RoutineStorageService.getActiveRoutineId();
+      isActiveCheckbox.checked = currentEditingRoutine.id === activeId;
+    }
+
+    // Badge
+    const badge = document.getElementById("exercises-badge");
+    if (badge) badge.textContent = exercisesState.length.toString();
+
+    // Exercises List
+    renderEditorExercisesList();
+  }
+
+  function renderEditorExercisesList() {
+    const listContainer = document.getElementById("editor-exercises-list");
+    if (!listContainer) return;
+
+    if (exercisesState.length === 0) {
+      listContainer.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted);" data-i18n="No exercises added yet. Start your routine!">
+          ${t("No exercises added yet. Start your routine!")}
+        </div>
+      `;
+      return;
+    }
+
+    listContainer.innerHTML = exercisesState
+      .map((exercise, index) => {
+        const isFirst = index === 0;
+        const isLast = index === exercisesState.length - 1;
+
+        return `
+        <div class="editor-exercise-item" data-index="${index}">
+          <div class="exercise-info">
+            <span class="exercise-index">${index + 1}.</span>
+            <span class="exercise-text">${escapeHtml(exercise)}</span>
+          </div>
+          <div class="exercise-actions">
+            <button type="button" class="btn-move-up" ${isFirst ? "disabled" : ""} data-i18n-title="Move exercise up">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="btn-move-down" ${isLast ? "disabled" : ""} data-i18n-title="Move exercise down">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="btn-duplicate-exercise" data-i18n-title="Duplicate exercise">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+            <button type="button" class="btn-edit-exercise" data-i18n-title="Edit exercise">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button type="button" class="delete-exercise" data-i18n-title="Delete exercise">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    initTranslation(listContainer);
+
+    // Bind exercise-item action buttons
+    listContainer.querySelectorAll(".editor-exercise-item").forEach((item) => {
+      const idx = parseInt(item.getAttribute("data-index") || "0");
+
+      item.querySelector(".btn-move-up")?.addEventListener("click", async () => {
+        await play("tap", true);
+        moveExercise(idx, idx - 1);
+      });
+
+      item.querySelector(".btn-move-down")?.addEventListener("click", async () => {
+        await play("tap", true);
+        moveExercise(idx, idx + 1);
+      });
+
+      item.querySelector(".btn-duplicate-exercise")?.addEventListener("click", async () => {
+        await play("tap", true);
+        duplicateExercise(idx);
+      });
+
+      item.querySelector(".btn-edit-exercise")?.addEventListener("click", async (e) => {
+        await play("tap", true);
+        openEditExerciseModal(idx, e.currentTarget as HTMLElement);
+      });
+
+      item.querySelector(".delete-exercise")?.addEventListener("click", async () => {
+        await play("tap", true);
+        deleteExercise(idx);
+      });
+    });
+  }
+
+  // --- ACTIONS ---
+  function moveExercise(from: number, to: number) {
+    if (to < 0 || to >= exercisesState.length) return;
+    const item = exercisesState[from];
+    exercisesState.splice(from, 1);
+    exercisesState.splice(to, 0, item);
+
+    // Update state & UI
+    const badge = document.getElementById("exercises-badge");
+    if (badge) badge.textContent = exercisesState.length.toString();
+    renderEditorExercisesList();
+  }
+
+  function duplicateExercise(idx: number) {
+    const item = exercisesState[idx];
+    exercisesState.splice(idx + 1, 0, item);
+
+    const badge = document.getElementById("exercises-badge");
+    if (badge) badge.textContent = exercisesState.length.toString();
+    renderEditorExercisesList();
+  }
+
+  function deleteExercise(idx: number) {
+    exercisesState.splice(idx, 1);
+
+    const badge = document.getElementById("exercises-badge");
+    if (badge) badge.textContent = exercisesState.length.toString();
+    renderEditorExercisesList();
+  }
+
+  function addExercise() {
+    const input = document.getElementById("new-exercise-input") as HTMLInputElement | null;
+    if (!input) return;
+
+    const name = input.value.trim();
+    if (!name) return;
+
+    exercisesState.push(name);
+    input.value = "";
+
+    const badge = document.getElementById("exercises-badge");
+    if (badge) badge.textContent = exercisesState.length.toString();
+    renderEditorExercisesList();
+
+    // Keep focus on input for fast typing
+    input.focus();
+  }
+
+  // --- EXERCISE MODAL ---
+  function openEditExerciseModal(idx: number, trigger: HTMLElement) {
+    if (!exerciseModal || !exerciseModalInput) return;
+    activeEditingExerciseIndex = idx;
+    exerciseModalInput.value = exercisesState[idx];
+    exerciseModal.showModal();
+    exerciseModalInput.focus();
+
+    exerciseModal.addEventListener(
+      "close",
+      () => {
+        trigger.focus();
+      },
+      { once: true },
+    );
+  }
+
+  // --- SAVE / DELETE / SHARE MAIN ROUTINE ---
+  async function saveRoutine() {
+    if (!currentEditingRoutine) return;
+
+    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
+    const prepInput = document.getElementById("editor-prep") as HTMLInputElement | null;
+    const workInput = document.getElementById("editor-work") as HTMLInputElement | null;
+    const restInput = document.getElementById("editor-rest") as HTMLInputElement | null;
+    const roundsInput = document.getElementById("editor-rounds") as HTMLInputElement | null;
+    const isActiveCheckbox = document.getElementById("editor-is-active") as HTMLInputElement | null;
+
+    const name = nameInput?.value.trim() || "";
+    if (!name) {
+      alert(t("Routine Name") + " " + "is required");
+      return;
+    }
+
+    const config = {
+      prepDuration: parseInt(prepInput?.value || "10") || 0,
+      workDuration: parseInt(workInput?.value || "20") || 0,
+      restDuration: parseInt(restInput?.value || "10") || 0,
+      rounds: parseInt(roundsInput?.value || "8") || 1,
+      nextExercise: 0,
+    };
+
+    let savedRoutine: Routine;
+
+    if (currentEditingRoutine.id) {
+      // Edit existing
+      RoutineStorageService.updateRoutine(currentEditingRoutine.id, {
+        name,
+        config,
+        exercises: exercisesState,
+      });
+      savedRoutine = {
+        id: currentEditingRoutine.id,
+        name,
+        config,
+        exercises: exercisesState,
+      };
+    } else {
+      // Create new
+      savedRoutine = RoutineStorageService.createRoutine(name, config, exercisesState);
+    }
+
+    // Set Active State if checkbox checked
+    if (isActiveCheckbox?.checked) {
+      RoutineStorageService.setActiveRoutineId(savedRoutine.id);
+    } else {
+      // If was previously active, but unchecked (and other routines exist)
+      const currentActiveId = RoutineStorageService.getActiveRoutineId();
+      if (currentActiveId === savedRoutine.id && !isActiveCheckbox?.checked) {
+        // select another routine if possible
+        const list = RoutineStorageService.getRoutines().filter((r) => r.id !== savedRoutine.id);
+        if (list.length > 0) {
+          RoutineStorageService.setActiveRoutineId(list[0].id);
+        } else {
+          RoutineStorageService.setActiveRoutineId("");
+        }
+      }
+    }
+
+    // Re-select and re-render
+    selectedRoutineId = savedRoutine.id;
+    searchQuery = ""; // clear search on save to show saved routine
+    const searchField = document.querySelector(".search-input") as HTMLInputElement | null;
+    if (searchField) {
+      searchField.value = "";
+      const clearBtn = document.getElementById("clear-search");
+      if (clearBtn) clearBtn.style.display = "none";
+    }
+
+    loadRoutine(savedRoutine.id);
+  }
+
+  async function shareRoutine() {
+    if (!currentEditingRoutine) return;
+
+    await play("tap", true);
+
+    const routineToShare: Routine = {
+      id: currentEditingRoutine.id || "temp",
+      name: (document.getElementById("editor-routine-name") as HTMLInputElement)?.value.trim() || currentEditingRoutine.name,
+      config: {
+        prepDuration: parseInt((document.getElementById("editor-prep") as HTMLInputElement)?.value || "10") || 0,
+        workDuration: parseInt((document.getElementById("editor-work") as HTMLInputElement)?.value || "20") || 0,
+        restDuration: parseInt((document.getElementById("editor-rest") as HTMLInputElement)?.value || "10") || 0,
+        rounds: parseInt((document.getElementById("editor-rounds") as HTMLInputElement)?.value || "8") || 1,
+        nextExercise: 0,
+      },
+      exercises: exercisesState,
+    };
+
+    const result = compressRoutine(routineToShare);
     if (result.success && result.url) {
       if (navigator.share) {
         try {
           await navigator.share({
-            title: routine.name,
+            title: routineToShare.name,
             text: t("Share routine"),
             url: result.url,
           });
@@ -243,62 +821,120 @@ import SearchBar from "@components/SearchBar.astro";
     }
   }
 
-  async function handleEdit(routineId: string) {
-    await play("tap", true);
-    window.location.href = `/tabata/settings?edit=${routineId}`;
-  }
+  async function deleteRoutine() {
+    if (!currentEditingRoutine || !currentEditingRoutine.id) return;
 
-  async function handleDelete(routineId: string) {
     await play("tap", true);
-    const routine = RoutineStorageService.getRoutines().find(
-      (r) => r.id === routineId,
-    );
+
     if (
-      routine &&
       confirm(
         t('Are you sure you want to delete "{name}"?').replace(
           "{name}",
-          routine.name,
+          currentEditingRoutine.name,
         ),
       )
     ) {
-      RoutineStorageService.deleteRoutine(routineId);
-      renderRoutines(RoutineStorageService.getRoutines());
+      RoutineStorageService.deleteRoutine(currentEditingRoutine.id);
+
+      // Select first routine in the collection, or reset
+      const remaining = RoutineStorageService.getRoutines();
+      if (remaining.length > 0) {
+        loadRoutine(remaining[0].id);
+      } else {
+        loadRoutine(null);
+      }
     }
   }
 
+  // --- INITIALIZATION ---
   document.addEventListener("DOMContentLoaded", () => {
-    renderRoutines(RoutineStorageService.getRoutines());
+    // 1. Initial Render
+    const allRoutines = RoutineStorageService.getRoutines();
+    const activeId = RoutineStorageService.getActiveRoutineId();
 
-    document.addEventListener("search", (e: Event) => {
-      const detail = (e as CustomEvent).detail;
-      filterRoutines(detail.query);
+    if (activeId && allRoutines.some((r) => r.id === activeId)) {
+      loadRoutine(activeId);
+    } else if (allRoutines.length > 0) {
+      loadRoutine(allRoutines[0].id);
+    } else {
+      loadRoutine(null);
+    }
+
+    // 2. Bind New Routine button click
+    const btnNewRoutine = document.getElementById("btn-new-routine");
+    btnNewRoutine?.addEventListener("click", async () => {
+      await play("tap", true);
+      startNewRoutine();
     });
 
-    const routineList = document.getElementById("routine-list");
-    if (routineList) {
-      routineList.addEventListener("click", async (e: Event) => {
-        const target = e.target as HTMLElement;
-        const btn = target.closest(".action-btn") as HTMLButtonElement | null;
-        if (!btn) return;
-        const actions = btn.closest(".quick-actions");
-        const routineId = actions?.getAttribute("data-routine-id");
-        const action = btn.getAttribute("data-action");
-        if (!routineId) return;
+    // 3. Search listener
+    document.addEventListener("search", (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      searchQuery = detail.query;
+      renderRoutines();
+    });
 
-        if (action === "share") await handleShare(routineId);
-        else if (action === "edit") await handleEdit(routineId);
-        else if (action === "delete") await handleDelete(routineId);
-      });
-    }
+    // 4. Bind Exercise Adding
+    const btnAddExercise = document.getElementById("btn-add-exercise");
+    const exerciseInput = document.getElementById("new-exercise-input");
 
-    const createBtn = document.querySelector('[data-action="create"]');
-    if (createBtn) {
-      createBtn.addEventListener("click", async () => {
+    btnAddExercise?.addEventListener("click", async () => {
+      await play("tap", true);
+      addExercise();
+    });
+
+    exerciseInput?.addEventListener("keypress", async (e) => {
+      if ((e as KeyboardEvent).key === "Enter") {
+        e.preventDefault();
         await play("tap", true);
-        window.location.href = "/tabata/settings";
-      });
-    }
+        addExercise();
+      }
+    });
+
+    // 5. Bind Exercise Modal Actions
+    exerciseModalForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await play("tap", true);
+      if (activeEditingExerciseIndex !== null && exerciseModalInput) {
+        const val = exerciseModalInput.value.trim();
+        if (val) {
+          exercisesState[activeEditingExerciseIndex] = val;
+          renderEditorExercisesList();
+        }
+      }
+      exerciseModal?.close();
+    });
+
+    const btnCancelExerciseModal = document.getElementById("exercise-modal-cancel");
+    btnCancelExerciseModal?.addEventListener("click", async () => {
+      await play("tap", true);
+      exerciseModal?.close();
+    });
+
+    // 6. Bind Editor Header Share/Delete buttons
+    const btnShare = document.getElementById("editor-btn-share");
+    btnShare?.addEventListener("click", () => {
+      shareRoutine();
+    });
+
+    const btnDelete = document.getElementById("editor-btn-delete");
+    btnDelete?.addEventListener("click", () => {
+      deleteRoutine();
+    });
+
+    // 7. Bind Editor Footer Cancel/Save buttons
+    const btnCancel = document.getElementById("editor-btn-cancel");
+    btnCancel?.addEventListener("click", async () => {
+      await play("tap", true);
+      loadRoutine(selectedRoutineId);
+    });
+
+    const btnSave = document.getElementById("editor-btn-save");
+    btnSave?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await play("tap", true);
+      saveRoutine();
+    });
   });
 </script>
 
@@ -324,26 +960,46 @@ import SearchBar from "@components/SearchBar.astro";
 
   .trainer-content {
     width: 100%;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  .trainer-desktop-layout {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
+    align-items: start;
+    width: 100%;
+  }
+
+  @media (min-width: 900px) {
+    .trainer-desktop-layout {
+      grid-template-columns: 450px 1fr;
+    }
+  }
+
+  .library-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
   }
 
   .toolbar {
     display: flex;
-    flex-wrap: wrap;
     gap: 0.75rem;
     align-items: center;
-    justify-content: space-between;
+    width: 100%;
   }
 
   .btn-create {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
+    padding: 0.6rem 1rem;
     border: 1px solid var(--color-accent);
     border-radius: var(--radius-md);
     background: var(--color-accent);
@@ -355,6 +1011,7 @@ import SearchBar from "@components/SearchBar.astro";
       opacity 0.2s,
       transform 0.1s;
     min-height: var(--touch-target-lg);
+    flex-shrink: 0;
   }
 
   .btn-create:hover {
@@ -366,16 +1023,21 @@ import SearchBar from "@components/SearchBar.astro";
   }
 
   .routine-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 0.25rem;
   }
 
   .routine-card {
     background: var(--surface);
     border: 1px solid var(--surface-border);
     border-radius: var(--radius-lg);
-    padding: 1.25rem;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
     transition:
       border-color 0.2s,
       background 0.2s;
@@ -386,121 +1048,86 @@ import SearchBar from "@components/SearchBar.astro";
     background: var(--surface-hover);
   }
 
+  .routine-card.active-card {
+    border-color: var(--color-accent);
+    background: rgba(247, 193, 121, 0.1);
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
+
   .card-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
   }
 
   .routine-name {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 700;
     margin: 0;
     color: white;
     word-break: break-word;
   }
 
-  .quick-actions {
-    display: flex;
-    gap: 0.4rem;
-    flex-shrink: 0;
-  }
-
-  .action-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--touch-target);
-    height: var(--touch-target);
-    border: 1px solid var(--surface-border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .action-btn:hover {
-    background: var(--surface-hover);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .action-btn:active {
-    transform: scale(0.93);
-  }
-
-  .share-btn:hover {
-    color: var(--color-work);
-    border-color: var(--color-work);
-  }
-
-  .edit-btn:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-  }
-
-  .delete-btn:hover {
-    color: var(--color-rest);
-    border-color: var(--color-rest);
-  }
-
   .card-body {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .exercises-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.3rem;
   }
 
   .exercise-tag {
-    background: rgba(68, 170, 153, 0.2);
+    background: rgba(68, 170, 153, 0.3);
+    border: 1px solid rgba(68, 170, 153, 0.4);
     color: var(--color-work);
     padding: 0.25rem 0.6rem;
     border-radius: var(--radius-sm);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
   }
 
   .exercise-count {
     background: var(--surface-hover);
     color: var(--text-secondary);
-    padding: 0.25rem 0.6rem;
+    padding: 0.2rem 0.5rem;
     border-radius: var(--radius-sm);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
   }
 
   .timing-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 
   .timing-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.15rem;
-    padding: 0.6rem 0.4rem;
+    gap: 0.1rem;
+    padding: 0.4rem 0.2rem;
     background: rgba(0, 0, 0, 0.2);
     border-radius: var(--radius-sm);
   }
 
   .timing-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
   }
 
   .timing-value {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-primary);
   }
@@ -524,15 +1151,294 @@ import SearchBar from "@components/SearchBar.astro";
     margin: 0;
   }
 
-  @media (min-width: 640px) {
-    .routine-list {
-      grid-template-columns: repeat(2, 1fr);
+  /* Editor Panel */
+  .editor-panel {
+    min-height: 500px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    text-align: left;
+  }
+
+  .editor-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    color: var(--text-muted);
+    padding: 3rem 1rem;
+    gap: 1rem;
+  }
+
+  .placeholder-icon {
+    opacity: 0.3;
+    color: var(--color-accent);
+  }
+
+  .editor-placeholder h3 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+
+  .editor-placeholder p {
+    margin: 0;
+    font-size: 0.95rem;
+    max-width: 300px;
+  }
+
+  .editor-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--surface-border);
+    padding-bottom: 0.75rem;
+  }
+
+  .editor-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .editor-header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover {
+    background: var(--surface-hover);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .share-btn:hover {
+    color: var(--color-work);
+    border-color: var(--color-work);
+  }
+
+  .delete-btn:hover {
+    color: var(--color-rest);
+    border-color: var(--color-rest);
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 1.5rem 0 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0.25rem;
+    color: var(--text-secondary);
+  }
+
+  .timings-grid-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 600px) {
+    .timings-grid-inputs {
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  @media (min-width: 900px) {
-    .routine-list {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .input-field label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .input-field input {
+    width: 100%;
+    margin: 0;
+  }
+
+  .exercises-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .exercises-section-header .section-title {
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+
+  .badge {
+    background: var(--color-accent);
+    color: var(--color--prep);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+  }
+
+  .add-exercise-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .add-exercise-bar input {
+    flex: 1;
+    margin: 0;
+  }
+
+  .editor-exercises-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 350px;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+    padding-right: 0.25rem;
+  }
+
+  /* Exercise Item styling in Editor list */
+  .editor-exercise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .editor-exercise-item .exercise-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+  }
+
+  .editor-exercise-item .exercise-index {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    min-width: 1.5rem;
+  }
+
+  .editor-exercise-item .exercise-text {
+    word-break: break-word;
+    text-align: left;
+  }
+
+  .editor-exercise-item .exercise-actions {
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  .editor-exercise-item .exercise-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+
+  .editor-exercise-item .exercise-actions button:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+  }
+
+  .editor-exercise-item .exercise-actions button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: transparent;
+  }
+
+  .editor-exercise-item .exercise-actions button.delete-exercise:hover {
+    color: var(--color-rest);
+    background: rgba(204, 102, 119, 0.15);
+  }
+
+  .active-setting-checkbox {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .checkbox-label input {
+    margin: 0;
+  }
+
+  .editor-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .editor-footer button {
+    min-width: 120px;
+  }
+
+  /* Exercise modal simple layout */
+  #exercise-modal article {
+    width: 90vw;
+    max-width: 450px;
+  }
+
+  .form-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .form-buttons button {
+    flex: 1;
   }
 </style>
