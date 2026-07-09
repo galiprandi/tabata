@@ -1,19 +1,42 @@
 ---
+
 ---
 
 <div class="save-confirmation">
   <div class="confirmation-content">
     <div class="confirmation-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="48"
+        height="48"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+        ></path>
       </svg>
     </div>
-    <h2>Set as Active?</h2>
-    <p>Do you want to set this routine as your active routine?</p>
-    
+    <h2 data-i18n="Set as Active?">Set as Active?</h2>
+    <p data-i18n="Do you want to set this routine as your active routine?">
+      Do you want to set this routine as your active routine?
+    </p>
+
     <div class="confirmation-actions">
-      <button class="btn btn-cancel" data-action="cancel">No, Just Save</button>
-      <button class="btn btn-confirm" data-action="confirm">Yes, Set Active</button>
+      <button
+        class="btn btn-cancel"
+        data-action="cancel"
+        data-i18n="No, Just Save">No, Just Save</button
+      >
+      <button
+        class="btn btn-confirm"
+        data-action="confirm"
+        data-i18n="Yes, Set Active">Yes, Set Active</button
+      >
     </div>
   </div>
 </div>
@@ -73,7 +96,9 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.15s, opacity 0.2s;
+    transition:
+      transform 0.15s,
+      opacity 0.2s;
     min-height: var(--touch-target-lg);
   }
 
@@ -102,19 +127,23 @@
 </style>
 
 <script>
-  const confirmation = document.querySelector('.save-confirmation');
-  const cancelButton = document.querySelector('.save-confirmation .btn-cancel') as HTMLButtonElement;
-  const confirmButton = document.querySelector('.save-confirmation .btn-confirm') as HTMLButtonElement;
+  const confirmation = document.querySelector(".save-confirmation");
+  const cancelButton = document.querySelector(
+    ".save-confirmation .btn-cancel",
+  ) as HTMLButtonElement;
+  const confirmButton = document.querySelector(
+    ".save-confirmation .btn-confirm",
+  ) as HTMLButtonElement;
 
   if (cancelButton && confirmation) {
-    cancelButton.addEventListener('click', () => {
-      confirmation.dispatchEvent(new CustomEvent('cancel', { bubbles: true }));
+    cancelButton.addEventListener("click", () => {
+      confirmation.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
     });
   }
 
   if (confirmButton && confirmation) {
-    confirmButton.addEventListener('click', () => {
-      confirmation.dispatchEvent(new CustomEvent('confirm', { bubbles: true }));
+    confirmButton.addEventListener("click", () => {
+      confirmation.dispatchEvent(new CustomEvent("confirm", { bubbles: true }));
     });
   }
 </script>

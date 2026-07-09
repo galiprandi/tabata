@@ -304,6 +304,66 @@ export const dictionary = {
     en: "Share Progress",
     es: "Compartir progreso",
   },
+  "Set as Active?": {
+    en: "Set as Active?",
+    es: "¿Establecer como activa?",
+  },
+  "Do you want to set this routine as your active routine?": {
+    en: "Do you want to set this routine as your active routine?",
+    es: "¿Quieres establecer esta rutina como tu rutina activa?",
+  },
+  "No, Just Save": {
+    en: "No, Just Save",
+    es: "No, solo guardar",
+  },
+  "Yes, Set Active": {
+    en: "Yes, Set Active",
+    es: "Sí, establecer activa",
+  },
+  "Shared Routine": {
+    en: "Shared Routine",
+    es: "Rutina compartida",
+  },
+  "Save Routine": {
+    en: "Save Routine",
+    es: "Guardar rutina",
+  },
+  Exercises: {
+    en: "Exercises",
+    es: "Ejercicios",
+  },
+  Timing: {
+    en: "Timing",
+    es: "Tiempos",
+  },
+  Prep: {
+    en: "Prep",
+    es: "Prep",
+  },
+  Work: {
+    en: "Work",
+    es: "Trabajo",
+  },
+  Rest: {
+    en: "Rest",
+    es: "Descanso",
+  },
+  "Shared Progress": {
+    en: "Shared Progress",
+    es: "Progreso compartido",
+  },
+  "Unique Routines": {
+    en: "Unique Routines",
+    es: "Rutinas únicas",
+  },
+  "Shared by {name}": {
+    en: "Shared by {name}",
+    es: "Compartido por {name}",
+  },
+  "Loading exercises...": {
+    en: "Loading exercises...",
+    es: "Cargando ejercicios...",
+  },
 };
 
 const langs: AvailableLanguages[] = ["en", "es"];
