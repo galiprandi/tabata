@@ -197,6 +197,10 @@ export const dictionary = {
     en: "No routine selected",
     es: "Ninguna rutina seleccionada",
   },
+  "Select a routine from the list or create a new one to begin.": {
+    en: "Select a routine from the list or create a new one to begin.",
+    es: "Selecciona una rutina de la lista o crea una nueva para comenzar.",
+  },
   "Turn audio on": {
     en: "Turn audio on",
     es: "Activar audio",
