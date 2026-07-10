@@ -1,8 +1,9 @@
 ---
+
 ---
 
 <div class="basic-kpis-panel">
-  <h3>Indicadores clave</h3>
+  <h3 data-i18n="Key Indicators">Key Indicators</h3>
   <div class="kpis-grid"></div>
 </div>
 
@@ -56,66 +57,77 @@
 </style>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { t, initTranslation } from "../assets/dictionary";
 
   function renderKPIs(logs: any[]) {
-    const grid = document.querySelector('.kpis-grid')
-    if (!grid) return
+    const grid = document.querySelector(".kpis-grid");
+    if (!grid) return;
 
-    const totalWorkouts = logs.length
-    const totalDuration = logs.reduce((sum, log) => sum + log.duration, 0)
-    const totalMinutes = Math.floor(totalDuration / 60)
-    const uniqueRoutines = new Set(logs.map((log) => log.routineSnapshot.name)).size
+    const totalWorkouts = logs.length;
+    const totalDuration = logs.reduce((sum, log) => sum + log.duration, 0);
+    const totalMinutes = Math.floor(totalDuration / 60);
+    const uniqueRoutines = new Set(logs.map((log) => log.routineSnapshot.name))
+      .size;
 
     // Calculate streak
-    const dates = [...new Set(logs.map((log) => {
-      const d = new Date(log.date)
-      d.setHours(0, 0, 0, 0)
-      return d.getTime()
-    }))].sort((a, b) => b - a)
+    const dates = [
+      ...new Set(
+        logs.map((log) => {
+          const d = new Date(log.date);
+          d.setHours(0, 0, 0, 0);
+          return d.getTime();
+        }),
+      ),
+    ].sort((a, b) => b - a);
 
-    let streak = 0
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const oneDay = 24 * 60 * 60 * 1000
-    let checkDate = today.getTime()
+    let streak = 0;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const oneDay = 24 * 60 * 60 * 1000;
+    let checkDate = today.getTime();
 
     if (dates.length > 0 && dates[0] !== checkDate) {
-      checkDate -= oneDay
+      checkDate -= oneDay;
     }
 
     for (const date of dates) {
       if (date === checkDate) {
-        streak++
-        checkDate -= oneDay
+        streak++;
+        checkDate -= oneDay;
       } else if (date < checkDate) {
-        break
+        break;
       }
     }
 
     const kpis = [
-      { name: 'Entrenamientos', value: totalWorkouts, unit: '' },
-      { name: 'Tiempo total', value: totalMinutes, unit: 'min' },
-      { name: 'Rutinas únicas', value: uniqueRoutines, unit: '' },
-      { name: 'Racha', value: streak, unit: 'días' },
-    ]
+      { name: t("Total Workouts"), value: totalWorkouts, unit: "" },
+      { name: t("Total Time"), value: totalMinutes, unit: t("min") },
+      { name: t("Unique Routines"), value: uniqueRoutines, unit: "" },
+      { name: t("Current Streak"), value: streak, unit: t("days") },
+    ];
 
-    grid.innerHTML = kpis.map((kpi) => `
+    grid.innerHTML = kpis
+      .map(
+        (kpi) => `
       <div class="kpi-card">
         <div class="kpi-name">${kpi.name}</div>
         <div class="kpi-value">${kpi.value}<span class="kpi-unit">${kpi.unit}</span></div>
       </div>
-    `).join('')
+    `,
+      )
+      .join("");
   }
 
   // Initial render
-  renderKPIs(WorkoutLogService.getLogs())
+  renderKPIs(WorkoutLogService.getLogs());
+  initTranslation(document.querySelector(".basic-kpis-panel") as HTMLElement);
 
   // Listen for filter changes
-  document.addEventListener('filters-applied', (e: Event) => {
-    const detail = (e as CustomEvent).detail
+  document.addEventListener("filters-applied", (e: Event) => {
+    const detail = (e as CustomEvent).detail;
     if (detail?.filteredLogs) {
-      renderKPIs(detail.filteredLogs)
+      renderKPIs(detail.filteredLogs);
     }
-  })
+  });
 </script>

@@ -141,6 +141,10 @@ export const dictionary = {
     en: "Delete exercise",
     es: "Eliminar ejercicio",
   },
+  Delete: {
+    en: "Delete",
+    es: "Eliminar",
+  },
   "Duplicate exercise": {
     en: "Duplicate exercise",
     es: "Duplicar ejercicio",
@@ -367,6 +371,118 @@ export const dictionary = {
   "Loading exercises...": {
     en: "Loading exercises...",
     es: "Cargando ejercicios...",
+  },
+  "Key Indicators": {
+    en: "Key Indicators",
+    es: "Indicadores clave",
+  },
+  Trends: {
+    en: "Trends",
+    es: "Tendencias",
+  },
+  "Basic Analysis": {
+    en: "Basic Analysis",
+    es: "Análisis básico",
+  },
+  "Advanced Analysis": {
+    en: "Advanced Analysis",
+    es: "Análisis avanzado",
+  },
+  Tools: {
+    en: "Tools",
+    es: "Herramientas",
+  },
+  Filters: {
+    en: "Filters",
+    es: "Filtros",
+  },
+  Export: {
+    en: "Export",
+    es: "Exportar",
+  },
+  Notes: {
+    en: "Notes",
+    es: "Notas",
+  },
+  "Advanced filters": {
+    en: "Advanced filters",
+    es: "Filtros avanzados",
+  },
+  "Date range": {
+    en: "Date range",
+    es: "Rango de fechas",
+  },
+  Apply: {
+    en: "Apply",
+    es: "Aplicar",
+  },
+  Clear: {
+    en: "Clear",
+    es: "Limpiar",
+  },
+  "Export data": {
+    en: "Export data",
+    es: "Exportar datos",
+  },
+  Format: {
+    en: "Format",
+    es: "Formato",
+  },
+  "Coach notes": {
+    en: "Coach notes",
+    es: "Notas del entrenador",
+  },
+  "Add note...": {
+    en: "Add note...",
+    es: "Agregar nota...",
+  },
+  "Save note": {
+    en: "Save note",
+    es: "Guardar nota",
+  },
+  "No notes": {
+    en: "No notes",
+    es: "Sin notas",
+  },
+  "Not enough data": {
+    en: "Not enough data",
+    es: "Sin datos suficientes",
+  },
+  "Weekly Frequency": {
+    en: "Weekly Frequency",
+    es: "Frecuencia semanal",
+  },
+  "{count} this week": {
+    en: "{count} this week",
+    es: "{count} esta semana",
+  },
+  "Average Duration": {
+    en: "Average Duration",
+    es: "Duración promedio",
+  },
+  "Routine Variety": {
+    en: "Routine Variety",
+    es: "Variedad de rutinas",
+  },
+  "Exercise Variety": {
+    en: "Exercise Variety",
+    es: "Variedad de ejercicios",
+  },
+  days: {
+    en: "days",
+    es: "días",
+  },
+  min: {
+    en: "min",
+    es: "min",
+  },
+  "{count} routines": {
+    en: "{count} routines",
+    es: "{count} rutinas",
+  },
+  "{count} exercises": {
+    en: "{count} exercises",
+    es: "{count} ejercicios",
   },
 };
 

@@ -1,27 +1,44 @@
 ---
+
 ---
 
 <div class="analysis-tools-panel">
   <button class="panel-toggle" data-action="toggle">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <line x1="3" y1="12" x2="21" y2="12"></line>
       <line x1="3" y1="6" x2="21" y2="6"></line>
       <line x1="3" y1="18" x2="21" y2="18"></line>
     </svg>
-    Herramientas
+    <span data-i18n="Tools">Tools</span>
   </button>
 
   <div class="panel-content" style="display: none;">
     <div class="tools-tabs">
-      <button class="tool-tab active" data-tool="filters">Filtros</button>
-      <button class="tool-tab" data-tool="export">Exportar</button>
-      <button class="tool-tab" data-tool="annotations">Notas</button>
+      <button class="tool-tab active" data-tool="filters" data-i18n="Filters"
+        >Filters</button
+      >
+      <button class="tool-tab" data-tool="export" data-i18n="Export"
+        >Export</button
+      >
+      <button class="tool-tab" data-tool="annotations" data-i18n="Notes"
+        >Notes</button
+      >
     </div>
 
     <div class="tool-content" data-tool="filters">
-      <h4>Filtros avanzados</h4>
+      <h4 data-i18n="Advanced filters">Advanced filters</h4>
       <div class="filter-group">
-        <label>Rango de fechas</label>
+        <label data-i18n="Date range">Date range</label>
         <div class="date-inputs">
           <input type="date" class="date-input" data-filter="from" />
           <span>→</span>
@@ -29,35 +46,48 @@
         </div>
       </div>
       <div class="filter-group">
-        <label>Rutinas</label>
+        <label data-i18n="My Routines">My Routines</label>
         <select class="filter-select" data-filter="routines" multiple></select>
       </div>
       <div class="filter-group">
-        <label>Ejercicios</label>
+        <label data-i18n="Exercises">Exercises</label>
         <select class="filter-select" data-filter="exercises" multiple></select>
       </div>
       <div class="filter-actions">
-        <button class="btn btn-primary" data-action="apply">Aplicar</button>
-        <button class="btn btn-secondary" data-action="reset">Limpiar</button>
+        <button class="btn btn-primary" data-action="apply" data-i18n="Apply"
+          >Apply</button
+        >
+        <button class="btn btn-secondary" data-action="reset" data-i18n="Clear"
+          >Clear</button
+        >
       </div>
     </div>
 
     <div class="tool-content" data-tool="export" style="display: none;">
-      <h4>Exportar datos</h4>
+      <h4 data-i18n="Export data">Export data</h4>
       <div class="export-group">
-        <label>Formato</label>
+        <label data-i18n="Format">Format</label>
         <select class="export-select" data-export="format">
           <option value="csv">CSV</option>
           <option value="json">JSON</option>
         </select>
       </div>
-      <button class="btn btn-primary" data-action="export">Exportar</button>
+      <button class="btn btn-primary" data-action="export" data-i18n="Export"
+        >Export</button
+      >
     </div>
 
     <div class="tool-content" data-tool="annotations" style="display: none;">
-      <h4>Notas del entrenador</h4>
-      <textarea class="annotation-textarea" placeholder="Agregar nota..." rows="3"></textarea>
-      <button class="btn btn-primary" data-action="save-note">Guardar nota</button>
+      <h4 data-i18n="Coach notes">Coach notes</h4>
+      <textarea
+        class="annotation-textarea"
+        data-i18n-placeholder="Add note..."
+        rows="3"></textarea>
+      <button
+        class="btn btn-primary"
+        data-action="save-note"
+        data-i18n="Save note">Save note</button
+      >
       <div class="annotations-items"></div>
     </div>
   </div>
@@ -257,181 +287,252 @@
 </style>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
-  import { applyFilters, exportToCSV, exportToJSON, saveNote, getNotes, deleteNote } from '../assets/analysisTools'
-  import type { FilterState } from '../assets/analysisTools'
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import {
+    applyFilters,
+    exportToCSV,
+    exportToJSON,
+    saveNote,
+    getNotes,
+    deleteNote,
+  } from "../assets/analysisTools";
+  import type { FilterState } from "../assets/analysisTools";
+  import { t, initTranslation } from "../assets/dictionary";
 
-  const toggleButton = document.querySelector('[data-action="toggle"]') as HTMLButtonElement
-  const panelContent = document.querySelector('.panel-content') as HTMLElement
-  const toolTabs = document.querySelectorAll('.tool-tab') as NodeListOf<HTMLButtonElement>
+  const toggleButton = document.querySelector(
+    '[data-action="toggle"]',
+  ) as HTMLButtonElement;
+  const panelContent = document.querySelector(".panel-content") as HTMLElement;
+  const toolTabs = document.querySelectorAll(
+    ".tool-tab",
+  ) as NodeListOf<HTMLButtonElement>;
 
   if (toggleButton && panelContent) {
-    toggleButton.addEventListener('click', () => {
-      const isHidden = panelContent.style.display === 'none'
-      panelContent.style.display = isHidden ? 'block' : 'none'
-    })
+    toggleButton.addEventListener("click", () => {
+      const isHidden = panelContent.style.display === "none";
+      panelContent.style.display = isHidden ? "block" : "none";
+    });
   }
 
   toolTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      toolTabs.forEach((t) => t.classList.remove('active'))
-      tab.classList.add('active')
+    tab.addEventListener("click", () => {
+      toolTabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
 
-      const tool = tab.dataset.tool
+      const tool = tab.dataset.tool;
 
-      document.querySelectorAll('.tool-content').forEach((content) => {
-        (content as HTMLElement).style.display = 'none'
-      })
+      document.querySelectorAll(".tool-content").forEach((content) => {
+        (content as HTMLElement).style.display = "none";
+      });
 
-      const selectedContent = document.querySelector(`.tool-content[data-tool="${tool}"]`)
+      const selectedContent = document.querySelector(
+        `.tool-content[data-tool="${tool}"]`,
+      );
       if (selectedContent) {
-        (selectedContent as HTMLElement).style.display = 'block'
+        (selectedContent as HTMLElement).style.display = "block";
       }
-    })
-  })
+    });
+  });
 
   // Populate filter selects with real data
   function populateFilterSelects() {
-    const logs = WorkoutLogService.getLogs()
-    const routines = [...new Set(logs.map((log) => log.routineSnapshot.name))]
-    const exercises = [...new Set(logs.flatMap((log) => log.routineSnapshot.exercises))]
+    const logs = WorkoutLogService.getLogs();
+    const routines = [...new Set(logs.map((log) => log.routineSnapshot.name))];
+    const exercises = [
+      ...new Set(logs.flatMap((log) => log.routineSnapshot.exercises)),
+    ];
 
-    const routinesSelect = document.querySelector('[data-filter="routines"]') as HTMLSelectElement
-    const exercisesSelect = document.querySelector('[data-filter="exercises"]') as HTMLSelectElement
+    const routinesSelect = document.querySelector(
+      '[data-filter="routines"]',
+    ) as HTMLSelectElement;
+    const exercisesSelect = document.querySelector(
+      '[data-filter="exercises"]',
+    ) as HTMLSelectElement;
 
     if (routinesSelect) {
-      routinesSelect.innerHTML = routines.map((r) => `<option value="${r}">${r}</option>`).join('')
+      routinesSelect.innerHTML = routines
+        .map((r) => `<option value="${r}">${r}</option>`)
+        .join("");
     }
     if (exercisesSelect) {
-      exercisesSelect.innerHTML = exercises.map((e) => `<option value="${e}">${e}</option>`).join('')
+      exercisesSelect.innerHTML = exercises
+        .map((e) => `<option value="${e}">${e}</option>`)
+        .join("");
     }
   }
 
-  populateFilterSelects()
+  populateFilterSelects();
 
   // Apply filters
-  const applyBtn = document.querySelector('[data-action="apply"]') as HTMLButtonElement
+  const applyBtn = document.querySelector(
+    '[data-action="apply"]',
+  ) as HTMLButtonElement;
   if (applyBtn) {
-    applyBtn.addEventListener('click', () => {
-      const fromInput = document.querySelector('[data-filter="from"]') as HTMLInputElement
-      const toInput = document.querySelector('[data-filter="to"]') as HTMLInputElement
-      const routinesSelect = document.querySelector('[data-filter="routines"]') as HTMLSelectElement
-      const exercisesSelect = document.querySelector('[data-filter="exercises"]') as HTMLSelectElement
+    applyBtn.addEventListener("click", () => {
+      const fromInput = document.querySelector(
+        '[data-filter="from"]',
+      ) as HTMLInputElement;
+      const toInput = document.querySelector(
+        '[data-filter="to"]',
+      ) as HTMLInputElement;
+      const routinesSelect = document.querySelector(
+        '[data-filter="routines"]',
+      ) as HTMLSelectElement;
+      const exercisesSelect = document.querySelector(
+        '[data-filter="exercises"]',
+      ) as HTMLSelectElement;
 
-      const filters: FilterState = {}
+      const filters: FilterState = {};
 
       if (fromInput?.value && toInput?.value) {
         filters.dateRange = {
           from: new Date(fromInput.value).getTime(),
           to: new Date(toInput.value).getTime(),
-        }
+        };
       }
 
       if (routinesSelect?.selectedOptions.length) {
-        filters.routines = Array.from(routinesSelect.selectedOptions).map((o) => o.value)
+        filters.routines = Array.from(routinesSelect.selectedOptions).map(
+          (o) => o.value,
+        );
       }
 
       if (exercisesSelect?.selectedOptions.length) {
-        filters.exercises = Array.from(exercisesSelect.selectedOptions).map((o) => o.value)
+        filters.exercises = Array.from(exercisesSelect.selectedOptions).map(
+          (o) => o.value,
+        );
       }
 
-      const logs = WorkoutLogService.getLogs()
-      const filtered = applyFilters(logs, filters)
+      const logs = WorkoutLogService.getLogs();
+      const filtered = applyFilters(logs, filters);
 
-      document.dispatchEvent(new CustomEvent('filters-applied', {
-        detail: { filteredLogs: filtered }
-      }))
-    })
+      document.dispatchEvent(
+        new CustomEvent("filters-applied", {
+          detail: { filteredLogs: filtered },
+        }),
+      );
+    });
   }
 
   // Reset filters
-  const resetBtn = document.querySelector('[data-action="reset"]') as HTMLButtonElement
+  const resetBtn = document.querySelector(
+    '[data-action="reset"]',
+  ) as HTMLButtonElement;
   if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      const fromInput = document.querySelector('[data-filter="from"]') as HTMLInputElement
-      const toInput = document.querySelector('[data-filter="to"]') as HTMLInputElement
-      const routinesSelect = document.querySelector('[data-filter="routines"]') as HTMLSelectElement
-      const exercisesSelect = document.querySelector('[data-filter="exercises"]') as HTMLSelectElement
+    resetBtn.addEventListener("click", () => {
+      const fromInput = document.querySelector(
+        '[data-filter="from"]',
+      ) as HTMLInputElement;
+      const toInput = document.querySelector(
+        '[data-filter="to"]',
+      ) as HTMLInputElement;
+      const routinesSelect = document.querySelector(
+        '[data-filter="routines"]',
+      ) as HTMLSelectElement;
+      const exercisesSelect = document.querySelector(
+        '[data-filter="exercises"]',
+      ) as HTMLSelectElement;
 
-      if (fromInput) fromInput.value = ''
-      if (toInput) toInput.value = ''
-      if (routinesSelect) Array.from(routinesSelect.options).forEach((o) => o.selected = false)
-      if (exercisesSelect) Array.from(exercisesSelect.options).forEach((o) => o.selected = false)
+      if (fromInput) fromInput.value = "";
+      if (toInput) toInput.value = "";
+      if (routinesSelect)
+        Array.from(routinesSelect.options).forEach((o) => (o.selected = false));
+      if (exercisesSelect)
+        Array.from(exercisesSelect.options).forEach(
+          (o) => (o.selected = false),
+        );
 
-      const logs = WorkoutLogService.getLogs()
-      document.dispatchEvent(new CustomEvent('filters-applied', {
-        detail: { filteredLogs: logs }
-      }))
-    })
+      const logs = WorkoutLogService.getLogs();
+      document.dispatchEvent(
+        new CustomEvent("filters-applied", {
+          detail: { filteredLogs: logs },
+        }),
+      );
+    });
   }
 
   // Export
-  const exportBtn = document.querySelector('[data-action="export"]') as HTMLButtonElement
+  const exportBtn = document.querySelector(
+    '[data-action="export"]',
+  ) as HTMLButtonElement;
   if (exportBtn) {
-    exportBtn.addEventListener('click', () => {
-      const formatSelect = document.querySelector('[data-export="format"]') as HTMLSelectElement
-      const format = formatSelect?.value || 'csv'
-      const logs = WorkoutLogService.getLogs()
+    exportBtn.addEventListener("click", () => {
+      const formatSelect = document.querySelector(
+        '[data-export="format"]',
+      ) as HTMLSelectElement;
+      const format = formatSelect?.value || "csv";
+      const logs = WorkoutLogService.getLogs();
 
-      if (format === 'csv') {
-        exportToCSV(logs)
+      if (format === "csv") {
+        exportToCSV(logs);
       } else {
-        exportToJSON(logs)
+        exportToJSON(logs);
       }
-    })
+    });
   }
 
   // Annotations
   function renderAnnotations() {
-    const container = document.querySelector('.annotations-items')
-    if (!container) return
+    const container = document.querySelector(".annotations-items");
+    if (!container) return;
 
-    const notes = getNotes()
+    const notes = getNotes();
     if (notes.length === 0) {
-      container.innerHTML = '<p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">Sin notas</p>'
-      return
+      container.innerHTML = `<p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">${t("No notes")}</p>`;
+      return;
     }
 
-    container.innerHTML = notes.map((note) => `
+    container.innerHTML = notes
+      .map(
+        (note) => `
       <div class="annotation-item" data-note-id="${note.id}">
-        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}">✕</button>
+        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}" aria-label="${t("Delete")}">✕</button>
         <div class="annotation-item-text">${note.text}</div>
         <div class="annotation-item-date">${new Date(note.date).toLocaleDateString()}</div>
       </div>
-    `).join('')
+    `,
+      )
+      .join("");
 
     container.querySelectorAll('[data-action="delete-note"]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const noteId = (btn as HTMLButtonElement).dataset.noteId
+      btn.addEventListener("click", () => {
+        const noteId = (btn as HTMLButtonElement).dataset.noteId;
         if (noteId) {
-          deleteNote(noteId)
-          renderAnnotations()
+          deleteNote(noteId);
+          renderAnnotations();
         }
-      })
-    })
+      });
+    });
   }
 
-  renderAnnotations()
+  renderAnnotations();
+  initTranslation(
+    document.querySelector(".analysis-tools-panel") as HTMLElement,
+  );
 
-  const saveNoteBtn = document.querySelector('[data-action="save-note"]') as HTMLButtonElement
+  const saveNoteBtn = document.querySelector(
+    '[data-action="save-note"]',
+  ) as HTMLButtonElement;
   if (saveNoteBtn) {
-    saveNoteBtn.addEventListener('click', () => {
-      const textarea = document.querySelector('.annotation-textarea') as HTMLTextAreaElement
-      if (!textarea || !textarea.value.trim()) return
+    saveNoteBtn.addEventListener("click", () => {
+      const textarea = document.querySelector(
+        ".annotation-textarea",
+      ) as HTMLTextAreaElement;
+      if (!textarea || !textarea.value.trim()) return;
 
       saveNote({
         id: crypto.randomUUID(),
-        studentId: 'local',
+        studentId: "local",
         date: Date.now(),
         text: textarea.value.trim(),
         analysisContext: {
           dateRange: { from: 0, to: Date.now() },
           filters: {},
         },
-      })
+      });
 
-      textarea.value = ''
-      renderAnnotations()
-    })
+      textarea.value = "";
+      renderAnnotations();
+    });
   }
 </script>

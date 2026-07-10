@@ -1,8 +1,9 @@
 ---
+
 ---
 
 <div class="basic-trend-analysis">
-  <h3>Tendencias</h3>
+  <h3 data-i18n="Trends">Trends</h3>
   <div class="trends-list"></div>
 </div>
 
@@ -72,75 +73,99 @@
 </style>
 
 <script>
-  import { WorkoutLogService } from '../assets/workoutLog'
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { t, initTranslation } from "../assets/dictionary";
 
   function renderTrends(logs: any[]) {
-    const list = document.querySelector('.trends-list')
-    if (!list) return
+    const list = document.querySelector(".trends-list");
+    if (!list) return;
 
     if (logs.length === 0) {
-      list.innerHTML = '<p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">Sin datos suficientes</p>'
-      return
+      list.innerHTML = `<p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">${t("Not enough data")}</p>`;
+      return;
     }
 
-    const now = Date.now()
-    const oneWeek = 7 * 24 * 60 * 60 * 1000
-    const recentLogs = logs.filter((log) => log.date > now - oneWeek)
-    const olderLogs = logs.filter((log) => log.date <= now - oneWeek && log.date > now - oneWeek * 2)
+    const now = Date.now();
+    const oneWeek = 7 * 24 * 60 * 60 * 1000;
+    const recentLogs = logs.filter((log) => log.date > now - oneWeek);
+    const olderLogs = logs.filter(
+      (log) => log.date <= now - oneWeek && log.date > now - oneWeek * 2,
+    );
 
-    const recentAvg = recentLogs.length > 0 ? recentLogs.reduce((s, l) => s + l.duration, 0) / recentLogs.length : 0
-    const olderAvg = olderLogs.length > 0 ? olderLogs.reduce((s, l) => s + l.duration, 0) / olderLogs.length : 0
+    const recentAvg =
+      recentLogs.length > 0
+        ? recentLogs.reduce((s, l) => s + l.duration, 0) / recentLogs.length
+        : 0;
+    const olderAvg =
+      olderLogs.length > 0
+        ? olderLogs.reduce((s, l) => s + l.duration, 0) / olderLogs.length
+        : 0;
 
-    const durationDiff = recentAvg - olderAvg
-    const durationPct = olderAvg > 0 ? Math.round((durationDiff / olderAvg) * 100) : 0
+    const durationDiff = recentAvg - olderAvg;
+    const durationPct =
+      olderAvg > 0 ? Math.round((durationDiff / olderAvg) * 100) : 0;
 
-    const recentFreq = recentLogs.length
-    const olderFreq = olderLogs.length
-    const freqDiff = recentFreq - olderFreq
+    const recentFreq = recentLogs.length;
+    const olderFreq = olderLogs.length;
+    const freqDiff = recentFreq - olderFreq;
 
-    const uniqueRoutines = new Set(logs.map((l) => l.routineSnapshot.name)).size
-    const uniqueExercises = new Set(logs.flatMap((l) => l.routineSnapshot.exercises)).size
+    const uniqueRoutines = new Set(logs.map((l) => l.routineSnapshot.name))
+      .size;
+    const uniqueExercises = new Set(
+      logs.flatMap((l) => l.routineSnapshot.exercises),
+    ).size;
 
     function trendIcon(diff: number) {
-      if (diff > 0) return '↗'
-      if (diff < 0) return '↘'
-      return '→'
+      if (diff > 0) return "↗";
+      if (diff < 0) return "↘";
+      return "→";
     }
 
     function trendClass(diff: number) {
-      if (diff > 0) return 'up'
-      if (diff < 0) return 'down'
-      return 'stable'
+      if (diff > 0) return "up";
+      if (diff < 0) return "down";
+      return "stable";
     }
 
     const trends = [
       {
-        metric: 'Frecuencia semanal',
+        metric: t("Weekly Frequency"),
         direction: trendIcon(freqDiff),
-        change: `${recentFreq} esta semana`,
+        change: t("{count} this week").replace(
+          "{count}",
+          recentFreq.toString(),
+        ),
         cls: trendClass(freqDiff),
       },
       {
-        metric: 'Duración promedio',
+        metric: t("Average Duration"),
         direction: trendIcon(durationDiff),
-        change: `${Math.round(recentAvg / 60)}min (${durationPct > 0 ? '+' : ''}${durationPct}%)`,
+        change: `${Math.round(recentAvg / 60)}${t("min")} (${durationPct > 0 ? "+" : ""}${durationPct}%)`,
         cls: trendClass(durationDiff),
       },
       {
-        metric: 'Variedad de rutinas',
-        direction: '→',
-        change: `${uniqueRoutines} rutinas`,
-        cls: 'stable',
+        metric: t("Routine Variety"),
+        direction: "→",
+        change: t("{count} routines").replace(
+          "{count}",
+          uniqueRoutines.toString(),
+        ),
+        cls: "stable",
       },
       {
-        metric: 'Variedad de ejercicios',
-        direction: '→',
-        change: `${uniqueExercises} ejercicios`,
-        cls: 'stable',
+        metric: t("Exercise Variety"),
+        direction: "→",
+        change: t("{count} exercises").replace(
+          "{count}",
+          uniqueExercises.toString(),
+        ),
+        cls: "stable",
       },
-    ]
+    ];
 
-    list.innerHTML = trends.map((t) => `
+    list.innerHTML = trends
+      .map(
+        (t) => `
       <div class="trend-item">
         <div class="trend-metric">${t.metric}</div>
         <div class="trend-indicator">
@@ -148,15 +173,20 @@
           <span class="trend-change ${t.cls}">${t.change}</span>
         </div>
       </div>
-    `).join('')
+    `,
+      )
+      .join("");
   }
 
-  renderTrends(WorkoutLogService.getLogs())
+  renderTrends(WorkoutLogService.getLogs());
+  initTranslation(
+    document.querySelector(".basic-trend-analysis") as HTMLElement,
+  );
 
-  document.addEventListener('filters-applied', (e: Event) => {
-    const detail = (e as CustomEvent).detail
+  document.addEventListener("filters-applied", (e: Event) => {
+    const detail = (e as CustomEvent).detail;
     if (detail?.filteredLogs) {
-      renderTrends(detail.filteredLogs)
+      renderTrends(detail.filteredLogs);
     }
-  })
+  });
 </script>
