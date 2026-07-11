@@ -32,3 +32,7 @@
 
 **Learning:** Implementing the native Web Share API (`navigator.share`) significantly improves the sharing experience on mobile devices, making it feel like a first-class app interaction. A robust fallback to clipboard copying ensures functionality on all platforms.
 **Action:** Use native sharing when possible, providing translatable titles and text, and always include a clipboard fallback with user feedback (e.g., localized alerts).
+
+## 2024-07-11 - [Dictionary Key Consistency and Reuse]
+**Learning:** Standardizing dictionary keys and reusing existing ones (e.g., using "Work" instead of "Working") ensures UI consistency and reduces technical debt. Inconsistent casing or redundant keys (like "Pause" vs "Pausar") lead to maintenance overhead.
+**Action:** Always audit 'src/assets/dictionary.ts' for existing concepts before adding new keys, and strictly follow the project's casing conventions (PascalCase for UI labels).
