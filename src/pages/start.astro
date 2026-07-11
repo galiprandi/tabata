@@ -18,7 +18,7 @@ import GoToHome from "@components/GoToHome.astro";
 
     <!-- Exercise name - giant, centered -->
     <div id="exercise-display" class="exercise-display speech">
-      <span id="exercise-name">Preparation</span>
+      <span id="exercise-name" data-i18n="Preparation Time">Preparation Time</span>
     </div>
 
     <!-- Timer - giant countdown -->
@@ -33,12 +33,17 @@ import GoToHome from "@components/GoToHome.astro";
 
     <!-- Next exercise preview -->
     <div id="next-exercise-preview" class="next-exercise-preview">
-      <span class="next-label">Próximo:</span>
+      <span class="next-label" data-i18n="Next:">Next:</span>
       <span id="next-exercise-name">-</span>
     </div>
 
     <!-- Pause button (visible but whole screen is tappable) -->
-    <button id="btn-pause" class="btn-pause" aria-label="Pausar">
+    <button
+      id="btn-pause"
+      class="btn-pause"
+      aria-label="Pause"
+      data-i18n-aria-label="Pause"
+    >
       <Pause />
     </button>
   </div>
@@ -46,31 +51,31 @@ import GoToHome from "@components/GoToHome.astro";
   <!-- Start modal - dismissible overlay, not blocking dialog -->
   <div id="start-overlay" class="start-overlay">
     <div class="start-card">
-      <h2 class="start-title">Rutina</h2>
+      <h2 class="start-title" data-i18n="Routine">Routine</h2>
 
       <div class="routine-info">
         <div class="info-item">
           <span class="info-value" id="total-exercises">-</span>
-          <span class="info-label">ejercicios</span>
+          <span class="info-label" data-i18n="Exercises">Exercises</span>
         </div>
         <div class="info-item">
           <span class="info-value" id="total-rounds">-</span>
-          <span class="info-label">rondas</span>
+          <span class="info-label" data-i18n="Rounds">Rounds</span>
         </div>
         <div class="info-item">
           <span class="info-value" id="total-time">-</span>
-          <span class="info-label">tiempo</span>
+          <span class="info-label" data-i18n="Time">Time</span>
         </div>
       </div>
 
       <div class="start-actions">
         <button id="btn-restart" class="btn-secondary">
           <Play />
-          <span>Reiniciar</span>
+          <span data-i18n="Restart">Restart</span>
         </button>
         <button id="btn-continue" class="btn-primary">
           <Continue />
-          <span>Continuar</span>
+          <span data-i18n="Continue">Continue</span>
         </button>
       </div>
 
@@ -84,18 +89,18 @@ import GoToHome from "@components/GoToHome.astro";
   <!-- Pause overlay -->
   <div id="pause-overlay" class="pause-overlay" style="display: none;">
     <div class="pause-card">
-      <h2 class="pause-title">Pausado</h2>
+      <h2 class="pause-title" data-i18n="Paused">Paused</h2>
       <div class="pause-actions">
         <button id="btn-resume" class="btn-primary">
           <Continue />
-          <span>Reanudar</span>
+          <span data-i18n="Resume">Resume</span>
         </button>
         <button id="btn-restart-pause" class="btn-secondary">
           <Play />
-          <span>Reiniciar</span>
+          <span data-i18n="Restart">Restart</span>
         </button>
         <button id="btn-exit" class="btn-exit">
-          <span>Salir</span>
+          <span data-i18n="Exit">Exit</span>
         </button>
       </div>
     </div>
@@ -223,9 +228,9 @@ import GoToHome from "@components/GoToHome.astro";
     if (!indicator) return;
 
     const labels: Record<string, string> = {
-      prep: "Preparación",
-      workout: "Trabajo",
-      rest: "Descanso",
+      prep: t("Preparation Time"),
+      workout: t("Work"),
+      rest: t("Rest"),
     };
     indicator.textContent = labels[phase] || phase;
     indicator.className = `phase-indicator phase-${phase}`;

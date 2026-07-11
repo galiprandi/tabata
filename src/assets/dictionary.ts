@@ -81,6 +81,10 @@ export const dictionary = {
     en: "Tap image to share with your friends!",
     es: "¡Toca la imagen para compartirla con tus amigos!",
   },
+  Time: {
+    en: "Time",
+    es: "Tiempo",
+  },
   Train: {
     en: "Train",
     es: "Entrenar",
@@ -205,6 +209,22 @@ export const dictionary = {
     en: "Select a routine from the list or create a new one to begin.",
     es: "Selecciona una rutina de la lista o crea una nueva para comenzar.",
   },
+  Pause: {
+    en: "Pause",
+    es: "Pausa",
+  },
+  Paused: {
+    en: "Paused",
+    es: "Pausado",
+  },
+  Resume: {
+    en: "Resume",
+    es: "Reanudar",
+  },
+  Exit: {
+    en: "Exit",
+    es: "Salir",
+  },
   "Turn audio on": {
     en: "Turn audio on",
     es: "Activar audio",
@@ -222,6 +242,10 @@ export const dictionary = {
   "Search routine or exercise...": {
     en: "Search routine or exercise...",
     es: "Buscar rutina o ejercicio...",
+  },
+  "Next:": {
+    en: "Next:",
+    es: "Próximo:",
   },
   "Share routine": { en: "Share routine", es: "Compartir rutina" },
   "Link copied to clipboard": {
@@ -347,6 +371,10 @@ export const dictionary = {
   Prep: {
     en: "Prep",
     es: "Prep",
+  },
+  Preparation: {
+    en: "Preparation",
+    es: "Preparación",
   },
   Work: {
     en: "Work",
