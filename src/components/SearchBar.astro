@@ -145,6 +145,17 @@
       }, 300);
     });
 
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && searchInput.value) {
+        searchInput.value = "";
+        updateClearButtonVisibility();
+        const searchEvent = new CustomEvent("search", {
+          detail: { query: "" },
+        });
+        document.dispatchEvent(searchEvent);
+      }
+    });
+
     clearButton.addEventListener("click", async () => {
       await play("tap", true);
       searchInput.value = "";

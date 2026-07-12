@@ -28,6 +28,16 @@
 **Learning:** To ensure keyboard accessibility in help components, focus must be programmatically shifted to the close button when a dialog opens and returned to the trigger button when it closes.
 **Action:** When implementing native `<dialog>` elements, use `dialog.showModal()`, focus the close button immediately, and use a `once: true` listener on the 'close' event to restore focus.
 
+## 2025-10-10 - [Clipboard Feedback State Safety]
+
+**Learning:** When using temporary visual feedback (like replacing a button's icon with a checkmark "✓" on click), subsequent clicks during the timeout can capture the feedback state as the "original" state, causing the button to get stuck.
+**Action:** Always check if the feedback state is already active (e.g., `btn.innerHTML !== "✓"`) before initiating the feedback cycle.
+
+## 2025-10-10 - [SearchBar Keyboard UX]
+
+**Learning:** Supporting the 'Escape' key to clear search inputs is a standard expectation. It should not only clear the UI but also reset the search state (e.g., dispatching a 'search' event with an empty query).
+**Action:** Add a `keydown` listener for 'Escape' in search components to improve keyboard efficiency.
+
 ## 2025-08-15 - [Native Sharing UX]
 
 **Learning:** Implementing the native Web Share API (`navigator.share`) significantly improves the sharing experience on mobile devices, making it feel like a first-class app interaction. A robust fallback to clipboard copying ensures functionality on all platforms.
