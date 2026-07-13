@@ -1,15 +1,33 @@
 ---
 ---
 
-<button class="share-progress-btn" data-action="share-progress">
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<button
+  class="share-progress-btn"
+  data-action="share-progress"
+  title="Share Progress"
+  aria-label="Share Progress"
+  data-i18n-title="Share Progress"
+  data-i18n-aria-label="Share Progress"
+  data-tooltip="Share Progress"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
     <circle cx="18" cy="5" r="3"></circle>
     <circle cx="6" cy="12" r="3"></circle>
     <circle cx="18" cy="19" r="3"></circle>
     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
   </svg>
-  Share Progress
+  <span data-i18n="Share Progress">Share Progress</span>
 </button>
 
 <style>
@@ -32,15 +50,72 @@
   .share-progress-btn:hover {
     background: rgba(247, 193, 121, 0.85);
   }
+
+  .share-progress-btn span {
+    display: inline-flex;
+    align-items: center;
+  }
 </style>
 
 <script>
-  const button = document.querySelector('.share-progress-btn') as HTMLButtonElement;
-  
-  if (button) {
-    button.addEventListener('click', () => {
-      // Dispatch event to parent component
-      button.dispatchEvent(new CustomEvent('share-progress'));
+  import { WorkoutLogService } from "../assets/workoutLog";
+  import { compressProgress, getDateRanges } from "../assets/progressSharing";
+  import { t } from "../assets/dictionary";
+  import { play } from "../assets/audio";
+
+  const initShareProgress = () => {
+    const shareButtons = document.querySelectorAll(
+      ".share-progress-btn",
+    ) as NodeListOf<HTMLButtonElement>;
+
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        await play("tap", true);
+
+        const logs = WorkoutLogService.getLogs();
+        const ranges = getDateRanges();
+
+        // For now, use the first range (Last 7 days)
+        const result = compressProgress(logs, ranges[0], t("My Progress"));
+
+        if (result.success && result.url) {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: t("Workout History"),
+                text: t("Share Progress"),
+                url: result.url,
+              });
+            } catch (err) {
+              if ((err as Error).name !== "AbortError") {
+                copyToClipboard(result.url, button);
+              }
+            }
+          } else {
+            copyToClipboard(result.url, button);
+          }
+        } else {
+          alert(t("Failed to generate progress link"));
+        }
+      });
     });
+  };
+
+  async function copyToClipboard(text: string, btn: HTMLButtonElement) {
+    const span = btn.querySelector("span");
+    if (!span || span.textContent === "✓") return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      const originalText = span.textContent;
+      span.textContent = "✓";
+      setTimeout(() => {
+        span.textContent = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
   }
+
+  document.addEventListener("DOMContentLoaded", initShareProgress);
 </script>

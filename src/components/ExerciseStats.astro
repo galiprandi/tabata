@@ -15,35 +15,40 @@
   import { WorkoutLogService } from "../assets/workoutLog";
   import { t } from "../assets/dictionary";
 
-  const exerciseStats = WorkoutLogService.getExerciseStats();
-  const emptyState = document.querySelector('.exercise-stats .empty-state') as HTMLElement
-  const statsList = document.querySelector('.exercise-stats .stats-list') as HTMLElement
-  
-  if (exerciseStats.length === 0) {
-    emptyState!.style.display = "block";
-  } else {
-    statsList.innerHTML = exerciseStats
-      .map(
-        (stat) => `
-      <div class="stat-item">
-        <div class="stat-name">${stat.name}</div>
-        <div class="stat-metrics">
-          <div class="metric">
-            <span class="metric-label">${t("Frequency:")}</span>
-            <span class="metric-value">${stat.count}x</span>
+  const container = document.querySelector('.exercise-stats') as HTMLElement;
+  if (container) {
+    const exerciseStats = WorkoutLogService.getExerciseStats();
+    const emptyState = container.querySelector('.empty-state') as HTMLElement
+    const statsList = container.querySelector('.stats-list') as HTMLElement
+
+    if (exerciseStats.length === 0) {
+      if (emptyState) emptyState.style.display = "block";
+    } else {
+      if (statsList) {
+        statsList.innerHTML = exerciseStats
+          .map(
+            (stat) => `
+          <div class="stat-item">
+            <div class="stat-name">${stat.name}</div>
+            <div class="stat-metrics">
+              <div class="metric">
+                <span class="metric-label">${t("Frequency:")}</span>
+                <span class="metric-value">${stat.count}x</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">${t("Total Time")}:</span>
+                <span class="metric-value">${Math.floor(stat.totalDuration / 60)}m</span>
+              </div>
+            </div>
+            <div class="stat-progress">
+              <div class="progress-bar" style="width: ${Math.min((stat.count / 20) * 100, 100)}%"></div>
+            </div>
           </div>
-          <div class="metric">
-            <span class="metric-label">${t("Total Time")}:</span>
-            <span class="metric-value">${Math.floor(stat.totalDuration / 60)}m</span>
-          </div>
-        </div>
-        <div class="stat-progress">
-          <div class="progress-bar" style="width: ${Math.min((stat.count / 20) * 100, 100)}%"></div>
-        </div>
-      </div>
-    `,
-      )
-      .join("");
+        `,
+          )
+          .join("");
+      }
+    }
   }
 </script>
 
