@@ -31,42 +31,6 @@ import GoToHome from "../components/GoToHome.astro";
   </section>
 </Layout>
 
-<script>
-  import { WorkoutLogService } from "../assets/workoutLog";
-  import { compressProgress, getDateRanges } from "../assets/progressSharing";
-  import { t } from "../assets/dictionary";
-
-  document.addEventListener("share-progress", async () => {
-    const logs = WorkoutLogService.getLogs();
-    const ranges = getDateRanges();
-
-    // For now, use the first range (Last 7 days)
-    const result = compressProgress(logs, ranges[0], "My Progress");
-
-    if (result.success && result.url) {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: t("Workout History"),
-            text: t("Share Progress"),
-            url: result.url,
-          });
-        } catch (err) {
-          if ((err as Error).name !== "AbortError") {
-            navigator.clipboard.writeText(result.url);
-            alert(t("Progress link copied to clipboard!"));
-          }
-        }
-      } else {
-        navigator.clipboard.writeText(result.url);
-        alert(t("Progress link copied to clipboard!"));
-      }
-    } else {
-      alert(t("Failed to generate progress link"));
-    }
-  });
-</script>
-
 <style>
   .top-nav {
     display: flex;

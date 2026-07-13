@@ -33,6 +33,11 @@
 **Learning:** When using temporary visual feedback (like replacing a button's icon with a checkmark "✓" on click), subsequent clicks during the timeout can capture the feedback state as the "original" state, causing the button to get stuck.
 **Action:** Always check if the feedback state is already active (e.g., `btn.innerHTML !== "✓"`) before initiating the feedback cycle.
 
+## 2025-10-11 - [In-button Feedback Preservation]
+
+**Learning:** Replacing the entire `innerHTML` of a button with "✓" for feedback can be visually disruptive as it removes icons and changes layout.
+**Action:** Target only the text-containing element (e.g., a nested `<span>`) for feedback when possible to preserve the button's visual structure.
+
 ## 2025-10-10 - [SearchBar Keyboard UX]
 
 **Learning:** Supporting the 'Escape' key to clear search inputs is a standard expectation. It should not only clear the UI but also reset the search state (e.g., dispatching a 'search' event with an empty query).

@@ -336,6 +336,10 @@ export const dictionary = {
     en: "Share Progress",
     es: "Compartir progreso",
   },
+  "My Progress": {
+    en: "My Progress",
+    es: "Mi progreso",
+  },
   "Set as Active?": {
     en: "Set as Active?",
     es: "¿Establecer como activa?",
