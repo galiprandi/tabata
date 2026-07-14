@@ -51,3 +51,7 @@
 ## 2024-07-11 - [Dictionary Key Consistency and Reuse]
 **Learning:** Standardizing dictionary keys and reusing existing ones (e.g., using "Work" instead of "Working") ensures UI consistency and reduces technical debt. Inconsistent casing or redundant keys (like "Pause" vs "Pausar") lead to maintenance overhead.
 **Action:** Always audit 'src/assets/dictionary.ts' for existing concepts before adding new keys, and strictly follow the project's casing conventions (PascalCase for UI labels).
+
+## 2025-07-14 - [Reliable UI Visibility Checks]
+**Learning:** Checking `element.style.display` in scripts only works for inline styles. For elements hidden via CSS classes (common in this app's Astro/Pico CSS setup), it returns an empty string, leading to incorrect logic states.
+**Action:** Use `window.getComputedStyle(el).display !== "none"` for reliable visibility checks when implementing keyboard shortcuts or conditional logic.

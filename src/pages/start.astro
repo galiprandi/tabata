@@ -124,6 +124,10 @@ import GoToHome from "@components/GoToHome.astro";
     updateRoutineInfo(config);
     renderRoundDots(config.rounds, 0);
 
+    // Initial focus on continue button
+    const btnContinue = document.getElementById("btn-continue") as HTMLButtonElement | null;
+    btnContinue?.focus();
+
     onClick("#btn-pause", () => {
       if (isWorkoutRunning) {
         pauseWorkout();
@@ -156,6 +160,42 @@ import GoToHome from "@components/GoToHome.astro";
       const target = e.target as HTMLElement;
       if (target.closest("button")) return;
       pauseWorkout();
+    });
+
+    // Keyboard controls
+    document.addEventListener("keydown", (e) => {
+      const startOverlay = document.getElementById("start-overlay");
+      const pauseOverlay = document.getElementById("pause-overlay");
+
+      const isStartVisible = startOverlay && window.getComputedStyle(startOverlay).display !== "none";
+      const isPauseVisible = pauseOverlay && window.getComputedStyle(pauseOverlay).display !== "none";
+      const isButtonFocused = e.target instanceof HTMLButtonElement;
+
+      if (e.code === "Space") {
+        if (isButtonFocused) return;
+        e.preventDefault();
+        if (isStartVisible) {
+          startWorkout();
+        } else if (isPauseVisible) {
+          resumeWorkout();
+        } else if (isWorkoutRunning) {
+          pauseWorkout();
+        }
+      } else if (e.key === "Enter") {
+        if (isButtonFocused) return;
+        if (isStartVisible) {
+          e.preventDefault();
+          startWorkout();
+        }
+      } else if (e.key === "Escape") {
+        if (isPauseVisible) {
+          resumeWorkout();
+        } else if (isWorkoutRunning) {
+          pauseWorkout();
+        } else if (isStartVisible) {
+          window.location.href = "/tabata";
+        }
+      }
     });
 
     // Swipe gestures
@@ -271,17 +311,29 @@ import GoToHome from "@components/GoToHome.astro";
 
   function showPauseOverlay() {
     const overlay = document.getElementById("pause-overlay");
-    if (overlay) overlay.style.display = "flex";
+    if (overlay) {
+      overlay.style.display = "flex";
+      const btnResume = document.getElementById("btn-resume") as HTMLButtonElement | null;
+      btnResume?.focus();
+    }
   }
 
   function hidePauseOverlay() {
     const overlay = document.getElementById("pause-overlay");
-    if (overlay) overlay.style.display = "none";
+    if (overlay) {
+      overlay.style.display = "none";
+      const btnPause = document.getElementById("btn-pause") as HTMLButtonElement | null;
+      btnPause?.focus();
+    }
   }
 
   function hideStartOverlay() {
     const overlay = document.getElementById("start-overlay");
-    if (overlay) overlay.style.display = "none";
+    if (overlay) {
+      overlay.style.display = "none";
+      const btnPause = document.getElementById("btn-pause") as HTMLButtonElement | null;
+      btnPause?.focus();
+    }
   }
 
   async function startWorkout() {
