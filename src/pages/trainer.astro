@@ -86,6 +86,13 @@ import SearchBar from "@components/SearchBar.astro";
             <p data-i18n="No results found for your search">
               No results found for your search
             </p>
+            <button
+              class="btn-modern secondary outline"
+              id="btn-clear-search-empty"
+              data-i18n="Clear search"
+            >
+              Clear search
+            </button>
           </div>
         </div>
       </aside>
@@ -901,6 +908,14 @@ import SearchBar from "@components/SearchBar.astro";
       const detail = (e as CustomEvent).detail;
       searchQuery = detail.query;
       renderRoutines();
+    });
+
+    const btnClearSearchEmpty = document.getElementById("btn-clear-search-empty");
+    btnClearSearchEmpty?.addEventListener("click", () => {
+      const clearBtn = document.getElementById("clear-search");
+      if (clearBtn) {
+        clearBtn.click();
+      }
     });
 
     // 4. Bind Exercise Adding

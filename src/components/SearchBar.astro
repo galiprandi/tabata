@@ -147,6 +147,8 @@
 
     searchInput.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && searchInput.value) {
+        e.preventDefault();
+        clearTimeout(debounceTimer);
         searchInput.value = "";
         updateClearButtonVisibility();
         const searchEvent = new CustomEvent("search", {
@@ -158,6 +160,7 @@
 
     clearButton.addEventListener("click", async () => {
       await play("tap", true);
+      clearTimeout(debounceTimer);
       searchInput.value = "";
       updateClearButtonVisibility();
       searchInput.focus();

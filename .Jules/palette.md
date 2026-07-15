@@ -55,3 +55,7 @@
 ## 2025-07-14 - [Reliable UI Visibility Checks]
 **Learning:** Checking `element.style.display` in scripts only works for inline styles. For elements hidden via CSS classes (common in this app's Astro/Pico CSS setup), it returns an empty string, leading to incorrect logic states.
 **Action:** Use `window.getComputedStyle(el).display !== "none"` for reliable visibility checks when implementing keyboard shortcuts or conditional logic.
+
+## 2025-11-20 - [Empty Results Recovery Pattern]
+**Learning:** Providing a direct "Clear search" action within the "No results found" state significantly reduces friction for users who have over-filtered their lists.
+**Action:** Always include a recovery button (e.g., "Clear search" or "View all") in empty search result states to prevent dead ends.
