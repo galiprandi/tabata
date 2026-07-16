@@ -364,6 +364,10 @@ export const dictionary = {
     en: "Save Routine",
     es: "Guardar rutina",
   },
+  Duration: {
+    en: "Duration",
+    es: "Duración",
+  },
   Exercises: {
     en: "Exercises",
     es: "Ejercicios",
@@ -491,6 +495,10 @@ export const dictionary = {
   "Average Duration": {
     en: "Average Duration",
     es: "Duración promedio",
+  },
+  more: {
+    en: "more",
+    es: "más",
   },
   "Routine Variety": {
     en: "Routine Variety",

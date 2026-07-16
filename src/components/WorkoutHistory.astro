@@ -51,7 +51,7 @@ import TrashIcon from "./TrashIcon.astro";
           <div class="history-routine">${log.routineSnapshot.name}</div>
           <div class="history-exercises">
             ${log.routineSnapshot.exercises.slice(0, 3).join(", ")}
-            ${log.routineSnapshot.exercises.length > 3 ? ` +${log.routineSnapshot.exercises.length - 3} more` : ""}
+            ${log.routineSnapshot.exercises.length > 3 ? ` +${log.routineSnapshot.exercises.length - 3} ${t("more")}` : ""}
           </div>
         </div>
         <div class="history-duration">
