@@ -2,36 +2,46 @@
 import Layout from '@app/layouts/layout.astro'
 import Play from '@icons/Play.icon.astro'
 import GoToHome from '@components/GoToHome.astro'
+import GoToHistory from '@components/GoToHistory.astro'
 ---
 
 <Layout>
   <section class="end-screen">
     <div class="celebration">
       <div class="emoji">🎉</div>
-      <h1>¡Felicitaciones!</h1>
-      <p class="subtitle">Rutina completada</p>
+      <h1 data-i18n="Congrats">¡Felicitaciones!</h1>
+      <p class="subtitle" data-i18n="Routine completed!">Rutina completada</p>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
         <span class="stat-value" id="stat-duration">-</span>
-        <span class="stat-label">Duración</span>
+        <span class="stat-label" data-i18n="Duration">Duración</span>
       </div>
       <div class="stat-card">
         <span class="stat-value" id="stat-rounds">-</span>
-        <span class="stat-label">Rondas</span>
+        <span class="stat-label" data-i18n="Rounds">Rondas</span>
       </div>
       <div class="stat-card">
         <span class="stat-value" id="stat-exercises">-</span>
-        <span class="stat-label">Ejercicios</span>
+        <span class="stat-label" data-i18n="Exercises">Ejercicios</span>
       </div>
     </div>
 
     <div class="end-actions">
-      <button id="startAgain" class="btn-primary">
+      <button
+        id="startAgain"
+        class="btn-primary"
+        title="Start Again"
+        aria-label="Start Again"
+        data-i18n-title="Start Again"
+        data-i18n-aria-label="Start Again"
+        data-tooltip="Start Again"
+      >
         <Play />
-        <span>Otra vez</span>
+        <span data-i18n="Start Again">Otra vez</span>
       </button>
+      <GoToHistory />
       <GoToHome />
     </div>
   </section>
@@ -42,8 +52,11 @@ import GoToHome from '@components/GoToHome.astro'
   import { RoutineStorageService } from '../assets/routine'
   import { WorkoutLogService } from '../assets/workoutLog'
   import { RoutineService } from '../assets/routine/RoutineService'
+  import { initTranslation } from '../assets/dictionary'
+  import { formatDuration } from '@assets/domHelpers'
 
   document.addEventListener('DOMContentLoaded', () => {
+    initTranslation()
     play('end')
 
     const activeRoutineId = RoutineStorageService.getActiveRoutineId()
@@ -55,20 +68,19 @@ import GoToHome from '@components/GoToHome.astro'
         const config = activeRoutine.config
         const exercises = activeRoutine.exercises
 
-        const totalDuration = (
+        const totalDuration =
           config.prepDuration +
-          (config.workDuration + config.restDuration) * config.rounds * exercises.length
-        )
+          (config.workDuration + config.restDuration) *
+            config.rounds *
+            exercises.length
 
         // Register workout in history
         WorkoutLogService.addLog(activeRoutine, totalDuration)
 
         // Display stats
-        const minutes = Math.floor(totalDuration / 60)
-        const seconds = totalDuration % 60
         const durationEl = document.getElementById('stat-duration')
         if (durationEl) {
-          durationEl.textContent = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
+          durationEl.textContent = formatDuration(totalDuration)
         }
 
         const roundsEl = document.getElementById('stat-rounds')
