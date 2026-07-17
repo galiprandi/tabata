@@ -59,3 +59,7 @@
 ## 2025-11-20 - [Empty Results Recovery Pattern]
 **Learning:** Providing a direct "Clear search" action within the "No results found" state significantly reduces friction for users who have over-filtered their lists.
 **Action:** Always include a recovery button (e.g., "Clear search" or "View all") in empty search result states to prevent dead ends.
+
+## 2025-12-05 - [Localizing Scoped Event Listeners to Prevent Global Keyboard Hijacking]
+**Learning:** Registering a keydown event listener on the global `document` for dropdown or selector menu navigation (such as ArrowUp/ArrowDown) can easily hijack keyboard navigation and prevent standard scrolling page-wide, even when other elements have focus.
+**Action:** Always register list/dropdown navigation keydown listeners directly on the specific container element (e.g., `#routine-selector`) rather than on `document`, and use `window.getComputedStyle(dropdown).display !== "none"` to determine its active state.

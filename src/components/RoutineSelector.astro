@@ -103,10 +103,11 @@
   };
 
   const init = () => {
+    const selectorContainer = document.getElementById("routine-selector");
     const selectorButton = document.getElementById("routine-selector-button");
     const dropdown = document.getElementById("routine-dropdown");
 
-    if (!selectorButton || !dropdown) return;
+    if (!selectorContainer || !selectorButton || !dropdown) return;
 
     selectorButton.addEventListener("click", async () => {
       await play("tap", true);
@@ -123,10 +124,46 @@
       }
     });
 
-    // Keyboard navigation
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
+    // Keyboard navigation scoped to the selector container to prevent global hijacking
+    selectorContainer.addEventListener("keydown", (e) => {
+      const isVisible = window.getComputedStyle(dropdown).display !== "none";
+
+      if (e.key === "Escape" && isVisible) {
         closeDropdown();
+        selectorButton.focus();
+        e.preventDefault();
+      } else if (e.key === "ArrowDown" && isVisible) {
+        // Move focus down
+        e.preventDefault();
+        const active = document.activeElement;
+        const items = Array.from(dropdown.querySelectorAll(".dropdown-item")) as HTMLElement[];
+        if (items.length === 0) return;
+        const index = items.indexOf(active as HTMLElement);
+        if (index === -1 || index === items.length - 1) {
+          items[0].focus();
+        } else {
+          items[index + 1].focus();
+        }
+      } else if (e.key === "ArrowUp" && isVisible) {
+        // Move focus up
+        e.preventDefault();
+        const active = document.activeElement;
+        const items = Array.from(dropdown.querySelectorAll(".dropdown-item")) as HTMLElement[];
+        if (items.length === 0) return;
+        const index = items.indexOf(active as HTMLElement);
+        if (index === -1 || index === 0) {
+          items[items.length - 1].focus();
+        } else {
+          items[index - 1].focus();
+        }
+      } else if (e.key === "ArrowDown" && !isVisible && document.activeElement === selectorButton) {
+        // Open dropdown on ArrowDown
+        e.preventDefault();
+        toggleDropdown();
+        setTimeout(() => {
+          const first = dropdown.querySelector(".dropdown-item") as HTMLElement | null;
+          first?.focus();
+        }, 10);
       }
     });
 
