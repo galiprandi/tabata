@@ -63,3 +63,7 @@
 ## 2025-12-05 - [Localizing Scoped Event Listeners to Prevent Global Keyboard Hijacking]
 **Learning:** Registering a keydown event listener on the global `document` for dropdown or selector menu navigation (such as ArrowUp/ArrowDown) can easily hijack keyboard navigation and prevent standard scrolling page-wide, even when other elements have focus.
 **Action:** Always register list/dropdown navigation keydown listeners directly on the specific container element (e.g., `#routine-selector`) rather than on `document`, and use `window.getComputedStyle(dropdown).display !== "none"` to determine its active state.
+
+## 2026-06-25 - [Cohesive Initial-Load Accessibility and Interactive ARIA States]
+**Learning:** Relying solely on localization-driven attributes (such as `data-i18n-title`) can leave interactive components inaccessible before dynamic translations load or if scripts fail. Additionally, collapsible interfaces must explicitly communicate state.
+**Action:** Always provide fallback standard `title` and `aria-label` attributes alongside `data-i18n-` translations, use `aria-hidden="true"` on inline SVGs inside buttons, and dynamically maintain `aria-expanded` attributes on togglable containers.

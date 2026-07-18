@@ -21,6 +21,8 @@ import SearchBar from "@components/SearchBar.astro";
             class="btn-create"
             id="btn-new-routine"
             data-action="create"
+            title="Add new routine"
+            aria-label="Add new routine"
             data-i18n-title="Add new routine"
             data-i18n-aria-label="Add new routine"
           >
@@ -122,7 +124,9 @@ import SearchBar from "@components/SearchBar.astro";
             <line x1="9" y1="8" x2="12" y2="8"></line>
           </svg>
           <h3 data-i18n="No routine selected">No routine selected</h3>
-          <p data-i18n="Select a routine from the list or create a new one to begin.">
+          <p
+            data-i18n="Select a routine from the list or create a new one to begin."
+          >
             Select a routine from the list or create a new one to begin.
           </p>
         </div>
@@ -136,6 +140,8 @@ import SearchBar from "@components/SearchBar.astro";
                 id="editor-btn-share"
                 type="button"
                 class="action-btn share-btn"
+                title="Share routine"
+                aria-label="Share routine"
                 data-i18n-title="Share routine"
                 data-i18n-aria-label="Share routine"
               >
@@ -161,6 +167,8 @@ import SearchBar from "@components/SearchBar.astro";
                 id="editor-btn-delete"
                 type="button"
                 class="action-btn delete-btn"
+                title="Delete routine"
+                aria-label="Delete routine"
                 data-i18n-title="Delete routine"
                 data-i18n-aria-label="Delete routine"
               >
@@ -232,12 +240,16 @@ import SearchBar from "@components/SearchBar.astro";
                 type="text"
                 id="new-exercise-input"
                 placeholder="New Exercise"
+                aria-label="New Exercise"
                 data-i18n-placeholder="New Exercise"
+                data-i18n-aria-label="New Exercise"
               />
               <button
                 type="button"
                 id="btn-add-exercise"
                 class="btn-create"
+                title="Add Exercise"
+                aria-label="Add Exercise"
                 data-i18n-title="Add Exercise"
                 data-i18n-aria-label="Add Exercise"
               >
@@ -260,11 +272,7 @@ import SearchBar from "@components/SearchBar.astro";
             </div>
 
             <!-- Exercises List Container -->
-            <div
-              id="editor-exercises-list"
-              class="editor-exercises-list"
-            >
-            </div>
+            <div id="editor-exercises-list" class="editor-exercises-list"></div>
 
             <!-- Switch to Set Active -->
             <div class="active-setting-checkbox">
@@ -351,9 +359,15 @@ import SearchBar from "@components/SearchBar.astro";
 
   // Exercise Edit Modal State
   let activeEditingExerciseIndex: number | null = null;
-  const exerciseModal = document.getElementById("exercise-modal") as HTMLDialogElement | null;
-  const exerciseModalInput = document.getElementById("exercise-modal-input") as HTMLInputElement | null;
-  const exerciseModalForm = document.getElementById("exercise-modal-form") as HTMLFormElement | null;
+  const exerciseModal = document.getElementById(
+    "exercise-modal",
+  ) as HTMLDialogElement | null;
+  const exerciseModalInput = document.getElementById(
+    "exercise-modal-input",
+  ) as HTMLInputElement | null;
+  const exerciseModalForm = document.getElementById(
+    "exercise-modal-form",
+  ) as HTMLFormElement | null;
 
   // --- RENDERING ROUTINES LIST (LEFT PANEL) ---
   function renderRoutines() {
@@ -405,7 +419,8 @@ import SearchBar from "@components/SearchBar.astro";
             ? `<span class="exercise-count">+${routine.exercises.length - 4}</span>`
             : "";
 
-        const isActiveCard = routine.id === selectedRoutineId ? "active-card" : "";
+        const isActiveCard =
+          routine.id === selectedRoutineId ? "active-card" : "";
 
         return `
         <article class="routine-card ${isActiveCard}" data-routine-id="${routine.id}">
@@ -499,7 +514,9 @@ import SearchBar from "@components/SearchBar.astro";
     renderRoutines();
 
     // Focus routine name input
-    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
+    const nameInput = document.getElementById(
+      "editor-routine-name",
+    ) as HTMLInputElement | null;
     if (nameInput) {
       nameInput.focus();
     }
@@ -523,22 +540,40 @@ import SearchBar from "@components/SearchBar.astro";
     // Header Title
     const title = document.getElementById("editor-title");
     if (title) {
-      title.textContent = currentEditingRoutine.id ? t("Edit Routine") : t("New Routine");
+      title.textContent = currentEditingRoutine.id
+        ? t("Edit Routine")
+        : t("New Routine");
     }
 
     // Input fields
-    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
-    const prepInput = document.getElementById("editor-prep") as HTMLInputElement | null;
-    const workInput = document.getElementById("editor-work") as HTMLInputElement | null;
-    const restInput = document.getElementById("editor-rest") as HTMLInputElement | null;
-    const roundsInput = document.getElementById("editor-rounds") as HTMLInputElement | null;
-    const isActiveCheckbox = document.getElementById("editor-is-active") as HTMLInputElement | null;
+    const nameInput = document.getElementById(
+      "editor-routine-name",
+    ) as HTMLInputElement | null;
+    const prepInput = document.getElementById(
+      "editor-prep",
+    ) as HTMLInputElement | null;
+    const workInput = document.getElementById(
+      "editor-work",
+    ) as HTMLInputElement | null;
+    const restInput = document.getElementById(
+      "editor-rest",
+    ) as HTMLInputElement | null;
+    const roundsInput = document.getElementById(
+      "editor-rounds",
+    ) as HTMLInputElement | null;
+    const isActiveCheckbox = document.getElementById(
+      "editor-is-active",
+    ) as HTMLInputElement | null;
 
     if (nameInput) nameInput.value = currentEditingRoutine.name;
-    if (prepInput) prepInput.value = currentEditingRoutine.config.prepDuration.toString();
-    if (workInput) workInput.value = currentEditingRoutine.config.workDuration.toString();
-    if (restInput) restInput.value = currentEditingRoutine.config.restDuration.toString();
-    if (roundsInput) roundsInput.value = currentEditingRoutine.config.rounds.toString();
+    if (prepInput)
+      prepInput.value = currentEditingRoutine.config.prepDuration.toString();
+    if (workInput)
+      workInput.value = currentEditingRoutine.config.workDuration.toString();
+    if (restInput)
+      restInput.value = currentEditingRoutine.config.restDuration.toString();
+    if (roundsInput)
+      roundsInput.value = currentEditingRoutine.config.rounds.toString();
 
     // Checkbox is active
     if (isActiveCheckbox) {
@@ -580,44 +615,54 @@ import SearchBar from "@components/SearchBar.astro";
           </div>
           <div class="exercise-actions">
             <button type="button" class="btn-move-up" ${isFirst ? "disabled" : ""}
+              title="Move exercise up"
+              aria-label="Move exercise up"
               data-i18n-title="Move exercise up"
               data-i18n-aria-label="Move exercise up"
               data-tooltip="Move exercise up">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="18 15 12 9 6 15"></polyline>
               </svg>
             </button>
             <button type="button" class="btn-move-down" ${isLast ? "disabled" : ""}
+              title="Move exercise down"
+              aria-label="Move exercise down"
               data-i18n-title="Move exercise down"
               data-i18n-aria-label="Move exercise down"
               data-tooltip="Move exercise down">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
             <button type="button" class="btn-duplicate-exercise"
+              title="Duplicate exercise"
+              aria-label="Duplicate exercise"
               data-i18n-title="Duplicate exercise"
               data-i18n-aria-label="Duplicate exercise"
               data-tooltip="Duplicate exercise">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
             </button>
             <button type="button" class="btn-edit-exercise"
+              title="Edit exercise"
+              aria-label="Edit exercise"
               data-i18n-title="Edit exercise"
               data-i18n-aria-label="Edit exercise"
               data-tooltip="Edit exercise">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
               </svg>
             </button>
             <button type="button" class="delete-exercise"
+              title="Delete exercise"
+              aria-label="Delete exercise"
               data-i18n-title="Delete exercise"
               data-i18n-aria-label="Delete exercise"
               data-tooltip="Delete exercise">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="3 6 5 6 21"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
               </svg>
@@ -634,30 +679,40 @@ import SearchBar from "@components/SearchBar.astro";
     listContainer.querySelectorAll(".editor-exercise-item").forEach((item) => {
       const idx = parseInt(item.getAttribute("data-index") || "0");
 
-      item.querySelector(".btn-move-up")?.addEventListener("click", async () => {
-        await play("tap", true);
-        moveExercise(idx, idx - 1);
-      });
+      item
+        .querySelector(".btn-move-up")
+        ?.addEventListener("click", async () => {
+          await play("tap", true);
+          moveExercise(idx, idx - 1);
+        });
 
-      item.querySelector(".btn-move-down")?.addEventListener("click", async () => {
-        await play("tap", true);
-        moveExercise(idx, idx + 1);
-      });
+      item
+        .querySelector(".btn-move-down")
+        ?.addEventListener("click", async () => {
+          await play("tap", true);
+          moveExercise(idx, idx + 1);
+        });
 
-      item.querySelector(".btn-duplicate-exercise")?.addEventListener("click", async () => {
-        await play("tap", true);
-        duplicateExercise(idx);
-      });
+      item
+        .querySelector(".btn-duplicate-exercise")
+        ?.addEventListener("click", async () => {
+          await play("tap", true);
+          duplicateExercise(idx);
+        });
 
-      item.querySelector(".btn-edit-exercise")?.addEventListener("click", async (e) => {
-        await play("tap", true);
-        openEditExerciseModal(idx, e.currentTarget as HTMLElement);
-      });
+      item
+        .querySelector(".btn-edit-exercise")
+        ?.addEventListener("click", async (e) => {
+          await play("tap", true);
+          openEditExerciseModal(idx, e.currentTarget as HTMLElement);
+        });
 
-      item.querySelector(".delete-exercise")?.addEventListener("click", async () => {
-        await play("tap", true);
-        deleteExercise(idx);
-      });
+      item
+        .querySelector(".delete-exercise")
+        ?.addEventListener("click", async () => {
+          await play("tap", true);
+          deleteExercise(idx);
+        });
     });
   }
 
@@ -692,7 +747,9 @@ import SearchBar from "@components/SearchBar.astro";
   }
 
   function addExercise() {
-    const input = document.getElementById("new-exercise-input") as HTMLInputElement | null;
+    const input = document.getElementById(
+      "new-exercise-input",
+    ) as HTMLInputElement | null;
     if (!input) return;
 
     const name = input.value.trim();
@@ -730,12 +787,24 @@ import SearchBar from "@components/SearchBar.astro";
   async function saveRoutine() {
     if (!currentEditingRoutine) return;
 
-    const nameInput = document.getElementById("editor-routine-name") as HTMLInputElement | null;
-    const prepInput = document.getElementById("editor-prep") as HTMLInputElement | null;
-    const workInput = document.getElementById("editor-work") as HTMLInputElement | null;
-    const restInput = document.getElementById("editor-rest") as HTMLInputElement | null;
-    const roundsInput = document.getElementById("editor-rounds") as HTMLInputElement | null;
-    const isActiveCheckbox = document.getElementById("editor-is-active") as HTMLInputElement | null;
+    const nameInput = document.getElementById(
+      "editor-routine-name",
+    ) as HTMLInputElement | null;
+    const prepInput = document.getElementById(
+      "editor-prep",
+    ) as HTMLInputElement | null;
+    const workInput = document.getElementById(
+      "editor-work",
+    ) as HTMLInputElement | null;
+    const restInput = document.getElementById(
+      "editor-rest",
+    ) as HTMLInputElement | null;
+    const roundsInput = document.getElementById(
+      "editor-rounds",
+    ) as HTMLInputElement | null;
+    const isActiveCheckbox = document.getElementById(
+      "editor-is-active",
+    ) as HTMLInputElement | null;
 
     const name = nameInput?.value.trim() || "";
     if (!name) {
@@ -768,7 +837,11 @@ import SearchBar from "@components/SearchBar.astro";
       };
     } else {
       // Create new
-      savedRoutine = RoutineStorageService.createRoutine(name, config, exercisesState);
+      savedRoutine = RoutineStorageService.createRoutine(
+        name,
+        config,
+        exercisesState,
+      );
     }
 
     // Set Active State if checkbox checked
@@ -779,7 +852,9 @@ import SearchBar from "@components/SearchBar.astro";
       const currentActiveId = RoutineStorageService.getActiveRoutineId();
       if (currentActiveId === savedRoutine.id && !isActiveCheckbox?.checked) {
         // select another routine if possible
-        const list = RoutineStorageService.getRoutines().filter((r) => r.id !== savedRoutine.id);
+        const list = RoutineStorageService.getRoutines().filter(
+          (r) => r.id !== savedRoutine.id,
+        );
         if (list.length > 0) {
           RoutineStorageService.setActiveRoutineId(list[0].id);
         } else {
@@ -791,7 +866,9 @@ import SearchBar from "@components/SearchBar.astro";
     // Re-select and re-render
     selectedRoutineId = savedRoutine.id;
     searchQuery = ""; // clear search on save to show saved routine
-    const searchField = document.querySelector(".search-input") as HTMLInputElement | null;
+    const searchField = document.querySelector(
+      ".search-input",
+    ) as HTMLInputElement | null;
     if (searchField) {
       searchField.value = "";
       const clearBtn = document.getElementById("clear-search");
@@ -808,12 +885,31 @@ import SearchBar from "@components/SearchBar.astro";
 
     const routineToShare: Routine = {
       id: currentEditingRoutine.id || "temp",
-      name: (document.getElementById("editor-routine-name") as HTMLInputElement)?.value.trim() || currentEditingRoutine.name,
+      name:
+        (
+          document.getElementById("editor-routine-name") as HTMLInputElement
+        )?.value.trim() || currentEditingRoutine.name,
       config: {
-        prepDuration: parseInt((document.getElementById("editor-prep") as HTMLInputElement)?.value || "10") || 0,
-        workDuration: parseInt((document.getElementById("editor-work") as HTMLInputElement)?.value || "20") || 0,
-        restDuration: parseInt((document.getElementById("editor-rest") as HTMLInputElement)?.value || "10") || 0,
-        rounds: parseInt((document.getElementById("editor-rounds") as HTMLInputElement)?.value || "8") || 1,
+        prepDuration:
+          parseInt(
+            (document.getElementById("editor-prep") as HTMLInputElement)
+              ?.value || "10",
+          ) || 0,
+        workDuration:
+          parseInt(
+            (document.getElementById("editor-work") as HTMLInputElement)
+              ?.value || "20",
+          ) || 0,
+        restDuration:
+          parseInt(
+            (document.getElementById("editor-rest") as HTMLInputElement)
+              ?.value || "10",
+          ) || 0,
+        rounds:
+          parseInt(
+            (document.getElementById("editor-rounds") as HTMLInputElement)
+              ?.value || "8",
+          ) || 1,
         nextExercise: 0,
       },
       exercises: exercisesState,
@@ -910,7 +1006,9 @@ import SearchBar from "@components/SearchBar.astro";
       renderRoutines();
     });
 
-    const btnClearSearchEmpty = document.getElementById("btn-clear-search-empty");
+    const btnClearSearchEmpty = document.getElementById(
+      "btn-clear-search-empty",
+    );
     btnClearSearchEmpty?.addEventListener("click", () => {
       const clearBtn = document.getElementById("clear-search");
       if (clearBtn) {
@@ -949,7 +1047,9 @@ import SearchBar from "@components/SearchBar.astro";
       exerciseModal?.close();
     });
 
-    const btnCancelExerciseModal = document.getElementById("exercise-modal-cancel");
+    const btnCancelExerciseModal = document.getElementById(
+      "exercise-modal-cancel",
+    );
     btnCancelExerciseModal?.addEventListener("click", async () => {
       await play("tap", true);
       exerciseModal?.close();

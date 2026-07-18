@@ -3,7 +3,7 @@
 ---
 
 <div class="analysis-tools-panel">
-  <button class="panel-toggle" data-action="toggle">
+  <button class="panel-toggle" data-action="toggle" aria-expanded="false">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="20"
@@ -40,18 +40,40 @@
       <div class="filter-group">
         <label data-i18n="Date range">Date range</label>
         <div class="date-inputs">
-          <input type="date" class="date-input" data-filter="from" />
+          <input
+            type="date"
+            id="filter-date-from"
+            class="date-input"
+            data-filter="from"
+            aria-label="Start Date"
+            data-i18n-aria-label="Start Date"
+          />
           <span>→</span>
-          <input type="date" class="date-input" data-filter="to" />
+          <input
+            type="date"
+            id="filter-date-to"
+            class="date-input"
+            data-filter="to"
+            aria-label="End Date"
+            data-i18n-aria-label="End Date"
+          />
         </div>
       </div>
       <div class="filter-group">
-        <label data-i18n="My Routines">My Routines</label>
-        <select class="filter-select" data-filter="routines" multiple></select>
+        <label for="filter-routines" data-i18n="My Routines">My Routines</label>
+        <select
+          id="filter-routines"
+          class="filter-select"
+          data-filter="routines"
+          multiple></select>
       </div>
       <div class="filter-group">
-        <label data-i18n="Exercises">Exercises</label>
-        <select class="filter-select" data-filter="exercises" multiple></select>
+        <label for="filter-exercises" data-i18n="Exercises">Exercises</label>
+        <select
+          id="filter-exercises"
+          class="filter-select"
+          data-filter="exercises"
+          multiple></select>
       </div>
       <div class="filter-actions">
         <button class="btn btn-primary" data-action="apply" data-i18n="Apply"
@@ -66,8 +88,8 @@
     <div class="tool-content" data-tool="export" style="display: none;">
       <h4 data-i18n="Export data">Export data</h4>
       <div class="export-group">
-        <label data-i18n="Format">Format</label>
-        <select class="export-select" data-export="format">
+        <label for="export-format" data-i18n="Format">Format</label>
+        <select id="export-format" class="export-select" data-export="format">
           <option value="csv">CSV</option>
           <option value="json">JSON</option>
         </select>
@@ -80,8 +102,12 @@
     <div class="tool-content" data-tool="annotations" style="display: none;">
       <h4 data-i18n="Coach notes">Coach notes</h4>
       <textarea
+        id="annotation-textarea"
         class="annotation-textarea"
+        placeholder="Add note..."
         data-i18n-placeholder="Add note..."
+        aria-label="Add note..."
+        data-i18n-aria-label="Add note..."
         rows="3"></textarea>
       <button
         class="btn btn-primary"
@@ -311,6 +337,7 @@
     toggleButton.addEventListener("click", () => {
       const isHidden = panelContent.style.display === "none";
       panelContent.style.display = isHidden ? "block" : "none";
+      toggleButton.setAttribute("aria-expanded", isHidden ? "true" : "false");
     });
   }
 
@@ -486,7 +513,7 @@
       .map(
         (note) => `
       <div class="annotation-item" data-note-id="${note.id}">
-        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}" aria-label="${t("Delete")}">✕</button>
+        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}" title="${t("Delete")}" aria-label="${t("Delete")}">✕</button>
         <div class="annotation-item-text">${note.text}</div>
         <div class="annotation-item-date">${new Date(note.date).toLocaleDateString()}</div>
       </div>
