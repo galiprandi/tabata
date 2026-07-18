@@ -472,6 +472,14 @@ export const dictionary = {
     en: "Add note...",
     es: "Agregar nota...",
   },
+  "Start Date": {
+    en: "Start Date",
+    es: "Fecha de inicio",
+  },
+  "End Date": {
+    en: "End Date",
+    es: "Fecha de fin",
+  },
   "Save note": {
     en: "Save note",
     es: "Guardar nota",
