@@ -67,3 +67,7 @@
 ## 2026-06-25 - [Cohesive Initial-Load Accessibility and Interactive ARIA States]
 **Learning:** Relying solely on localization-driven attributes (such as `data-i18n-title`) can leave interactive components inaccessible before dynamic translations load or if scripts fail. Additionally, collapsible interfaces must explicitly communicate state.
 **Action:** Always provide fallback standard `title` and `aria-label` attributes alongside `data-i18n-` translations, use `aria-hidden="true"` on inline SVGs inside buttons, and dynamically maintain `aria-expanded` attributes on togglable containers.
+
+## 2026-07-19 - [Hiding Contextual Actions on Empty States]
+**Learning:** Showing action buttons (e.g., "Clear History" or "Share Progress") when there is no content to act upon causes user confusion, potential errors, or useless notifications. Hiding or disabling these actions on empty states significantly cleans up the visual hierarchy and guides the user toward the primary call to action.
+**Action:** Always verify if list-dependent action buttons should be conditionally hidden or disabled when the underlying list or data is empty.

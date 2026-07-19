@@ -68,11 +68,18 @@
       ".share-progress-btn",
     ) as NodeListOf<HTMLButtonElement>;
 
+    const logs = WorkoutLogService.getLogs();
+    if (logs.length === 0) {
+      shareButtons.forEach((button) => {
+        button.style.display = "none";
+      });
+      return;
+    }
+
     shareButtons.forEach((button) => {
       button.addEventListener("click", async () => {
         await play("tap", true);
 
-        const logs = WorkoutLogService.getLogs();
         const ranges = getDateRanges();
 
         // For now, use the first range (Last 7 days)
