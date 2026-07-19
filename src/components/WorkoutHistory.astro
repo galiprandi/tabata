@@ -36,9 +36,15 @@ import TrashIcon from "./TrashIcon.astro";
   const historyList = document.querySelector(
     ".workout-history .history-list",
   ) as HTMLElement;
+  const clearButton = document.querySelector(
+    '[data-action="clear"]',
+  ) as HTMLButtonElement;
 
   if (logs.length === 0) {
     emptyState!.style.display = "block";
+    if (clearButton) {
+      clearButton.style.display = "none";
+    }
   } else {
     historyList.innerHTML = logs
       .map(
@@ -63,11 +69,7 @@ import TrashIcon from "./TrashIcon.astro";
       .join("");
   }
 
-  const clearButton = document.querySelector(
-    '[data-action="clear"]',
-  ) as HTMLButtonElement;
-
-  if (clearButton) {
+  if (clearButton && logs.length > 0) {
     clearButton.addEventListener("click", () => {
       if (
         confirm(
