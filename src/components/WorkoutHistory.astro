@@ -10,6 +10,7 @@ import TrashIcon from "./TrashIcon.astro";
       data-action="clear"
       data-i18n-title="Clear History"
       data-i18n-aria-label="Clear History"
+      data-tooltip="Clear History"
     >
       <TrashIcon />
       <span data-i18n="Clear History">Clear History</span>
@@ -28,6 +29,7 @@ import TrashIcon from "./TrashIcon.astro";
 <script>
   import { WorkoutLogService } from "../assets/workoutLog";
   import { t } from "../assets/dictionary";
+  import { play } from "../assets/audio";
 
   const logs = WorkoutLogService.getLogs();
   const emptyState = document.querySelector(
@@ -70,7 +72,8 @@ import TrashIcon from "./TrashIcon.astro";
   }
 
   if (clearButton && logs.length > 0) {
-    clearButton.addEventListener("click", () => {
+    clearButton.addEventListener("click", async () => {
+      await play("tap", true);
       if (
         confirm(
           t(

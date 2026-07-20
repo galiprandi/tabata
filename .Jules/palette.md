@@ -71,3 +71,7 @@
 ## 2026-07-19 - [Hiding Contextual Actions on Empty States]
 **Learning:** Showing action buttons (e.g., "Clear History" or "Share Progress") when there is no content to act upon causes user confusion, potential errors, or useless notifications. Hiding or disabling these actions on empty states significantly cleans up the visual hierarchy and guides the user toward the primary call to action.
 **Action:** Always verify if list-dependent action buttons should be conditionally hidden or disabled when the underlying list or data is empty.
+
+## 2026-07-20 - [Multi-Sensory Feedback and Native Tooltips on Interactive Buttons]
+**Learning:** Integrating native-styled tooltips on icon-only and compact buttons significantly aids low-vision and keyboard-navigating users. Additionally, playing interactive audio cue 'tap' before showing modal/confirm dialogs provides a delightful, multi-sensory response that is characteristic of native fitness applications.
+**Action:** Always include data-tooltip and data-i18n-title on icon-only/compact buttons, and call play("tap", true) before triggering synchronous window.confirm() dialogs.

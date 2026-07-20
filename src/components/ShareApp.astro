@@ -8,6 +8,7 @@ import CloseIcon from "./CloseIcon.astro";
   aria-label="Share this app"
   data-i18n-title="Share this app with your friends!"
   data-i18n-aria-label="Share this app"
+  data-tooltip="Share this app with your friends!"
 >
   <img
     id="qr_link"
@@ -19,7 +20,12 @@ import CloseIcon from "./CloseIcon.astro";
 </button>
 
 <dialog id="dialog">
-  <button id="dialog_close" data-i18n-aria-label="Close" data-i18n-title="Close">
+  <button
+    id="dialog_close"
+    data-i18n-aria-label="Close"
+    data-i18n-title="Close"
+    data-tooltip="Close"
+  >
     <CloseIcon />
   </button>
   <div>
