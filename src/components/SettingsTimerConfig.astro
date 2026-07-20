@@ -107,6 +107,7 @@ const className = vertical ? "vertical" : "horizontal";
   import { defaultSettings } from "../assets/defaultSettings";
   import { updateTotalWorkouts, updateRoutineStats } from "../assets/settings";
   import { t } from "../assets/dictionary";
+  import { play } from "../assets/audio";
   const { prepDuration, workDuration, restDuration, rounds } = getSettings();
 
   function Init() {
@@ -156,7 +157,8 @@ const className = vertical ? "vertical" : "horizontal";
       updateRoutineStats();
     });
 
-    document.getElementById("reset-settings")?.addEventListener("click", () => {
+    document.getElementById("reset-settings")?.addEventListener("click", async () => {
+      await play("tap", true);
       if (confirm(t("Are you sure reset all?"))) {
         updateSettings(defaultSettings);
         window.location.reload();

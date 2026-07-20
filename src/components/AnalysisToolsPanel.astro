@@ -38,7 +38,7 @@
     <div class="tool-content" data-tool="filters">
       <h4 data-i18n="Advanced filters">Advanced filters</h4>
       <div class="filter-group">
-        <label data-i18n="Date range">Date range</label>
+        <label for="filter-date-from" data-i18n="Date range">Date range</label>
         <div class="date-inputs">
           <input
             type="date"
@@ -324,6 +324,7 @@
   } from "../assets/analysisTools";
   import type { FilterState } from "../assets/analysisTools";
   import { t, initTranslation } from "../assets/dictionary";
+  import { play } from "../assets/audio";
 
   const toggleButton = document.querySelector(
     '[data-action="toggle"]',
@@ -513,7 +514,7 @@
       .map(
         (note) => `
       <div class="annotation-item" data-note-id="${note.id}">
-        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}" title="${t("Delete")}" aria-label="${t("Delete")}">✕</button>
+        <button class="annotation-item-delete" data-action="delete-note" data-note-id="${note.id}" title="${t("Delete")}" aria-label="${t("Delete")}" data-tooltip="${t("Delete")}">✕</button>
         <div class="annotation-item-text">${note.text}</div>
         <div class="annotation-item-date">${new Date(note.date).toLocaleDateString()}</div>
       </div>
@@ -522,7 +523,8 @@
       .join("");
 
     container.querySelectorAll('[data-action="delete-note"]').forEach((btn) => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
+        await play("tap", true);
         const noteId = (btn as HTMLButtonElement).dataset.noteId;
         if (noteId) {
           deleteNote(noteId);
@@ -541,7 +543,8 @@
     '[data-action="save-note"]',
   ) as HTMLButtonElement;
   if (saveNoteBtn) {
-    saveNoteBtn.addEventListener("click", () => {
+    saveNoteBtn.addEventListener("click", async () => {
+      await play("tap", true);
       const textarea = document.querySelector(
         ".annotation-textarea",
       ) as HTMLTextAreaElement;
