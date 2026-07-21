@@ -549,6 +549,20 @@ import SearchBar from "@components/SearchBar.astro";
         : t("New Routine");
     }
 
+    // Hide share and delete buttons for new unsaved routines
+    const btnShare = document.getElementById("editor-btn-share");
+    const btnDelete = document.getElementById("editor-btn-delete");
+    if (btnShare) {
+      btnShare.style.display = currentEditingRoutine.id
+        ? "inline-flex"
+        : "none";
+    }
+    if (btnDelete) {
+      btnDelete.style.display = currentEditingRoutine.id
+        ? "inline-flex"
+        : "none";
+    }
+
     // Input fields
     const nameInput = document.getElementById(
       "editor-routine-name",
