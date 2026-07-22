@@ -213,6 +213,10 @@ export const dictionary = {
     en: "Pause",
     es: "Pausa",
   },
+  "Pause (Space)": {
+    en: "Pause (Space)",
+    es: "Pausa (Espacio)",
+  },
   Paused: {
     en: "Paused",
     es: "Pausado",
@@ -224,6 +228,14 @@ export const dictionary = {
   Exit: {
     en: "Exit",
     es: "Salir",
+  },
+  "Press Enter or Space to Continue": {
+    en: "Press Enter or Space to Continue",
+    es: "Presiona Enter o Espacio para continuar",
+  },
+  "Press Space to Resume, Esc to Exit": {
+    en: "Press Space to Resume, Esc to Exit",
+    es: "Presiona Espacio para reanudar, Esc para salir",
   },
   "Turn audio on": {
     en: "Turn audio on",

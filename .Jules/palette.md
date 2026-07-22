@@ -75,3 +75,7 @@
 ## 2026-07-20 - [Multi-Sensory Feedback and Native Tooltips on Interactive Buttons]
 **Learning:** Integrating native-styled tooltips on icon-only and compact buttons significantly aids low-vision and keyboard-navigating users. Additionally, playing interactive audio cue 'tap' before showing modal/confirm dialogs provides a delightful, multi-sensory response that is characteristic of native fitness applications.
 **Action:** Always include data-tooltip and data-i18n-title on icon-only/compact buttons, and call play("tap", true) before triggering synchronous window.confirm() dialogs.
+
+## 2026-07-21 - [Displaying Keyboard Shortcut Hints]
+**Learning:** Displaying localized keyboard shortcut hints directly under start/pause action containers significantly improves accessibility and discoverability for desktop/keyboard users without cluttering the main UI.
+**Action:** When implementing global keyboard event listeners (such as Space, Enter, or Escape on overlay screens), add a subtle, localized '.keyboard-hint' element and corresponding tooltips on core action buttons.
