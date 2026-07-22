@@ -42,7 +42,10 @@ import GoToHome from "@components/GoToHome.astro";
       id="btn-pause"
       class="btn-pause"
       aria-label="Pause"
+      title="Pause (Space)"
       data-i18n-aria-label="Pause"
+      data-i18n-title="Pause (Space)"
+      data-tooltip="Pause (Space)"
     >
       <Pause />
     </button>
@@ -79,6 +82,10 @@ import GoToHome from "@components/GoToHome.astro";
         </button>
       </div>
 
+      <div class="keyboard-hint" data-i18n="Press Enter or Space to Continue">
+        Press Enter or Space to Continue
+      </div>
+
       <div class="start-secondary">
         <GoToHome />
         <GoToSettings />
@@ -102,6 +109,10 @@ import GoToHome from "@components/GoToHome.astro";
         <button id="btn-exit" class="btn-exit">
           <span data-i18n="Exit">Exit</span>
         </button>
+      </div>
+
+      <div class="keyboard-hint" data-i18n="Press Space to Resume, Esc to Exit">
+        Press Space to Resume, Esc to Exit
       </div>
     </div>
   </div>
@@ -820,5 +831,16 @@ import GoToHome from "@components/GoToHome.astro";
     #time-remaining {
       font-size: 3.5rem;
     }
+  }
+
+  .keyboard-hint {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    text-align: center;
   }
 </style>
