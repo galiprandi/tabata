@@ -34,22 +34,24 @@ const { title, description } = Astro.props;
 <script>
   import { play } from "@assets/audio";
 
-  const dialog = document.querySelector(
-    ".help-modal",
-  ) as HTMLDialogElement | null;
-  const btnOpen = document.querySelectorAll(
-    ".btn-open-dialog",
-  ) as NodeListOf<HTMLButtonElement> | null;
-  const btnClose = document.querySelector(
-    ".btn-close-dialog",
-  ) as HTMLButtonElement | null;
+  const containers = document.querySelectorAll(".helper-container");
 
-  if (dialog && btnOpen) {
-    btnOpen.forEach((btn) => {
-      btn.addEventListener("click", async () => {
+  containers.forEach((container) => {
+    const btnOpen = container.querySelector(
+      ".btn-open-dialog",
+    ) as HTMLButtonElement | null;
+    const dialog = container.querySelector(
+      ".help-modal",
+    ) as HTMLDialogElement | null;
+    const btnClose = container.querySelector(
+      ".btn-close-dialog",
+    ) as HTMLButtonElement | null;
+
+    if (btnOpen && dialog && btnClose) {
+      btnOpen.addEventListener("click", async () => {
         await play("tap", true);
-        const title = btn.getAttribute("data-title");
-        const description = btn.getAttribute("data-description");
+        const title = btnOpen.getAttribute("data-title");
+        const description = btnOpen.getAttribute("data-description");
 
         const titleEl = dialog.querySelector(".title");
         const descEl = dialog.querySelector(".description");
@@ -58,24 +60,23 @@ const { title, description } = Astro.props;
         if (descEl && description) descEl.textContent = description;
 
         dialog.showModal();
-        btnClose?.focus();
+        btnClose.focus();
 
-        dialog.addEventListener("close", () => btn.focus(), { once: true });
+        dialog.addEventListener("close", () => btnOpen.focus(), { once: true });
       });
-    });
-  }
 
-  if (dialog && btnClose) {
-    btnClose.addEventListener("click", async () => {
-      await play("tap", true);
-      dialog.close();
-    });
-    dialog.addEventListener("click", (e) => {
-      if (e.target === dialog) {
+      btnClose.addEventListener("click", async () => {
+        await play("tap", true);
         dialog.close();
-      }
-    });
-  }
+      });
+
+      dialog.addEventListener("click", (e) => {
+        if (e.target === dialog) {
+          dialog.close();
+        }
+      });
+    }
+  });
 </script>
 
 <style>
