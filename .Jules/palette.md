@@ -79,3 +79,7 @@
 ## 2026-07-21 - [Displaying Keyboard Shortcut Hints]
 **Learning:** Displaying localized keyboard shortcut hints directly under start/pause action containers significantly improves accessibility and discoverability for desktop/keyboard users without cluttering the main UI.
 **Action:** When implementing global keyboard event listeners (such as Space, Enter, or Escape on overlay screens), add a subtle, localized '.keyboard-hint' element and corresponding tooltips on core action buttons.
+
+## 2026-07-22 - [Scoping Script Selectors in Reusable Astro Components]
+**Learning:** In Astro, client-side scripts inside components are bundled globally and execute on the entire page. If a component is rendered multiple times (e.g., multiple Help dialogs on a single settings page) and uses general global selectors like `document.querySelector(".help-modal")`, all instances will target and interact with only the first rendered element in the DOM.
+**Action:** Always scope DOM queries in Astro component scripts by selecting container elements (e.g., using `document.querySelectorAll(".helper-container")`) and querying inside those specific containers to ensure complete isolation, proper event bindings, and accurate focus management.
