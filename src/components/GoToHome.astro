@@ -1,5 +1,5 @@
 ---
-import Home from '@icons/Home.icon.astro'
+import Home from "@icons/Home.icon.astro";
 ---
 
 <button
@@ -8,18 +8,17 @@ import Home from '@icons/Home.icon.astro'
   aria-label="Return to home"
   data-i18n-title="Return to home"
   data-i18n-aria-label="Return to home"
-  data-tooltip="Return to home"
-  ><Home /></button
+  data-tooltip="Return to home"><Home aria-hidden="true" /></button
 >
 
 <script>
-  import { onClick } from '@assets/domHelpers'
-  import { play } from '@assets/audio'
+  import { onClick } from "@assets/domHelpers";
+  import { play } from "@assets/audio";
 
-  document.addEventListener('DOMContentLoaded', () => {
-    onClick('button.btn-go-home', async () => {
-      await play('tap', true)
-      window.location.href = '/tabata'
-    })
-  })
+  document.addEventListener("DOMContentLoaded", () => {
+    onClick("button.btn-go-home", async () => {
+      await play("tap", true);
+      window.location.href = "/tabata";
+    });
+  });
 </script>

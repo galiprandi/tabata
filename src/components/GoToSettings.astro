@@ -1,5 +1,5 @@
 ---
-import Config from './icons/Config.icon.astro'
+import Config from "./icons/Config.icon.astro";
 ---
 
 <button
@@ -9,17 +9,17 @@ import Config from './icons/Config.icon.astro'
   aria-label="Configure routine"
   data-i18n-title="Configure routine"
   data-i18n-aria-label="Configure routine"
-  data-tooltip="Configure routine"
-><Config /></button>
+  data-tooltip="Configure routine"><Config aria-hidden="true" /></button
+>
 
 <script>
-  import { onClick } from '@assets/domHelpers'
-  import { play } from '@assets/audio'
+  import { onClick } from "@assets/domHelpers";
+  import { play } from "@assets/audio";
 
-  document.addEventListener('DOMContentLoaded', () => {
-    onClick('#btn-routine-config', async () => {
-      await play('tap', true)
-      window.location.href = '/tabata/settings'
-    })
-  })
+  document.addEventListener("DOMContentLoaded", () => {
+    onClick("#btn-routine-config", async () => {
+      await play("tap", true);
+      window.location.href = "/tabata/settings";
+    });
+  });
 </script>

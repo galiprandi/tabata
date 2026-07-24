@@ -1,23 +1,25 @@
 ---
-import Continue from '@icons/Continue.icon.astro'
+import Continue from "@icons/Continue.icon.astro";
 ---
 
 <button
   class="go-to-train"
   title="Start Routine"
+  aria-label="Start Routine"
   data-i18n-title="Start Routine"
+  data-i18n-aria-label="Start Routine"
   data-tooltip="Start Routine"
-  ><Continue /><span data-i18n="Train">Train</span>
+  ><Continue aria-hidden="true" /><span data-i18n="Train">Train</span>
 </button>
 
 <script>
-  import { onClick } from '@assets/domHelpers'
-  import { play } from '@assets/audio'
+  import { onClick } from "@assets/domHelpers";
+  import { play } from "@assets/audio";
 
-  document.addEventListener('DOMContentLoaded', () => {
-    onClick('button.go-to-train', async () => {
-      await play('tap', true)
-      window.location.href = '/tabata/start'
-    })
-  })
+  document.addEventListener("DOMContentLoaded", () => {
+    onClick("button.go-to-train", async () => {
+      await play("tap", true);
+      window.location.href = "/tabata/start";
+    });
+  });
 </script>

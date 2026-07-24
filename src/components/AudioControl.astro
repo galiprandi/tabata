@@ -12,7 +12,7 @@ import AudioOffIcon from "./AudioOffIcon.astro";
     title="Turn audio off"
     data-tooltip="Turn audio off"
   >
-    <AudioOnIcon />
+    <AudioOnIcon aria-hidden="true" />
   </button>
   <button
     id="btn-off"
@@ -22,7 +22,7 @@ import AudioOffIcon from "./AudioOffIcon.astro";
     title="Turn audio on"
     data-tooltip="Turn audio on"
   >
-    <AudioOffIcon />
+    <AudioOffIcon aria-hidden="true" />
   </button>
   <audio id="player">
     <source src="" type="audio/mpeg" />

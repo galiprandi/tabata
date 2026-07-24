@@ -8,6 +8,8 @@
     class="selector-button"
     aria-haspopup="listbox"
     aria-expanded="false"
+    title="Select routine"
+    aria-label="Select routine"
     data-i18n-aria-label="Select routine"
     data-i18n-title="Select routine"
     data-tooltip="Select routine"
@@ -20,6 +22,7 @@
       fill="none"
       stroke="currentColor"
       stroke-width="2"
+      aria-hidden="true"
     >
       <path d="M6 9l6 6 6-6"></path>
     </svg>
@@ -136,7 +139,9 @@
         // Move focus down
         e.preventDefault();
         const active = document.activeElement;
-        const items = Array.from(dropdown.querySelectorAll(".dropdown-item")) as HTMLElement[];
+        const items = Array.from(
+          dropdown.querySelectorAll(".dropdown-item"),
+        ) as HTMLElement[];
         if (items.length === 0) return;
         const index = items.indexOf(active as HTMLElement);
         if (index === -1 || index === items.length - 1) {
@@ -148,7 +153,9 @@
         // Move focus up
         e.preventDefault();
         const active = document.activeElement;
-        const items = Array.from(dropdown.querySelectorAll(".dropdown-item")) as HTMLElement[];
+        const items = Array.from(
+          dropdown.querySelectorAll(".dropdown-item"),
+        ) as HTMLElement[];
         if (items.length === 0) return;
         const index = items.indexOf(active as HTMLElement);
         if (index === -1 || index === 0) {
@@ -156,12 +163,18 @@
         } else {
           items[index - 1].focus();
         }
-      } else if (e.key === "ArrowDown" && !isVisible && document.activeElement === selectorButton) {
+      } else if (
+        e.key === "ArrowDown" &&
+        !isVisible &&
+        document.activeElement === selectorButton
+      ) {
         // Open dropdown on ArrowDown
         e.preventDefault();
         toggleDropdown();
         setTimeout(() => {
-          const first = dropdown.querySelector(".dropdown-item") as HTMLElement | null;
+          const first = dropdown.querySelector(
+            ".dropdown-item",
+          ) as HTMLElement | null;
           first?.focus();
         }, 10);
       }
@@ -193,7 +206,7 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    transition: background  0.2s;
+    transition: background 0.2s;
     font-family: inherit;
     font-size: 1.1rem;
     font-weight: 600;
