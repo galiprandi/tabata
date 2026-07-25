@@ -40,7 +40,8 @@ import EditItemIcon from "./EditItemIcon.astro";
 
       <form>
         <fieldset role="group">
-          <label for="routine-name" data-i18n="Routine Name">Routine Name</label>
+          <label for="routine-name" data-i18n="Routine Name">Routine Name</label
+          >
           <input
             type="text"
             id="routine-name"
@@ -73,6 +74,8 @@ import EditItemIcon from "./EditItemIcon.astro";
       <div class="routine-actions">
         <button
           class="select"
+          title="Select routine"
+          aria-label="Select routine"
           data-i18n-title="Select routine"
           data-i18n-aria-label="Select routine"
           data-tooltip="Select routine"
@@ -81,11 +84,13 @@ import EditItemIcon from "./EditItemIcon.astro";
         </button>
         <button
           class="edit"
+          title="Edit routine"
+          aria-label="Edit routine"
           data-i18n-title="Edit routine"
           data-i18n-aria-label="Edit routine"
           data-tooltip="Edit routine"
         >
-          <EditItemIcon />
+          <EditItemIcon aria-hidden="true" />
         </button>
         <button
           class="share"
@@ -95,7 +100,18 @@ import EditItemIcon from "./EditItemIcon.astro";
           data-i18n-aria-label="Share routine"
           data-tooltip="Share routine"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <circle cx="18" cy="5" r="3"></circle>
             <circle cx="6" cy="12" r="3"></circle>
             <circle cx="18" cy="19" r="3"></circle>
@@ -105,11 +121,13 @@ import EditItemIcon from "./EditItemIcon.astro";
         </button>
         <button
           class="delete"
+          title="Delete routine"
+          aria-label="Delete routine"
           data-i18n-title="Delete routine"
           data-i18n-aria-label="Delete routine"
           data-tooltip="Delete routine"
         >
-          <TrashIcon />
+          <TrashIcon aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -195,7 +213,9 @@ import EditItemIcon from "./EditItemIcon.astro";
       const item = clone.querySelector(".routine-item") as HTMLDivElement;
       const nameElement = item.querySelector(".routine-name") as HTMLDivElement;
       const timeElement = item.querySelector(".routine-time") as HTMLDivElement;
-      const exercisesElement = item.querySelector(".routine-exercises") as HTMLDivElement;
+      const exercisesElement = item.querySelector(
+        ".routine-exercises",
+      ) as HTMLDivElement;
 
       nameElement.textContent = routine.name;
       timeElement.textContent = `${routine.config.rounds} rounds`;
@@ -227,20 +247,20 @@ import EditItemIcon from "./EditItemIcon.astro";
               try {
                 if (navigator.share) {
                   await navigator.share({
-                    title: 'Tabata Routine',
+                    title: "Tabata Routine",
                     text: `Check out this Tabata routine: ${routine.name}`,
                     url: result.url,
                   });
                 } else {
                   await navigator.clipboard.writeText(result.url);
                   const originalText = button.innerHTML;
-                  button.innerHTML = '✓';
+                  button.innerHTML = "✓";
                   setTimeout(() => {
                     button.innerHTML = originalText;
                   }, 2000);
                 }
               } catch (error) {
-                console.error('Failed to share:', error);
+                console.error("Failed to share:", error);
               }
             }
           }
@@ -297,13 +317,15 @@ import EditItemIcon from "./EditItemIcon.astro";
       } else {
         // Crear nueva rutina con config actual
         const activeRoutine = RoutineStorageService.getActiveRoutine();
-        const config = activeRoutine ? activeRoutine.config : {
-          prepDuration: 10,
-          workDuration: 20,
-          restDuration: 10,
-          rounds: 8,
-          nextExercise: 0,
-        };
+        const config = activeRoutine
+          ? activeRoutine.config
+          : {
+              prepDuration: 10,
+              workDuration: 20,
+              restDuration: 10,
+              rounds: 8,
+              nextExercise: 0,
+            };
         const exercises = activeRoutine ? activeRoutine.exercises : [];
         RoutineStorageService.createRoutine(name, config, exercises);
       }
