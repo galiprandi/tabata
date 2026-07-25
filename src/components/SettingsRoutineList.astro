@@ -89,52 +89,64 @@ import UpIcon from "./UpIcon.astro";
         <button
           type="button"
           class="name speech"
+          title="Click to hear"
+          aria-label="Click to hear exercise name"
           data-i18n-title="Click to hear"
           data-i18n-aria-label="Click to hear exercise name"
         >
           <span class="workout-name"></span>
-          <AudioOnIcon />
+          <AudioOnIcon aria-hidden="true" />
         </button>
         <div class="buttons">
           <button
             class="up"
+            title="Move exercise up"
+            aria-label="Move exercise up"
             data-i18n-title="Move exercise up"
             data-i18n-aria-label="Move exercise up"
             data-tooltip="Move exercise up"
           >
-            <UpIcon />
+            <UpIcon aria-hidden="true" />
           </button>
           <button
             class="down"
+            title="Move exercise down"
+            aria-label="Move exercise down"
             data-i18n-title="Move exercise down"
             data-i18n-aria-label="Move exercise down"
             data-tooltip="Move exercise down"
           >
-            <DownIcon />
+            <DownIcon aria-hidden="true" />
           </button>
           <button
             class="duplicate"
+            title="Duplicate exercise"
+            aria-label="Duplicate exercise"
             data-i18n-title="Duplicate exercise"
             data-i18n-aria-label="Duplicate exercise"
             data-tooltip="Duplicate exercise"
           >
-            <CopyIcon />
+            <CopyIcon aria-hidden="true" />
           </button>
           <button
             class="edit"
+            title="Edit exercise"
+            aria-label="Edit exercise"
             data-i18n-title="Edit exercise"
             data-i18n-aria-label="Edit exercise"
             data-tooltip="Edit exercise"
           >
-            <EditItemIcon />
+            <EditItemIcon aria-hidden="true" />
           </button>
           <button
             class="delete"
+            title="Delete exercise"
+            aria-label="Delete exercise"
             data-i18n-title="Delete exercise"
             data-i18n-aria-label="Delete exercise"
             data-tooltip="Delete exercise"
           >
-            <TrashIcon />
+            <TrashIcon aria-hidden="true" />
           </button>
         </div>
       </div>
