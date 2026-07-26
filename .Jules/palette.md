@@ -83,3 +83,7 @@
 ## 2026-07-22 - [Scoping Script Selectors in Reusable Astro Components]
 **Learning:** In Astro, client-side scripts inside components are bundled globally and execute on the entire page. If a component is rendered multiple times (e.g., multiple Help dialogs on a single settings page) and uses general global selectors like `document.querySelector(".help-modal")`, all instances will target and interact with only the first rendered element in the DOM.
 **Action:** Always scope DOM queries in Astro component scripts by selecting container elements (e.g., using `document.querySelectorAll(".helper-container")`) and querying inside those specific containers to ensure complete isolation, proper event bindings, and accurate focus management.
+
+## 2026-07-23 - [Keyboard Submit and Accessible Save Feedback on Textareas]
+**Learning:** Long-form inputs like coach notes are highly used. Enabling keyboard-based submission (e.g., `Ctrl+Enter` or `Cmd+Enter`) dramatically increases power-user efficiency. Furthermore, when submitting, blurring the textarea and setting temporary screen-reader-accessible feedback state on the submit button (e.g., setting `aria-label` and `title` to "Note saved successfully" along with the "✓" checkmark icon) ensures clear visual and non-visual completion signals.
+**Action:** Implement `Ctrl+Enter` listener on textareas, blur them upon successful submit, and use transient accessible labels/attributes on the submission button that are properly restored after the visual timeout.
