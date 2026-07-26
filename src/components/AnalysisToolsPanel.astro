@@ -542,6 +542,19 @@
   const saveNoteBtn = document.querySelector(
     '[data-action="save-note"]',
   ) as HTMLButtonElement;
+  const annotationTextarea = document.querySelector(
+    ".annotation-textarea",
+  ) as HTMLTextAreaElement;
+
+  if (annotationTextarea && saveNoteBtn) {
+    annotationTextarea.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        saveNoteBtn.click();
+      }
+    });
+  }
+
   if (saveNoteBtn) {
     saveNoteBtn.addEventListener("click", async () => {
       await play("tap", true);
@@ -562,7 +575,47 @@
       });
 
       textarea.value = "";
+      textarea.blur();
       renderAnnotations();
+
+      // Show temporary visual feedback on Save Note button
+      if (saveNoteBtn.textContent !== "✓") {
+        const originalText = saveNoteBtn.textContent || "";
+        const originalI18n = saveNoteBtn.getAttribute("data-i18n") || "";
+        const originalAriaLabel = saveNoteBtn.getAttribute("aria-label") || "";
+        const originalTitle = saveNoteBtn.getAttribute("title") || "";
+
+        saveNoteBtn.textContent = "✓";
+        saveNoteBtn.setAttribute("aria-label", "Note saved successfully");
+        saveNoteBtn.setAttribute("title", "Note saved successfully");
+        saveNoteBtn.removeAttribute("data-i18n");
+        saveNoteBtn.style.pointerEvents = "none";
+
+        setTimeout(() => {
+          saveNoteBtn.textContent = originalText;
+          if (originalI18n) {
+            saveNoteBtn.setAttribute("data-i18n", originalI18n);
+          }
+          if (originalAriaLabel) {
+            saveNoteBtn.setAttribute("aria-label", originalAriaLabel);
+          } else {
+            saveNoteBtn.removeAttribute("aria-label");
+          }
+          if (originalTitle) {
+            saveNoteBtn.setAttribute("title", originalTitle);
+          } else {
+            saveNoteBtn.removeAttribute("title");
+          }
+          saveNoteBtn.style.pointerEvents = "auto";
+          // Re-translate to preserve correct language
+          const rootPanel = document.querySelector(
+            ".analysis-tools-panel",
+          ) as HTMLElement;
+          if (rootPanel) {
+            initTranslation(rootPanel);
+          }
+        }, 1500);
+      }
     });
   }
 </script>
