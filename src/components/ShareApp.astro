@@ -20,31 +20,33 @@ import CloseIcon from "./CloseIcon.astro";
 </button>
 
 <dialog id="dialog">
-  <button
-    id="dialog_close"
-    data-i18n-aria-label="Close"
-    data-i18n-title="Close"
-    data-tooltip="Close"
-  >
-    <CloseIcon />
-  </button>
-  <div>
+  <article>
     <button
-      id="btn_share_big"
-      aria-label="Share this app"
-      data-i18n-aria-label="Share this app"
+      id="dialog_close"
+      data-i18n-aria-label="Close"
+      data-i18n-title="Close"
+      data-tooltip="Close"
     >
-      <img
-        id="qr_link_big"
-        src="/tabata/qr_link.svg"
-        alt="Tap image to share"
-      />
+      <CloseIcon aria-hidden="true" />
     </button>
-    <br />
-    <small data-i18n="Tap image to share with your friends!"
-      >Tap image to share with your friends!</small
-    >
-  </div>
+    <div>
+      <button
+        id="btn_share_big"
+        aria-label="Share this app"
+        data-i18n-aria-label="Share this app"
+      >
+        <img
+          id="qr_link_big"
+          src="/tabata/qr_link.svg"
+          alt="Tap image to share"
+        />
+      </button>
+      <br />
+      <small data-i18n="Tap image to share with your friends!"
+        >Tap image to share with your friends!</small
+      >
+    </div>
+  </article>
 </dialog>
 
 <style>
@@ -152,6 +154,12 @@ import CloseIcon from "./CloseIcon.astro";
           },
           { once: true },
         );
+      }
+    });
+
+    dialog?.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        dialog.close();
       }
     });
   });
