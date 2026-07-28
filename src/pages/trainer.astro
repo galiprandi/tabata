@@ -37,6 +37,7 @@ import SearchBar from "@components/SearchBar.astro";
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -157,6 +158,7 @@ import SearchBar from "@components/SearchBar.astro";
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  aria-hidden="true"
                 >
                   <circle cx="18" cy="5" r="3"></circle>
                   <circle cx="6" cy="12" r="3"></circle>
@@ -185,6 +187,7 @@ import SearchBar from "@components/SearchBar.astro";
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  aria-hidden="true"
                 >
                   <polyline points="3 6 5 6 21"></polyline>
                   <path
@@ -267,6 +270,7 @@ import SearchBar from "@components/SearchBar.astro";
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
+                  aria-hidden="true"
                 >
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1071,6 +1075,12 @@ import SearchBar from "@components/SearchBar.astro";
     btnCancelExerciseModal?.addEventListener("click", async () => {
       await play("tap", true);
       exerciseModal?.close();
+    });
+
+    exerciseModal?.addEventListener("click", (e) => {
+      if (e.target === exerciseModal) {
+        exerciseModal.close();
+      }
     });
 
     // 6. Bind Editor Header Share/Delete buttons

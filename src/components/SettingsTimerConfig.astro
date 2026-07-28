@@ -29,7 +29,7 @@ const className = vertical ? "vertical" : "horizontal";
       data-i18n-aria-label="Reset to default settings"
       data-tooltip="Reset to default settings"
     >
-      <RestoreIcon />
+      <RestoreIcon aria-hidden="true" />
     </button>
   </header>
   <div class={className}>
@@ -157,13 +157,15 @@ const className = vertical ? "vertical" : "horizontal";
       updateRoutineStats();
     });
 
-    document.getElementById("reset-settings")?.addEventListener("click", async () => {
-      await play("tap", true);
-      if (confirm(t("Are you sure reset all?"))) {
-        updateSettings(defaultSettings);
-        window.location.reload();
-      }
-    });
+    document
+      .getElementById("reset-settings")
+      ?.addEventListener("click", async () => {
+        await play("tap", true);
+        if (confirm(t("Are you sure reset all?"))) {
+          updateSettings(defaultSettings);
+          window.location.reload();
+        }
+      });
   }
 
   document.addEventListener("DOMContentLoaded", Init);
