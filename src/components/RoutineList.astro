@@ -242,10 +242,35 @@ import EditItemIcon from "./EditItemIcon.astro";
             );
           }
           if (button.classList.contains("share")) {
-            if (button.getAttribute("data-feedback-active") === "true") return;
-
+            if (button.innerHTML === "✓") return;
             const result = compressRoutine(routine);
             if (result.success && result.url) {
+              const url = result.url;
+              const copyAndFeedback = async () => {
+                await navigator.clipboard.writeText(url);
+                const originalText = button.innerHTML;
+                const originalAriaLabel = button.getAttribute("aria-label") || "";
+                const originalTitle = button.getAttribute("title") || "";
+                const originalTooltip = button.getAttribute("data-tooltip") || "";
+
+                const copiedText = t("Link copied to clipboard");
+
+                button.innerHTML = "✓";
+                button.setAttribute("aria-label", copiedText);
+                button.setAttribute("title", copiedText);
+                button.setAttribute("data-tooltip", copiedText);
+
+                setTimeout(() => {
+                  button.innerHTML = originalText;
+                  if (originalAriaLabel) button.setAttribute("aria-label", originalAriaLabel);
+                  else button.removeAttribute("aria-label");
+                  if (originalTitle) button.setAttribute("title", originalTitle);
+                  else button.removeAttribute("title");
+                  if (originalTooltip) button.setAttribute("data-tooltip", originalTooltip);
+                  else button.removeAttribute("data-tooltip");
+                }, 2000);
+              };
+
               try {
                 if (navigator.share) {
                   await navigator.share({
@@ -254,38 +279,18 @@ import EditItemIcon from "./EditItemIcon.astro";
                     url: result.url,
                   });
                 } else {
-                  await navigator.clipboard.writeText(result.url);
-
-                  button.setAttribute("data-feedback-active", "true");
-
-                  const originalHtml = button.innerHTML;
-                  const originalTitle = button.getAttribute("title");
-                  const originalAria = button.getAttribute("aria-label");
-                  const originalTooltip = button.getAttribute("data-tooltip");
-
-                  const successMsg = t("Link copied to clipboard");
-
-                  button.innerHTML = "✓";
-                  button.setAttribute("title", successMsg);
-                  button.setAttribute("aria-label", successMsg);
-                  button.setAttribute("data-tooltip", successMsg);
-
-                  setTimeout(() => {
-                    button.innerHTML = originalHtml;
-                    if (originalTitle !== null)
-                      button.setAttribute("title", originalTitle);
-                    else button.removeAttribute("title");
-                    if (originalAria !== null)
-                      button.setAttribute("aria-label", originalAria);
-                    else button.removeAttribute("aria-label");
-                    if (originalTooltip !== null)
-                      button.setAttribute("data-tooltip", originalTooltip);
-                    else button.removeAttribute("data-tooltip");
-                    button.removeAttribute("data-feedback-active");
-                  }, 2000);
+                  await copyAndFeedback();
                 }
               } catch (error) {
-                console.error("Failed to share:", error);
+                if ((error as Error).name !== "AbortError") {
+                  try {
+                    await copyAndFeedback();
+                  } catch (clipErr) {
+                    console.error("Failed to share and fallback copy", clipErr);
+                  }
+                } else {
+                  console.error("Failed to share:", error);
+                }
               }
             }
           }
