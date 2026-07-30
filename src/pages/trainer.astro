@@ -903,6 +903,11 @@ import SearchBar from "@components/SearchBar.astro";
   async function shareRoutine() {
     if (!currentEditingRoutine) return;
 
+    const btn = document.getElementById(
+      "editor-btn-share",
+    ) as HTMLButtonElement | null;
+    if (btn && btn.getAttribute("data-feedback-active") === "true") return;
+
     await play("tap", true);
 
     const routineToShare: Routine = {
@@ -948,31 +953,46 @@ import SearchBar from "@components/SearchBar.astro";
           });
         } catch (err) {
           if ((err as Error).name !== "AbortError") {
-            navigator.clipboard.writeText(result.url);
-            const btn = document.getElementById("editor-btn-share");
-            if (btn && btn.innerHTML !== "✓") {
-              const originalHtml = btn.innerHTML;
-              btn.innerHTML = "✓";
-              setTimeout(() => {
-                btn.innerHTML = originalHtml;
-              }, 2000);
-            }
+            await navigator.clipboard.writeText(result.url);
+            showCopyFeedback(btn);
           }
         }
       } else {
-        navigator.clipboard.writeText(result.url);
-        const btn = document.getElementById("editor-btn-share");
-        if (btn && btn.innerHTML !== "✓") {
-          const originalHtml = btn.innerHTML;
-          btn.innerHTML = "✓";
-          setTimeout(() => {
-            btn.innerHTML = originalHtml;
-          }, 2000);
-        }
+        await navigator.clipboard.writeText(result.url);
+        showCopyFeedback(btn);
       }
     } else {
       alert(t("Failed to generate link"));
     }
+  }
+
+  function showCopyFeedback(btn: HTMLButtonElement | null) {
+    if (!btn) return;
+    btn.setAttribute("data-feedback-active", "true");
+
+    const originalHtml = btn.innerHTML;
+    const originalTitle = btn.getAttribute("title");
+    const originalAria = btn.getAttribute("aria-label");
+    const originalTooltip = btn.getAttribute("data-tooltip");
+
+    const successMsg = t("Link copied to clipboard");
+
+    btn.innerHTML = "✓";
+    btn.setAttribute("title", successMsg);
+    btn.setAttribute("aria-label", successMsg);
+    btn.setAttribute("data-tooltip", successMsg);
+
+    setTimeout(() => {
+      btn.innerHTML = originalHtml;
+      if (originalTitle !== null) btn.setAttribute("title", originalTitle);
+      else btn.removeAttribute("title");
+      if (originalAria !== null) btn.setAttribute("aria-label", originalAria);
+      else btn.removeAttribute("aria-label");
+      if (originalTooltip !== null)
+        btn.setAttribute("data-tooltip", originalTooltip);
+      else btn.removeAttribute("data-tooltip");
+      btn.removeAttribute("data-feedback-active");
+    }, 2000);
   }
 
   async function deleteRoutine() {
