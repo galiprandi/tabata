@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <button
@@ -109,15 +110,38 @@
   };
 
   async function copyToClipboard(text: string, btn: HTMLButtonElement) {
+    if (btn.getAttribute("data-feedback-active") === "true") return;
+
     const span = btn.querySelector("span");
-    if (!span || span.textContent === "✓") return;
+    if (!span) return;
 
     try {
       await navigator.clipboard.writeText(text);
+
+      btn.setAttribute("data-feedback-active", "true");
+
       const originalText = span.textContent;
+      const originalTitle = btn.getAttribute("title");
+      const originalAria = btn.getAttribute("aria-label");
+      const originalTooltip = btn.getAttribute("data-tooltip");
+
+      const successMsg = t("Link copied to clipboard");
+
       span.textContent = "✓";
+      btn.setAttribute("title", successMsg);
+      btn.setAttribute("aria-label", successMsg);
+      btn.setAttribute("data-tooltip", successMsg);
+
       setTimeout(() => {
         span.textContent = originalText;
+        if (originalTitle !== null) btn.setAttribute("title", originalTitle);
+        else btn.removeAttribute("title");
+        if (originalAria !== null) btn.setAttribute("aria-label", originalAria);
+        else btn.removeAttribute("aria-label");
+        if (originalTooltip !== null)
+          btn.setAttribute("data-tooltip", originalTooltip);
+        else btn.removeAttribute("data-tooltip");
+        btn.removeAttribute("data-feedback-active");
       }, 2000);
     } catch (err) {
       console.error("Failed to copy!", err);
