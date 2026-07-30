@@ -242,6 +242,8 @@ import EditItemIcon from "./EditItemIcon.astro";
             );
           }
           if (button.classList.contains("share")) {
+            if (button.getAttribute("data-feedback-active") === "true") return;
+
             const result = compressRoutine(routine);
             if (result.success && result.url) {
               try {
@@ -253,10 +255,33 @@ import EditItemIcon from "./EditItemIcon.astro";
                   });
                 } else {
                   await navigator.clipboard.writeText(result.url);
-                  const originalText = button.innerHTML;
+
+                  button.setAttribute("data-feedback-active", "true");
+
+                  const originalHtml = button.innerHTML;
+                  const originalTitle = button.getAttribute("title");
+                  const originalAria = button.getAttribute("aria-label");
+                  const originalTooltip = button.getAttribute("data-tooltip");
+
+                  const successMsg = t("Link copied to clipboard");
+
                   button.innerHTML = "✓";
+                  button.setAttribute("title", successMsg);
+                  button.setAttribute("aria-label", successMsg);
+                  button.setAttribute("data-tooltip", successMsg);
+
                   setTimeout(() => {
-                    button.innerHTML = originalText;
+                    button.innerHTML = originalHtml;
+                    if (originalTitle !== null)
+                      button.setAttribute("title", originalTitle);
+                    else button.removeAttribute("title");
+                    if (originalAria !== null)
+                      button.setAttribute("aria-label", originalAria);
+                    else button.removeAttribute("aria-label");
+                    if (originalTooltip !== null)
+                      button.setAttribute("data-tooltip", originalTooltip);
+                    else button.removeAttribute("data-tooltip");
+                    button.removeAttribute("data-feedback-active");
                   }, 2000);
                 }
               } catch (error) {
