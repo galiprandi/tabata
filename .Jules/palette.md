@@ -1,3 +1,7 @@
+## 2026-07-26 - [Interactive Container Keyboard Accessibility]
+**Learning:** Rendering list elements (like routine cards in `trainer.astro`) as standard structural components (like `<article>`) makes them completely invisible to keyboard-only and screen reader users. Giving them interactive roles, tabindices, accessible labels, and custom keydown listeners makes lists fully keyboard accessible.
+**Action:** Always add `tabindex="0"`, `role="button"`, and a keydown listener for "Enter" and "Space" (with `e.preventDefault()`) on structural container elements that are clickable, along with clear focus indicators using `:focus-visible`.
+
 ## 2024-10-31 - [Accessibility for Icon-only Buttons and Inputs]
 
 **Learning:** Icon-only buttons and inputs within a HIIT timer app often rely on visual cues (icons) that are not accessible to screen reader users. Adding `aria-label` provides the necessary context without altering the visual design.

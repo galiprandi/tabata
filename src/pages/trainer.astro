@@ -430,8 +430,10 @@ import SearchBar from "@components/SearchBar.astro";
         const isActiveCard =
           routine.id === selectedRoutineId ? "active-card" : "";
 
+        const cardAriaLabel = `${escapeHtml(routine.name)}, ${routine.config.rounds} ${t("Rounds").toLowerCase()}, ${routine.exercises.length} ${t("Exercises").toLowerCase()}`;
+
         return `
-        <article class="routine-card ${isActiveCard}" data-routine-id="${routine.id}">
+        <article class="routine-card ${isActiveCard}" data-routine-id="${routine.id}" tabindex="0" role="button" aria-pressed="${routine.id === selectedRoutineId ? "true" : "false"}" aria-label="${cardAriaLabel}">
           <header class="card-header">
             <h2 class="routine-name">${escapeHtml(routine.name)}</h2>
           </header>
@@ -466,13 +468,23 @@ import SearchBar from "@components/SearchBar.astro";
 
     initTranslation(list);
 
-    // Setup routine card click handlers
+    // Setup routine card click and keydown handlers
     list.querySelectorAll(".routine-card").forEach((card) => {
-      card.addEventListener("click", async () => {
+      const handleSelect = async () => {
         const routineId = card.getAttribute("data-routine-id");
         if (routineId) {
           await play("tap", true);
           loadRoutine(routineId);
+        }
+      };
+
+      card.addEventListener("click", handleSelect);
+
+      card.addEventListener("keydown", async (e) => {
+        const keyEvent = e as KeyboardEvent;
+        if (keyEvent.key === "Enter" || keyEvent.key === " ") {
+          keyEvent.preventDefault();
+          await handleSelect();
         }
       });
     });
@@ -1244,6 +1256,13 @@ import SearchBar from "@components/SearchBar.astro";
     border-color: var(--color-accent);
     background: rgba(247, 193, 121, 0.1);
     box-shadow: 0 0 0 2px var(--color-accent);
+  }
+
+  .routine-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    background: var(--surface-hover);
+    border-color: var(--color-accent);
   }
 
   .card-header {
