@@ -127,23 +127,57 @@
 </style>
 
 <script>
-  const confirmation = document.querySelector(".save-confirmation");
-  const cancelButton = document.querySelector(
-    ".save-confirmation .btn-cancel",
+  import { play } from "../assets/audio";
+
+  const container = document.querySelector(".save-confirmation") as HTMLElement;
+  const cancelButton = container?.querySelector(
+    ".btn-cancel",
   ) as HTMLButtonElement;
-  const confirmButton = document.querySelector(
-    ".save-confirmation .btn-confirm",
+  const confirmButton = container?.querySelector(
+    ".btn-confirm",
   ) as HTMLButtonElement;
 
-  if (cancelButton && confirmation) {
-    cancelButton.addEventListener("click", () => {
-      confirmation.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
+  if (cancelButton && container) {
+    cancelButton.addEventListener("click", async () => {
+      await play("tap", true);
+      container.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
     });
   }
 
-  if (confirmButton && confirmation) {
-    confirmButton.addEventListener("click", () => {
-      confirmation.dispatchEvent(new CustomEvent("confirm", { bubbles: true }));
+  if (confirmButton && container) {
+    confirmButton.addEventListener("click", async () => {
+      await play("tap", true);
+      container.dispatchEvent(new CustomEvent("confirm", { bubbles: true }));
     });
+  }
+
+  // Manage auto-focus and scoped keyboard shortcuts when visible
+  if (container) {
+    container.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        cancelButton?.click();
+      } else if (e.key === "Enter") {
+        // If focus is already on a button, let the default browser behavior trigger it
+        if (document.activeElement instanceof HTMLButtonElement) {
+          return;
+        }
+        e.preventDefault();
+        confirmButton?.click();
+      }
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            confirmButton?.focus();
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(container);
   }
 </script>
