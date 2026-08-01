@@ -201,23 +201,55 @@ const { routine } = Astro.props;
 </style>
 
 <script>
-  const preview = document.querySelector(".routine-preview");
-  const cancelButton = document.querySelector(
-    ".routine-preview .btn-cancel",
-  ) as HTMLButtonElement;
-  const saveButton = document.querySelector(
-    ".routine-preview .btn-save",
-  ) as HTMLButtonElement;
+  import { play } from "../assets/audio";
 
-  if (cancelButton && preview) {
-    cancelButton.addEventListener("click", () => {
-      preview.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
+  const container = document.querySelector(".routine-preview") as HTMLElement;
+  const cancelButton = container?.querySelector(
+    ".btn-cancel",
+  ) as HTMLButtonElement;
+  const saveButton = container?.querySelector(".btn-save") as HTMLButtonElement;
+
+  if (cancelButton && container) {
+    cancelButton.addEventListener("click", async () => {
+      await play("tap", true);
+      container.dispatchEvent(new CustomEvent("cancel", { bubbles: true }));
     });
   }
 
-  if (saveButton && preview) {
-    saveButton.addEventListener("click", () => {
-      preview.dispatchEvent(new CustomEvent("save", { bubbles: true }));
+  if (saveButton && container) {
+    saveButton.addEventListener("click", async () => {
+      await play("tap", true);
+      container.dispatchEvent(new CustomEvent("save", { bubbles: true }));
     });
+  }
+
+  // Manage auto-focus and scoped keyboard shortcuts when visible
+  if (container) {
+    container.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        cancelButton?.click();
+      } else if (e.key === "Enter") {
+        // If focus is already on a button, let the default browser behavior trigger it
+        if (document.activeElement instanceof HTMLButtonElement) {
+          return;
+        }
+        e.preventDefault();
+        saveButton?.click();
+      }
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            saveButton?.focus();
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(container);
   }
 </script>

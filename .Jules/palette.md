@@ -2,6 +2,10 @@
 **Learning:** Rendering list elements (like routine cards in `trainer.astro`) as standard structural components (like `<article>`) makes them completely invisible to keyboard-only and screen reader users. Giving them interactive roles, tabindices, accessible labels, and custom keydown listeners makes lists fully keyboard accessible.
 **Action:** Always add `tabindex="0"`, `role="button"`, and a keydown listener for "Enter" and "Space" (with `e.preventDefault()`) on structural container elements that are clickable, along with clear focus indicators using `:focus-visible`.
 
+## 2026-08-01 - [High-Performance Modal Focus and Keyboard Scoping]
+**Learning:** Adding global `document` event listeners for modal shortcuts causes key-hijacking and memory leaks. Furthermore, recursively checking style lookups with MutationObservers triggers layout thrashing (forced reflows). Using IntersectionObserver to trigger autofocus on element intersections, and registering local `keydown` listeners on the modal container itself, guarantees zero memory leaks, zero layout thrashing, and zero global shortcut pollution. When implementing `Enter` shortcuts, always verify that the active element is not already another button (e.g. Cancel) to prevent critical usability regressions.
+**Action:** Avoid global document listeners and MutationObservers for modal accessibility; register `keydown` listeners locally on the component's container, check `!(document.activeElement instanceof HTMLButtonElement)` before forcing the primary action, and use IntersectionObserver asynchronously for focusing elements.
+
 ## 2024-10-31 - [Accessibility for Icon-only Buttons and Inputs]
 
 **Learning:** Icon-only buttons and inputs within a HIIT timer app often rely on visual cues (icons) that are not accessible to screen reader users. Adding `aria-label` provides the necessary context without altering the visual design.
