@@ -112,8 +112,14 @@
       <button
         class="btn btn-primary"
         data-action="save-note"
-        data-i18n="Save note">Save note</button
+        title="Save note"
+        aria-label="Save note"
+        data-i18n-title="Save note"
+        data-i18n-aria-label="Save note"
+        data-tooltip="Save note"
       >
+        <span data-i18n="Save note">Save note</span>
+      </button>
       <div class="annotations-items"></div>
     </div>
   </div>
@@ -557,6 +563,8 @@
 
   if (saveNoteBtn) {
     saveNoteBtn.addEventListener("click", async () => {
+      if (saveNoteBtn.getAttribute("data-feedback-active") === "true") return;
+
       await play("tap", true);
       const textarea = document.querySelector(
         ".annotation-textarea",
@@ -578,44 +586,39 @@
       textarea.blur();
       renderAnnotations();
 
+      const span = saveNoteBtn.querySelector("span");
+      if (!span) return;
+
       // Show temporary visual feedback on Save Note button
-      if (saveNoteBtn.textContent !== "✓") {
-        const originalText = saveNoteBtn.textContent || "";
-        const originalI18n = saveNoteBtn.getAttribute("data-i18n") || "";
-        const originalAriaLabel = saveNoteBtn.getAttribute("aria-label") || "";
-        const originalTitle = saveNoteBtn.getAttribute("title") || "";
+      saveNoteBtn.setAttribute("data-feedback-active", "true");
+      saveNoteBtn.style.pointerEvents = "none";
 
-        saveNoteBtn.textContent = "✓";
-        saveNoteBtn.setAttribute("aria-label", "Note saved successfully");
-        saveNoteBtn.setAttribute("title", "Note saved successfully");
-        saveNoteBtn.removeAttribute("data-i18n");
-        saveNoteBtn.style.pointerEvents = "none";
+      const originalText = span.textContent || "";
+      const originalTitle = saveNoteBtn.getAttribute("title");
+      const originalAriaLabel = saveNoteBtn.getAttribute("aria-label");
+      const originalTooltip = saveNoteBtn.getAttribute("data-tooltip");
 
-        setTimeout(() => {
-          saveNoteBtn.textContent = originalText;
-          if (originalI18n) {
-            saveNoteBtn.setAttribute("data-i18n", originalI18n);
-          }
-          if (originalAriaLabel) {
-            saveNoteBtn.setAttribute("aria-label", originalAriaLabel);
-          } else {
-            saveNoteBtn.removeAttribute("aria-label");
-          }
-          if (originalTitle) {
-            saveNoteBtn.setAttribute("title", originalTitle);
-          } else {
-            saveNoteBtn.removeAttribute("title");
-          }
-          saveNoteBtn.style.pointerEvents = "auto";
-          // Re-translate to preserve correct language
-          const rootPanel = document.querySelector(
-            ".analysis-tools-panel",
-          ) as HTMLElement;
-          if (rootPanel) {
-            initTranslation(rootPanel);
-          }
-        }, 1500);
-      }
+      const successMsg = t("Note saved successfully");
+
+      span.textContent = "✓";
+      saveNoteBtn.setAttribute("title", successMsg);
+      saveNoteBtn.setAttribute("aria-label", successMsg);
+      saveNoteBtn.setAttribute("data-tooltip", successMsg);
+
+      setTimeout(() => {
+        span.textContent = originalText;
+        if (originalTitle !== null)
+          saveNoteBtn.setAttribute("title", originalTitle);
+        else saveNoteBtn.removeAttribute("title");
+        if (originalAriaLabel !== null)
+          saveNoteBtn.setAttribute("aria-label", originalAriaLabel);
+        else saveNoteBtn.removeAttribute("aria-label");
+        if (originalTooltip !== null)
+          saveNoteBtn.setAttribute("data-tooltip", originalTooltip);
+        else saveNoteBtn.removeAttribute("data-tooltip");
+        saveNoteBtn.removeAttribute("data-feedback-active");
+        saveNoteBtn.style.pointerEvents = "";
+      }, 2000);
     });
   }
 </script>
