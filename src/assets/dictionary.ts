@@ -496,6 +496,10 @@ export const dictionary = {
     en: "Save note",
     es: "Guardar nota",
   },
+  "Note saved successfully": {
+    en: "Note saved successfully",
+    es: "Nota guardada con éxito",
+  },
   "No notes": {
     en: "No notes",
     es: "Sin notas",
