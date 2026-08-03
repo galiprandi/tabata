@@ -18,7 +18,9 @@ import GoToHome from "@components/GoToHome.astro";
 
     <!-- Exercise name - giant, centered -->
     <div id="exercise-display" class="exercise-display speech">
-      <span id="exercise-name" data-i18n="Preparation Time">Preparation Time</span>
+      <span id="exercise-name" data-i18n="Preparation Time"
+        >Preparation Time</span
+      >
     </div>
 
     <!-- Timer - giant countdown -->
@@ -128,15 +130,19 @@ import GoToHome from "@components/GoToHome.astro";
 
   let timer = new TimerController();
   let isWorkoutRunning = false;
+  let originalTitle = "Tabata";
 
   // Wait for the DOM to be ready
   document.addEventListener("DOMContentLoaded", () => {
+    originalTitle = document.title || "Tabata";
     const config = RoutineService.getConfig();
     updateRoutineInfo(config);
     renderRoundDots(config.rounds, 0);
 
     // Initial focus on continue button
-    const btnContinue = document.getElementById("btn-continue") as HTMLButtonElement | null;
+    const btnContinue = document.getElementById(
+      "btn-continue",
+    ) as HTMLButtonElement | null;
     btnContinue?.focus();
 
     onClick("#btn-pause", () => {
@@ -156,11 +162,13 @@ import GoToHome from "@components/GoToHome.astro";
     onClick("#btn-restart-pause", () => {
       hidePauseOverlay();
       timer.abort();
+      document.title = originalTitle;
       RoutineService.updateConfig({ nextExercise: 0 });
       setTimeout(() => startWorkout(), 100);
     });
     onClick("#btn-exit", () => {
       timer.abort();
+      document.title = originalTitle;
       window.location.href = "/tabata";
     });
 
@@ -178,8 +186,12 @@ import GoToHome from "@components/GoToHome.astro";
       const startOverlay = document.getElementById("start-overlay");
       const pauseOverlay = document.getElementById("pause-overlay");
 
-      const isStartVisible = startOverlay && window.getComputedStyle(startOverlay).display !== "none";
-      const isPauseVisible = pauseOverlay && window.getComputedStyle(pauseOverlay).display !== "none";
+      const isStartVisible =
+        startOverlay &&
+        window.getComputedStyle(startOverlay).display !== "none";
+      const isPauseVisible =
+        pauseOverlay &&
+        window.getComputedStyle(pauseOverlay).display !== "none";
       const isButtonFocused = e.target instanceof HTMLButtonElement;
 
       if (e.code === "Space") {
@@ -204,6 +216,7 @@ import GoToHome from "@components/GoToHome.astro";
         } else if (isWorkoutRunning) {
           pauseWorkout();
         } else if (isStartVisible) {
+          document.title = originalTitle;
           window.location.href = "/tabata";
         }
       }
@@ -218,43 +231,53 @@ import GoToHome from "@components/GoToHome.astro";
     let touchStartY = 0;
     let touchStartTime = 0;
 
-    document.addEventListener("touchstart", (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchStartTime = Date.now();
-    }, { passive: true });
+    document.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      },
+      { passive: true },
+    );
 
-    document.addEventListener("touchend", (e) => {
-      if (!isWorkoutRunning) return;
+    document.addEventListener(
+      "touchend",
+      (e) => {
+        if (!isWorkoutRunning) return;
 
-      const touchEndX = e.changedTouches[0].clientX;
-      const touchEndY = e.changedTouches[0].clientY;
-      const dx = touchEndX - touchStartX;
-      const dy = touchEndY - touchStartY;
-      const dt = Date.now() - touchStartTime;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        const dt = Date.now() - touchStartTime;
 
-      // Swipe = horizontal movement > 100px, less than 50px vertical, under 500ms
-      if (Math.abs(dx) > 100 && Math.abs(dy) < 50 && dt < 500) {
-        if (dx < 0) {
-          // Swipe left = restart
-          timer.abort();
-          RoutineService.updateConfig({ nextExercise: 0 });
-          setTimeout(() => startWorkout(), 100);
-        } else {
-          // Swipe right = skip rest (advance to next exercise)
-          // Only skip if currently in rest phase
-          if (document.body.classList.contains("rest")) {
+        // Swipe = horizontal movement > 100px, less than 50px vertical, under 500ms
+        if (Math.abs(dx) > 100 && Math.abs(dy) < 50 && dt < 500) {
+          if (dx < 0) {
+            // Swipe left = restart
             timer.abort();
+            RoutineService.updateConfig({ nextExercise: 0 });
+            setTimeout(() => startWorkout(), 100);
+          } else {
+            // Swipe right = skip rest (advance to next exercise)
+            // Only skip if currently in rest phase
+            if (document.body.classList.contains("rest")) {
+              timer.abort();
+            }
           }
         }
-      }
-    }, { passive: true });
+      },
+      { passive: true },
+    );
   }
 
   function updateRoutineInfo(config: any) {
     const exercises = RoutineService.getExercises();
     const secondsByExercise = config.workDuration + config.restDuration;
-    const totalTime = (config.prepDuration + secondsByExercise * config.rounds * exercises.length);
+    const totalTime =
+      config.prepDuration +
+      secondsByExercise * config.rounds * exercises.length;
 
     updateTextContent("#total-exercises", exercises.length.toString());
     updateTextContent("#total-rounds", config.rounds.toString());
@@ -311,6 +334,7 @@ import GoToHome from "@components/GoToHome.astro";
     play("tap", true);
     hapticFeedback(30);
     showPauseOverlay();
+    document.title = `[Paused] ${document.title.replace(/^\[Paused\]\s*/, "")}`;
   }
 
   function resumeWorkout() {
@@ -324,7 +348,9 @@ import GoToHome from "@components/GoToHome.astro";
     const overlay = document.getElementById("pause-overlay");
     if (overlay) {
       overlay.style.display = "flex";
-      const btnResume = document.getElementById("btn-resume") as HTMLButtonElement | null;
+      const btnResume = document.getElementById(
+        "btn-resume",
+      ) as HTMLButtonElement | null;
       btnResume?.focus();
     }
   }
@@ -333,7 +359,9 @@ import GoToHome from "@components/GoToHome.astro";
     const overlay = document.getElementById("pause-overlay");
     if (overlay) {
       overlay.style.display = "none";
-      const btnPause = document.getElementById("btn-pause") as HTMLButtonElement | null;
+      const btnPause = document.getElementById(
+        "btn-pause",
+      ) as HTMLButtonElement | null;
       btnPause?.focus();
     }
   }
@@ -342,7 +370,9 @@ import GoToHome from "@components/GoToHome.astro";
     const overlay = document.getElementById("start-overlay");
     if (overlay) {
       overlay.style.display = "none";
-      const btnPause = document.getElementById("btn-pause") as HTMLButtonElement | null;
+      const btnPause = document.getElementById(
+        "btn-pause",
+      ) as HTMLButtonElement | null;
       btnPause?.focus();
     }
   }
@@ -375,7 +405,7 @@ import GoToHome from "@components/GoToHome.astro";
       routineCompleted();
     } catch (e) {
       // Timer was aborted (restart or exit) - silently handle
-      if (e instanceof Error && e.message === 'TIMER_ABORTED') {
+      if (e instanceof Error && e.message === "TIMER_ABORTED") {
         return;
       }
       throw e;
@@ -396,6 +426,7 @@ import GoToHome from "@components/GoToHome.astro";
 
     for (let sec = config.prepDuration; sec > 0; sec--) {
       updateTextContent("#time-remaining", sec.toString());
+      document.title = `[Prep ${sec}s] ${exercise} | ${originalTitle}`;
       updateProgressBar((sec / config.prepDuration) * 100);
       if (sec <= 3 && sec >= 1) {
         await play("beep");
@@ -408,7 +439,8 @@ import GoToHome from "@components/GoToHome.astro";
   async function workTime(round: number) {
     const exercises = RoutineService.getExercises();
     const config = RoutineService.getConfig();
-    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
+    const exercise =
+      exercises[config.nextExercise] ?? `${t("Exercise")} ${round}`;
 
     switchBodyClass("workout");
     updatePhaseIndicator("workout");
@@ -420,6 +452,7 @@ import GoToHome from "@components/GoToHome.astro";
 
     for (let sec = config.workDuration; sec > 0; sec--) {
       updateTextContent("#time-remaining", sec.toString());
+      document.title = `[Work ${sec}s] ${exercise} | ${originalTitle}`;
       updateProgressBar((sec / config.workDuration) * 100);
       if (sec <= 3 && sec >= 1) {
         await play("beep");
@@ -434,7 +467,8 @@ import GoToHome from "@components/GoToHome.astro";
   async function restTime(round: number) {
     const exercises = RoutineService.getExercises();
     const config = RoutineService.getConfig();
-    const exercise = exercises[config.nextExercise] ?? `${t("Exercise")} ${round + 1}`;
+    const exercise =
+      exercises[config.nextExercise] ?? `${t("Exercise")} ${round + 1}`;
 
     switchBodyClass("rest");
     updatePhaseIndicator("rest");
@@ -445,6 +479,7 @@ import GoToHome from "@components/GoToHome.astro";
 
     for (let sec = config.restDuration; sec > 0; sec--) {
       updateTextContent("#time-remaining", sec.toString());
+      document.title = `[Rest ${sec}s] ${exercise} | ${originalTitle}`;
       updateProgressBar((sec / config.restDuration) * 100);
       if (sec <= 3 && sec >= 1) {
         await play("beep");
@@ -456,6 +491,7 @@ import GoToHome from "@components/GoToHome.astro";
 
   async function routineCompleted() {
     isWorkoutRunning = false;
+    document.title = originalTitle;
     await play("end");
     hapticFeedback([100, 50, 100, 50, 200]);
     await timer.delay(1);
@@ -498,9 +534,15 @@ import GoToHome from "@components/GoToHome.astro";
     margin-top: 0.5rem;
   }
 
-  .phase-indicator.phase-prep { color: #7dd3fc; }
-  .phase-indicator.phase-workout { color: #fff; }
-  .phase-indicator.phase-rest { color: #fca5a5; }
+  .phase-indicator.phase-prep {
+    color: #7dd3fc;
+  }
+  .phase-indicator.phase-workout {
+    color: #fff;
+  }
+  .phase-indicator.phase-rest {
+    color: #fca5a5;
+  }
 
   /* Round dots */
   .round-dots {
@@ -611,7 +653,9 @@ import GoToHome from "@components/GoToHome.astro";
     align-items: center;
     justify-content: center;
     z-index: 10;
-    transition: transform 0.2s, background 0.2s;
+    transition:
+      transform 0.2s,
+      background 0.2s;
     backdrop-filter: blur(4px);
   }
 
@@ -700,7 +744,9 @@ import GoToHome from "@components/GoToHome.astro";
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    transition: transform 0.15s, opacity 0.2s;
+    transition:
+      transform 0.15s,
+      opacity 0.2s;
   }
 
   .start-actions button:active {
