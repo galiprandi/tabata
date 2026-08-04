@@ -1079,11 +1079,19 @@ import SearchBar from "@components/SearchBar.astro";
       addExercise();
     });
 
-    exerciseInput?.addEventListener("keypress", async (e) => {
-      if ((e as KeyboardEvent).key === "Enter") {
-        e.preventDefault();
+    exerciseInput?.addEventListener("keydown", async (e) => {
+      const keyEvent = e as KeyboardEvent;
+      if (keyEvent.key === "Enter") {
+        keyEvent.preventDefault();
         await play("tap", true);
         addExercise();
+      } else if (keyEvent.key === "Escape") {
+        const input = exerciseInput as HTMLInputElement;
+        if (input) {
+          keyEvent.preventDefault();
+          input.value = "";
+          input.blur();
+        }
       }
     });
 

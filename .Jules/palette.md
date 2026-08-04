@@ -122,3 +122,8 @@
 
 **Learning:** When implementing temporary visual feedback (such as checkmark '✓' for copy/success) on icon-only buttons, subsequent clicks during the timeout can capture the feedback state as the original, causing the button to get stuck. Furthermore, updating only the visual content leaves screen reader and tooltip users with outdated or misleading instructions (e.g., they still hear "Share routine" instead of "Link copied to clipboard").
 **Action:** Always guard against race conditions with `if (button.innerHTML === "✓") return;` at the start of the click handler. Store and restore original `aria-label`, `title`, and `data-tooltip` attributes, and update them to localized confirmation messages (e.g., via `t("Link copied to clipboard")`) during the temporary success state.
+
+## 2026-08-04 - [New Exercise Input Keyboard Shortcuts]
+
+**Learning:** When users manage lists or create new exercises within the Routine Editor, providing simple, expected keyboard shortcuts in the input field significantly enhances interactive efficiency. Pressing `Enter` should add the new exercise directly to the list (accompanied by a delightful tap sound), while pressing `Escape` at any point should clear the input's content and blur focus, releasing keyboard trap.
+**Action:** Replace standard keypress/change handlers with a robust `keydown` listener on the text input. If key is "Enter", prevent default and dispatch the save/add action; if key is "Escape", prevent default, reset the value to empty, and programmatically blur the input.
