@@ -151,8 +151,14 @@
     });
   }
 
-  // Manage auto-focus and scoped keyboard shortcuts when visible
+  // Manage auto-focus, backdrop clicks, and scoped keyboard shortcuts when visible
   if (container) {
+    container.addEventListener("click", (e) => {
+      if (e.target === container) {
+        cancelButton?.click();
+      }
+    });
+
     container.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         e.preventDefault();
