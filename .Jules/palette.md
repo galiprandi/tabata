@@ -1,3 +1,8 @@
+## 2026-08-05 - [Overlay Modal Backdrop Dismissal and Click-Outside Dismissal Consistency]
+
+**Learning:** When implementing backdrop click-outside dismissal/resume behaviors for full-screen overlay components (such as `#shared-routine-modal`, `#save-confirmation-modal`, or `#pause-overlay`), checking `e.target === overlayElement` is a highly robust, non-disruptive pattern that preserves active click events on inner content cards/buttons. This aligns with modern desktop/mobile dismiss gestures and ensures keyboard-focused or sweaty users can exit overlays gracefully without having to precisely target a small visual close/resume button.
+**Action:** Always wrap or handle overlay modals with backdrop clicks checked against `e.target === overlayElement` to trigger close/resume handlers, and ensure any sibling element overlay z-indices are managed to avoid click blockages.
+
 ## 2026-08-03 - [Dynamic Tab Title Countdown Feedback]
 
 **Learning:** In timer-based applications, users frequently switch tabs or multitask during workouts or rest periods. Dynamically updating the browser's `document.title` with the active phase (e.g., Prep, Work, Rest) and the remaining countdown seconds, prepending `[Paused]` on pause, and cleanly restoring the original title on completion or exit provides an exceptional background-visibility micro-UX.

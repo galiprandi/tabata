@@ -295,6 +295,16 @@ import ProgressView from "@components/ProgressView.astro";
         }
       });
     }
+
+    // Close shared routine modal on backdrop click handler
+    const backdropSharedModal = document.getElementById("shared-routine-modal");
+    if (backdropSharedModal) {
+      backdropSharedModal.addEventListener("click", (e) => {
+        if (e.target === backdropSharedModal) {
+          handleCancelSharedRoutine();
+        }
+      });
+    }
   });
 </script>
 

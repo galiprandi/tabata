@@ -159,6 +159,15 @@ import GoToHome from "@components/GoToHome.astro";
     onClick("#btn-continue", startWorkout);
 
     onClick("#btn-resume", resumeWorkout);
+
+    // Tap anywhere on pause overlay backdrop to resume
+    const pauseOverlay = document.getElementById("pause-overlay");
+    pauseOverlay?.addEventListener("click", (e) => {
+      if (e.target === pauseOverlay) {
+        resumeWorkout();
+      }
+    });
+
     onClick("#btn-restart-pause", () => {
       hidePauseOverlay();
       timer.abort();
