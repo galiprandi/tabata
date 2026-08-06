@@ -1,3 +1,8 @@
+## 2026-08-08 - [Global Keyboard-Driven Shortcuts and Discoverability Legends]
+
+**Learning:** Global page-level navigation shortcuts (e.g., S/H/G/T) combined with standard Pico `<kbd>` tags provide keyboard users and power users with mouse-free high-efficiency navigation. When creating global `keydown` listeners, we must check for and ignore active input/editable controls AND modifier keys (e.g., `ctrlKey`, `metaKey`, `altKey`) to avoid hijacking system-level shortcut actions (such as `Ctrl+S`).
+**Action:** Always check for input-focused state and `e.ctrlKey || e.metaKey || e.altKey` to safely handle global shortcut keys, and present subtle native-looking `<kbd>` shortcut legends for great discoverability on desktop views.
+
 ## 2026-08-05 - [Overlay Modal Backdrop Dismissal and Click-Outside Dismissal Consistency]
 
 **Learning:** When implementing backdrop click-outside dismissal/resume behaviors for full-screen overlay components (such as `#shared-routine-modal`, `#save-confirmation-modal`, or `#pause-overlay`), checking `e.target === overlayElement` is a highly robust, non-disruptive pattern that preserves active click events on inner content cards/buttons. This aligns with modern desktop/mobile dismiss gestures and ensures keyboard-focused or sweaty users can exit overlays gracefully without having to precisely target a small visual close/resume button.

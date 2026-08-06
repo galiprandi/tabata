@@ -242,6 +242,18 @@ export const dictionary = {
     es: "Activar audio",
   },
   "Turn audio off": { en: "Turn audio off", es: "Desactivar audio" },
+  "Turn audio on (M)": {
+    en: "Turn audio on (M)",
+    es: "Activar audio (M)",
+  },
+  "Turn audio off (M)": {
+    en: "Turn audio off (M)",
+    es: "Desactivar audio (M)",
+  },
+  Mute: {
+    en: "Mute",
+    es: "Silenciar",
+  },
   Congrats: { en: "Congrats", es: "Felicidades" },
   "Are you sure reset all?": {
     en: "Are you sure you want to reset all settings to default?",

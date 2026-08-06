@@ -24,6 +24,27 @@ import ProgressView from "@components/ProgressView.astro";
     <GoToTrain />
   </nav>
 
+  <div class="keyboard-hints-container">
+    <div class="keyboard-hints">
+      <span class="hint-item"
+        ><kbd>S</kbd> <span data-i18n="Settings">Settings</span></span
+      >
+      <span class="hint-item"
+        ><kbd>H</kbd> <span data-i18n="History">History</span></span
+      >
+      <span class="hint-item"
+        ><kbd>G</kbd> / <kbd>Space</kbd>
+        <span data-i18n="Train">Train</span></span
+      >
+      <span class="hint-item"
+        ><kbd>T</kbd> <span data-i18n="Trainer">Trainer</span></span
+      >
+      <span class="hint-item"
+        ><kbd>M</kbd> <span data-i18n="Mute">Mute</span></span
+      >
+    </div>
+  </div>
+
   <footer>
     <ShareApp />
     <GoToTrainer />
@@ -238,6 +259,64 @@ import ProgressView from "@components/ProgressView.astro";
       window.location.href = "/tabata/settings";
     });
 
+    // Keyboard navigation shortcuts
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.tagName === "SELECT" ||
+          (activeEl instanceof HTMLElement && activeEl.isContentEditable))
+      ) {
+        return;
+      }
+
+      // Check if any modal is currently visible
+      const isModalVisible = (id: string) => {
+        const modal = document.getElementById(id);
+        return modal && window.getComputedStyle(modal).display !== "none";
+      };
+
+      if (
+        isModalVisible("shared-routine-modal") ||
+        isModalVisible("save-confirmation-modal") ||
+        isModalVisible("shared-progress-modal")
+      ) {
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+      if (key === "s") {
+        e.preventDefault();
+        const btn = document.getElementById("btn-routine-config");
+        if (btn) btn.click();
+      } else if (key === "h") {
+        e.preventDefault();
+        const btn = document.querySelector(
+          "button.btn-go-history",
+        ) as HTMLElement | null;
+        if (btn) btn.click();
+      } else if (
+        key === "g" ||
+        (e.key === " " && activeEl?.tagName !== "BUTTON")
+      ) {
+        e.preventDefault();
+        const btn = document.querySelector(
+          "button.go-to-train",
+        ) as HTMLElement | null;
+        if (btn) btn.click();
+      } else if (key === "t") {
+        e.preventDefault();
+        const btn = document.querySelector(
+          "button.btn-go-trainer",
+        ) as HTMLElement | null;
+        if (btn) btn.click();
+      }
+    });
+
     // Check for shared routine in URL
     const sharedRoutineData = getSharedRoutineFromURL();
     const sharedModal = document.getElementById("shared-routine-modal");
@@ -357,5 +436,43 @@ import ProgressView from "@components/ProgressView.astro";
     z-index: 1000;
     padding: 1.5rem;
     backdrop-filter: blur(8px);
+  }
+
+  .keyboard-hints-container {
+    display: none;
+    justify-content: center;
+    margin-top: 1.5rem;
+    opacity: 0.6;
+    font-size: 0.8rem;
+  }
+
+  @media (hover: hover) and (min-width: 768px) {
+    .keyboard-hints-container {
+      display: flex;
+    }
+  }
+
+  .keyboard-hints {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hint-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .hint-item kbd {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+    font-family: inherit;
+    color: var(--text-primary);
   }
 </style>
