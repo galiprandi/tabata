@@ -1141,11 +1141,23 @@ import SearchBar from "@components/SearchBar.astro";
       loadRoutine(selectedRoutineId);
     });
 
-    const btnSave = document.getElementById("editor-btn-save");
-    btnSave?.addEventListener("click", async (e) => {
+    const editorForm = document.getElementById("editor-form");
+    editorForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
       await play("tap", true);
       saveRoutine();
+    });
+
+    editorForm?.addEventListener("keydown", async (e) => {
+      const keyEvent = e as KeyboardEvent;
+      if (keyEvent.key === "Escape") {
+        const target = e.target as HTMLElement;
+        if (target.id === "new-exercise-input") return;
+
+        keyEvent.preventDefault();
+        await play("tap", true);
+        loadRoutine(selectedRoutineId);
+      }
     });
   });
 </script>
