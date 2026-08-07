@@ -1,3 +1,8 @@
+## 2026-08-06 - [Semantic Form Submission and Keydown Reversion in Complex Editor Panels]
+
+**Learning:** Binding submit/save handlers directly to button click events instead of the parent `<form>`'s native `submit` event prevents standard keyboard-driven form submission (e.g. pressing `Enter` inside input fields). Implementing form `submit` event listeners preserves native HTML5 browser validation (like `required` and `min` checks) and keyboard accessibility. Additionally, binding a scoped `keydown` listener for `Escape` to the parent `<form>` allows keyboard users to instantly discard unsaved edits, as long as we guard against nested inputs (such as search boxes or tags) that carry their own custom `Escape` key behaviors.
+**Action:** Always bind primary save actions to the form's `submit` event instead of button `click` events, and include a container-level `keydown` listener for `Escape` to revert/dismiss unsaved changes, ensuring proper exclusion of inputs with custom Escape handlers.
+
 ## 2026-08-05 - [Overlay Modal Backdrop Dismissal and Click-Outside Dismissal Consistency]
 
 **Learning:** When implementing backdrop click-outside dismissal/resume behaviors for full-screen overlay components (such as `#shared-routine-modal`, `#save-confirmation-modal`, or `#pause-overlay`), checking `e.target === overlayElement` is a highly robust, non-disruptive pattern that preserves active click events on inner content cards/buttons. This aligns with modern desktop/mobile dismiss gestures and ensures keyboard-focused or sweaty users can exit overlays gracefully without having to precisely target a small visual close/resume button.
