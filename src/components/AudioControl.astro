@@ -6,21 +6,21 @@ import AudioOffIcon from "./AudioOffIcon.astro";
 <div id="enable-audio">
   <button
     id="btn-on"
-    data-i18n-aria-label="Turn audio off"
-    data-i18n-title="Turn audio off"
-    aria-label="Turn audio off"
-    title="Turn audio off"
-    data-tooltip="Turn audio off"
+    data-i18n-aria-label="Turn audio off (M)"
+    data-i18n-title="Turn audio off (M)"
+    aria-label="Turn audio off (M)"
+    title="Turn audio off (M)"
+    data-tooltip="Turn audio off (M)"
   >
     <AudioOnIcon aria-hidden="true" />
   </button>
   <button
     id="btn-off"
-    data-i18n-aria-label="Turn audio on"
-    data-i18n-title="Turn audio on"
-    aria-label="Turn audio on"
-    title="Turn audio on"
-    data-tooltip="Turn audio on"
+    data-i18n-aria-label="Turn audio on (M)"
+    data-i18n-title="Turn audio on (M)"
+    aria-label="Turn audio on (M)"
+    title="Turn audio on (M)"
+    data-tooltip="Turn audio on (M)"
   >
     <AudioOffIcon aria-hidden="true" />
   </button>
@@ -92,5 +92,26 @@ import AudioOffIcon from "./AudioOffIcon.astro";
     if (btnOff) btnOff.addEventListener("click", toggleAudio);
     updateIcon();
     initTranslation(document.getElementById("enable-audio")!);
+
+    // Global keyboard listener to toggle audio using M / m
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const activeEl = document.activeElement;
+      if (
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.tagName === "SELECT" ||
+          (activeEl instanceof HTMLElement && activeEl.isContentEditable))
+      ) {
+        return;
+      }
+
+      if (e.key === "m" || e.key === "M") {
+        e.preventDefault();
+        toggleAudio();
+      }
+    });
   });
 </script>
