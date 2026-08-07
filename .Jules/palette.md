@@ -2,6 +2,10 @@
 
 **Learning:** Binding submit/save handlers directly to button click events instead of the parent `<form>`'s native `submit` event prevents standard keyboard-driven form submission (e.g. pressing `Enter` inside input fields). Implementing form `submit` event listeners preserves native HTML5 browser validation (like `required` and `min` checks) and keyboard accessibility. Additionally, binding a scoped `keydown` listener for `Escape` to the parent `<form>` allows keyboard users to instantly discard unsaved edits, as long as we guard against nested inputs (such as search boxes or tags) that carry their own custom `Escape` key behaviors.
 **Action:** Always bind primary save actions to the form's `submit` event instead of button `click` events, and include a container-level `keydown` listener for `Escape` to revert/dismiss unsaved changes, ensuring proper exclusion of inputs with custom Escape handlers.
+## 2026-08-08 - [Global Keyboard-Driven Shortcuts and Discoverability Legends]
+
+**Learning:** Global page-level navigation shortcuts (e.g., S/H/G/T) combined with standard Pico `<kbd>` tags provide keyboard users and power users with mouse-free high-efficiency navigation. When creating global `keydown` listeners, we must check for and ignore active input/editable controls AND modifier keys (e.g., `ctrlKey`, `metaKey`, `altKey`) to avoid hijacking system-level shortcut actions (such as `Ctrl+S`).
+**Action:** Always check for input-focused state and `e.ctrlKey || e.metaKey || e.altKey` to safely handle global shortcut keys, and present subtle native-looking `<kbd>` shortcut legends for great discoverability on desktop views.
 
 ## 2026-08-05 - [Overlay Modal Backdrop Dismissal and Click-Outside Dismissal Consistency]
 
