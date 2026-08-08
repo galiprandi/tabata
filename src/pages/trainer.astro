@@ -377,6 +377,73 @@ import SearchBar from "@components/SearchBar.astro";
     "exercise-modal-form",
   ) as HTMLFormElement | null;
 
+  function hasUnsavedChanges(): boolean {
+    if (!currentEditingRoutine) return false;
+
+    const nameInput = document.getElementById(
+      "editor-routine-name",
+    ) as HTMLInputElement | null;
+    const prepInput = document.getElementById(
+      "editor-prep",
+    ) as HTMLInputElement | null;
+    const workInput = document.getElementById(
+      "editor-work",
+    ) as HTMLInputElement | null;
+    const restInput = document.getElementById(
+      "editor-rest",
+    ) as HTMLInputElement | null;
+    const roundsInput = document.getElementById(
+      "editor-rounds",
+    ) as HTMLInputElement | null;
+    const isActiveCheckbox = document.getElementById(
+      "editor-is-active",
+    ) as HTMLInputElement | null;
+
+    const currentName = nameInput ? nameInput.value.trim() : "";
+    const currentPrep = prepInput ? parseInt(prepInput.value) || 0 : 0;
+    const currentWork = workInput ? parseInt(workInput.value) || 0 : 0;
+    const currentRest = restInput ? parseInt(restInput.value) || 0 : 0;
+    const currentRounds = roundsInput ? parseInt(roundsInput.value) || 1 : 1;
+    const currentIsActive = isActiveCheckbox ? isActiveCheckbox.checked : false;
+
+    if (!currentEditingRoutine.id) {
+      const defaultName = t("New Routine");
+      const isDefaultName = currentName === "" || currentName === defaultName;
+      const isDefaultTimings =
+        currentPrep === 10 &&
+        currentWork === 20 &&
+        currentRest === 10 &&
+        currentRounds === 8;
+      const isDefaultExercises = exercisesState.length === 0;
+      const isDefaultActive = !currentIsActive;
+
+      return !(
+        isDefaultName &&
+        isDefaultTimings &&
+        isDefaultExercises &&
+        isDefaultActive
+      );
+    }
+
+    if (currentName !== currentEditingRoutine.name) return true;
+    if (currentPrep !== currentEditingRoutine.config.prepDuration) return true;
+    if (currentWork !== currentEditingRoutine.config.workDuration) return true;
+    if (currentRest !== currentEditingRoutine.config.restDuration) return true;
+    if (currentRounds !== currentEditingRoutine.config.rounds) return true;
+
+    const activeId = RoutineStorageService.getActiveRoutineId();
+    const originalIsActive = currentEditingRoutine.id === activeId;
+    if (currentIsActive !== originalIsActive) return true;
+
+    if (exercisesState.length !== currentEditingRoutine.exercises.length)
+      return true;
+    for (let i = 0; i < exercisesState.length; i++) {
+      if (exercisesState[i] !== currentEditingRoutine.exercises[i]) return true;
+    }
+
+    return false;
+  }
+
   // --- RENDERING ROUTINES LIST (LEFT PANEL) ---
   function renderRoutines() {
     const list = document.getElementById("routine-list");
@@ -473,6 +540,17 @@ import SearchBar from "@components/SearchBar.astro";
       const handleSelect = async () => {
         const routineId = card.getAttribute("data-routine-id");
         if (routineId) {
+          if (routineId !== selectedRoutineId && hasUnsavedChanges()) {
+            if (
+              !confirm(
+                t(
+                  "You have unsaved changes. Are you sure you want to discard them?",
+                ),
+              )
+            ) {
+              return;
+            }
+          }
           await play("tap", true);
           loadRoutine(routineId);
         }
@@ -1049,6 +1127,17 @@ import SearchBar from "@components/SearchBar.astro";
     // 2. Bind New Routine button click
     const btnNewRoutine = document.getElementById("btn-new-routine");
     btnNewRoutine?.addEventListener("click", async () => {
+      if (hasUnsavedChanges()) {
+        if (
+          !confirm(
+            t(
+              "You have unsaved changes. Are you sure you want to discard them?",
+            ),
+          )
+        ) {
+          return;
+        }
+      }
       await play("tap", true);
       startNewRoutine();
     });
@@ -1137,6 +1226,17 @@ import SearchBar from "@components/SearchBar.astro";
     // 7. Bind Editor Footer Cancel/Save buttons
     const btnCancel = document.getElementById("editor-btn-cancel");
     btnCancel?.addEventListener("click", async () => {
+      if (hasUnsavedChanges()) {
+        if (
+          !confirm(
+            t(
+              "You have unsaved changes. Are you sure you want to discard them?",
+            ),
+          )
+        ) {
+          return;
+        }
+      }
       await play("tap", true);
       loadRoutine(selectedRoutineId);
     });
@@ -1155,8 +1255,26 @@ import SearchBar from "@components/SearchBar.astro";
         if (target.id === "new-exercise-input") return;
 
         keyEvent.preventDefault();
+        if (hasUnsavedChanges()) {
+          if (
+            !confirm(
+              t(
+                "You have unsaved changes. Are you sure you want to discard them?",
+              ),
+            )
+          ) {
+            return;
+          }
+        }
         await play("tap", true);
         loadRoutine(selectedRoutineId);
+      }
+    });
+
+    window.addEventListener("beforeunload", (e) => {
+      if (hasUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = "";
       }
     });
   });
