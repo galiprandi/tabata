@@ -6,6 +6,7 @@ import GoToHistory from '@components/GoToHistory.astro'
 ---
 
 <Layout>
+  <canvas id="confetti-canvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
   <section class="end-screen">
     <div class="celebration">
       <div class="emoji">🎉</div>
@@ -55,9 +56,100 @@ import GoToHistory from '@components/GoToHistory.astro'
   import { initTranslation } from '../assets/dictionary'
   import { formatDuration } from '@assets/domHelpers'
 
+  function startConfetti() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+
+    const canvas = document.getElementById('confetti-canvas') as HTMLCanvasElement | null
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', resizeCanvas)
+    resizeCanvas()
+
+    const colors = [
+      '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5',
+      '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50',
+      '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'
+    ]
+
+    interface Particle {
+      x: number
+      y: number
+      size: number
+      color: string
+      speedX: number
+      speedY: number
+      rotation: number
+      rotationSpeed: number
+      opacity: number
+    }
+
+    const particles: Particle[] = []
+    const particleCount = 120
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: canvas.width / 2 + (Math.random() - 0.5) * 50,
+        y: canvas.height * 0.4 + (Math.random() - 0.5) * 50,
+        size: Math.random() * 8 + 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speedX: (Math.random() - 0.5) * 15,
+        speedY: -Math.random() * 15 - 5,
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 10,
+        opacity: 1
+      })
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      let active = false
+
+      particles.forEach((p) => {
+        p.x += p.speedX
+        p.y += p.speedY
+        p.speedY += 0.3
+        p.speedX *= 0.98
+        p.rotation += p.rotationSpeed
+
+        if (p.y > canvas.height * 0.8) {
+          p.opacity -= 0.02
+        }
+
+        if (p.opacity > 0) {
+          active = true
+          ctx.save()
+          ctx.translate(p.x, p.y)
+          ctx.rotate((p.rotation * Math.PI) / 180)
+          ctx.fillStyle = p.color
+          ctx.globalAlpha = p.opacity
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size)
+          ctx.restore()
+        }
+      })
+
+      if (active) {
+        requestAnimationFrame(animate)
+      } else {
+        window.removeEventListener('resize', resizeCanvas)
+        canvas.remove()
+      }
+    }
+
+    requestAnimationFrame(animate)
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     initTranslation()
     play('end')
+    startConfetti()
 
     const activeRoutineId = RoutineStorageService.getActiveRoutineId()
     if (activeRoutineId) {

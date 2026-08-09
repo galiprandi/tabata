@@ -141,3 +141,8 @@
 
 **Learning:** When users manage lists or create new exercises within the Routine Editor, providing simple, expected keyboard shortcuts in the input field significantly enhances interactive efficiency. Pressing `Enter` should add the new exercise directly to the list (accompanied by a delightful tap sound), while pressing `Escape` at any point should clear the input's content and blur focus, releasing keyboard trap.
 **Action:** Replace standard keypress/change handlers with a robust `keydown` listener on the text input. If key is "Enter", prevent default and dispatch the save/add action; if key is "Escape", prevent default, reset the value to empty, and programmatically blur the input.
+
+## 2026-08-10 - [Reduced-Motion Aware Zero-Dependency Canvas Celebrations]
+
+**Learning:** Triggering rewarding animations (like confetti explosions on workout completion pages) significantly increases user motivation and delightful engagement. To ensure complete accessibility, animations must check and respect system motion sensitivity (`prefers-reduced-motion: reduce`) by exiting immediately. Utilizing a zero-dependency absolute/fixed positioned `<canvas>` element with `pointer-events: none` and self-cleaning `requestAnimationFrame` render loops ensures high-performance visual rewards without introducing bloated npm libraries or blocking click/touch interactions on key action buttons.
+**Action:** When implementing celebratory animations, always respect `prefers-reduced-motion` settings, apply `pointer-events: none` to the overlay canvas, and register cleanup listeners that safely remove the DOM node and resize handlers on completion.
