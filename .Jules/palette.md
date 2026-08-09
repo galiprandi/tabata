@@ -1,3 +1,8 @@
+## 2026-08-10 - [On-Page State Change Detection and Prevent Unsaved Discards]
+
+**Learning:** When designing complex on-page client-side editors or form views, users frequently switch contexts or trigger actions (like selecting another item, clicking cancel, or navigating away) which can result in devastating loss of progress/work. Implementing a fine-grained, robust on-page state change detector (`hasUnsavedChanges`) and hooks into both internal navigation actions and the global `beforeunload` event provides a superb, bulletproof safety net that elevates the app to desktop/pro-grade usability.
+**Action:** Always write a helper function `hasUnsavedChanges` to compare current form states with original data, block and prompt on switching list items/cancelling/new-item creation, and use `beforeunload` listeners to intercept browser tab reloads or closes.
+
 ## 2026-08-06 - [Semantic Form Submission and Keydown Reversion in Complex Editor Panels]
 
 **Learning:** Binding submit/save handlers directly to button click events instead of the parent `<form>`'s native `submit` event prevents standard keyboard-driven form submission (e.g. pressing `Enter` inside input fields). Implementing form `submit` event listeners preserves native HTML5 browser validation (like `required` and `min` checks) and keyboard accessibility. Additionally, binding a scoped `keydown` listener for `Escape` to the parent `<form>` allows keyboard users to instantly discard unsaved edits, as long as we guard against nested inputs (such as search boxes or tags) that carry their own custom `Escape` key behaviors.

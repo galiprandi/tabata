@@ -3,6 +3,10 @@ export const dictionary = {
     en: "Add new item to the list",
     es: "Agregar nuevo elemento a la lista",
   },
+  "You have unsaved changes. Are you sure you want to discard them?": {
+    en: "You have unsaved changes. Are you sure you want to discard them?",
+    es: "Tienes cambios sin guardar. ¿Estás seguro de que quieres descartarlos?",
+  },
   Cancel: { en: "Cancel", es: "Cancelar" },
   Close: { en: "Close", es: "Cerrar" },
   "Config Routine": {
