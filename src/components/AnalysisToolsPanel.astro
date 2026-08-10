@@ -40,6 +40,9 @@
       <div class="filter-group">
         <label for="filter-date-from" data-i18n="Date range">Date range</label>
         <div class="date-inputs">
+          <label for="filter-date-from" class="sr-only" data-i18n="Start Date"
+            >Start Date</label
+          >
           <input
             type="date"
             id="filter-date-from"
@@ -49,6 +52,9 @@
             data-i18n-aria-label="Start Date"
           />
           <span>→</span>
+          <label for="filter-date-to" class="sr-only" data-i18n="End Date"
+            >End Date</label
+          >
           <input
             type="date"
             id="filter-date-to"
@@ -101,6 +107,9 @@
 
     <div class="tool-content" data-tool="annotations" style="display: none;">
       <h4 data-i18n="Coach notes">Coach notes</h4>
+      <label for="annotation-textarea" class="sr-only" data-i18n="Coach notes"
+        >Coach notes</label
+      >
       <textarea
         id="annotation-textarea"
         class="annotation-textarea"
@@ -280,6 +289,18 @@
 
   .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .annotations-items {

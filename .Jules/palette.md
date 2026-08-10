@@ -151,3 +151,8 @@
 
 **Learning:** Triggering rewarding animations (like confetti explosions on workout completion pages) significantly increases user motivation and delightful engagement. To ensure complete accessibility, animations must check and respect system motion sensitivity (`prefers-reduced-motion: reduce`) by exiting immediately. Utilizing a zero-dependency absolute/fixed positioned `<canvas>` element with `pointer-events: none` and self-cleaning `requestAnimationFrame` render loops ensures high-performance visual rewards without introducing bloated npm libraries or blocking click/touch interactions on key action buttons.
 **Action:** When implementing celebratory animations, always respect `prefers-reduced-motion` settings, apply `pointer-events: none` to the overlay canvas, and register cleanup listeners that safely remove the DOM node and resize handlers on completion.
+
+## 2026-08-11 - [Robust Explicit Label Association for Screen Reader Accessibility]
+
+**Learning:** Screen readers and assistive technologies rely heavily on explicit label-input association using matching `id` and `for` attributes. Even when inputs are nested inside labels or have an `aria-label`, standard WCAG compliance dictates explicit `<label for="[id]">` tags. For visually hidden labels, employing an `.sr-only` class ensures the labels remain fully readable and translatable (via the `data-i18n` attribute) to provide screen reader users with identical context and language translations as visual users.
+**Action:** Always link labels explicitly to their corresponding inputs with `id` and `for` attributes, and use a standard, visually hidden `.sr-only` class to preserve accessibility for elements that do not require visual labels.

@@ -18,8 +18,15 @@
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
   </svg>
+  <label
+    for="search-input-field"
+    class="sr-only"
+    data-i18n="Search routine or exercise..."
+    >Search routine or exercise...</label
+  >
   <input
     type="text"
+    id="search-input-field"
     placeholder="Search routine or exercise..."
     class="search-input"
     data-search-input
@@ -80,6 +87,18 @@
   .search-icon {
     color: var(--text-muted);
     flex-shrink: 0;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .search-input {
