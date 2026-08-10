@@ -242,6 +242,11 @@ import SearchBar from "@components/SearchBar.astro";
 
             <!-- Add Exercise Bar -->
             <div class="add-exercise-bar">
+              <label
+                for="new-exercise-input"
+                class="sr-only"
+                data-i18n="New Exercise">New Exercise</label
+              >
               <input
                 type="text"
                 id="new-exercise-input"
@@ -1653,6 +1658,18 @@ import SearchBar from "@components/SearchBar.astro";
     font-weight: 700;
     padding: 0.15rem 0.5rem;
     border-radius: 12px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .add-exercise-bar {
