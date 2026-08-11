@@ -1,3 +1,7 @@
+## 2026-08-12 - [Global Focus-Visible Outline for Cohesive Keyboard Navigation Accessibility]
+**Learning:** For apps with a custom modern dark theme or customized transparent/borderless buttons (like QR/share icons, sound triggers, reset-to-defaults controls), standard browser focus rings are often lost or overridden. Applying a global, cohesive `:focus-visible` styling rule targeting interactive elements (`a`, `button`, `input`, `select`, `textarea`, `[role="button"]`, and `[tabindex="0"]`) guarantees a consistent high-contrast keyboard-focus outline for power users and keyboard-only users, while completely preserving clean, outline-free visuals for touch and mouse interactions.
+**Action:** Always implement a global `:focus-visible` outline styling block in the layout/global stylesheet using `!important` to override custom border or shadow resets, and set `outline-offset` to keep it visually separate from button borders.
+
 ## 2026-08-10 - [On-Page State Change Detection and Prevent Unsaved Discards]
 
 **Learning:** When designing complex on-page client-side editors or form views, users frequently switch contexts or trigger actions (like selecting another item, clicking cancel, or navigating away) which can result in devastating loss of progress/work. Implementing a fine-grained, robust on-page state change detector (`hasUnsavedChanges`) and hooks into both internal navigation actions and the global `beforeunload` event provides a superb, bulletproof safety net that elevates the app to desktop/pro-grade usability.
