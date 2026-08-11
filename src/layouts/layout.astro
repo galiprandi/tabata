@@ -503,6 +503,19 @@ import AudioControl from '../components/AudioControl.astro'
   button:not(.btn-modern):not(.btn-pause):not(.action-btn):not(.select):not(.edit):not(.delete):not(.share):not(.up):not(.down):not(.duplicate):not(.btn-open-dialog):not(.btn-close-dialog):not(.icon):active {
     transform: scale(0.96);
   }
+
+  /* Focus visible state for keyboard navigation accessibility */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible,
+  [tabindex="0"]:focus-visible {
+    outline: 2px solid var(--color-accent) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
 </style>
 
 <script>
