@@ -1,4 +1,10 @@
+## 2026-08-14 - [Completion and Final Screen Programmatic Focus Accessibility]
+
+**Learning:** Upon landing on a workout completion or final feedback page (like `end.astro`), keyboard and screen reader users frequently face focus resets or get stuck at the top-document level, requiring extensive tabbing to reach any actionable control. Automatically and programmatically focusing the primary Call-To-Action (such as "Start Again" / `#startAgain`) during the page load's DOMContentLoaded hook significantly enhances accessibility, allowing immediate keypress action (Space/Enter) to restart workouts without friction.
+**Action:** Always identify the single primary Call-To-Action (CTA) on confirmation, celebration, or final results pages, and programmatically shift focus to it during initial page load to streamline repeat or subsequent actions.
+
 ## 2026-08-12 - [Global Focus-Visible Outline for Cohesive Keyboard Navigation Accessibility]
+
 **Learning:** For apps with a custom modern dark theme or customized transparent/borderless buttons (like QR/share icons, sound triggers, reset-to-defaults controls), standard browser focus rings are often lost or overridden. Applying a global, cohesive `:focus-visible` styling rule targeting interactive elements (`a`, `button`, `input`, `select`, `textarea`, `[role="button"]`, and `[tabindex="0"]`) guarantees a consistent high-contrast keyboard-focus outline for power users and keyboard-only users, while completely preserving clean, outline-free visuals for touch and mouse interactions.
 **Action:** Always implement a global `:focus-visible` outline styling block in the layout/global stylesheet using `!important` to override custom border or shadow resets, and set `outline-offset` to keep it visually separate from button borders.
 
@@ -11,6 +17,7 @@
 
 **Learning:** Binding submit/save handlers directly to button click events instead of the parent `<form>`'s native `submit` event prevents standard keyboard-driven form submission (e.g. pressing `Enter` inside input fields). Implementing form `submit` event listeners preserves native HTML5 browser validation (like `required` and `min` checks) and keyboard accessibility. Additionally, binding a scoped `keydown` listener for `Escape` to the parent `<form>` allows keyboard users to instantly discard unsaved edits, as long as we guard against nested inputs (such as search boxes or tags) that carry their own custom `Escape` key behaviors.
 **Action:** Always bind primary save actions to the form's `submit` event instead of button `click` events, and include a container-level `keydown` listener for `Escape` to revert/dismiss unsaved changes, ensuring proper exclusion of inputs with custom Escape handlers.
+
 ## 2026-08-08 - [Global Keyboard-Driven Shortcuts and Discoverability Legends]
 
 **Learning:** Global page-level navigation shortcuts (e.g., S/H/G/T) combined with standard Pico `<kbd>` tags provide keyboard users and power users with mouse-free high-efficiency navigation. When creating global `keydown` listeners, we must check for and ignore active input/editable controls AND modifier keys (e.g., `ctrlKey`, `metaKey`, `altKey`) to avoid hijacking system-level shortcut actions (such as `Ctrl+S`).
