@@ -34,7 +34,8 @@ const className = vertical ? "vertical" : "horizontal";
   </header>
   <div class={className}>
     <div id="prepContainer">
-      <label>
+      <label for="prepDuration">
+        <span class="sr-only" data-i18n="Preparation Time">Preparation Time</span>
         <PrepareIcon />
         <input
           type="number"
@@ -51,7 +52,8 @@ const className = vertical ? "vertical" : "horizontal";
       />
     </div>
     <div id="workContainer">
-      <label>
+      <label for="workDuration">
+        <span class="sr-only" data-i18n="Working Time">Working Time</span>
         <ExerciseWork />
         <input
           type="number"
@@ -68,7 +70,8 @@ const className = vertical ? "vertical" : "horizontal";
       />
     </div>
     <div id="restContainer">
-      <label>
+      <label for="restDuration">
+        <span class="sr-only" data-i18n="Rest Time">Rest Time</span>
         <ExerciseRestIcon />
         <input
           type="number"
@@ -82,7 +85,8 @@ const className = vertical ? "vertical" : "horizontal";
       <Helper title="Rest Time" description="Rest time for each exercise." />
     </div>
     <div id="roundsContainer">
-      <label>
+      <label for="rounds">
+        <span class="sr-only" data-i18n="Exercise in Round">Exercise in Round</span>
         <RoundsIcon />
         <input
           type="number"
@@ -276,5 +280,17 @@ const className = vertical ? "vertical" : "horizontal";
       position: sticky;
       top: 1em;
     }
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>
