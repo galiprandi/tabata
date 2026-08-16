@@ -1,3 +1,8 @@
+## 2026-08-15 - [Screen-Reader Only Dynamic Localization and Explicit Form Labeling]
+
+**Learning:** When inputs are labeled solely with icons or visually wrapped in `<label>` elements without explicit `for`/`id` associations, screen readers are left without proper, structured context. Adding explicit `<label for="...">` matching attributes and embedding an `.sr-only` class child tag containing translatable dynamic labels guarantees absolute WCAG compliance without affecting the visual design. Furthermore, localizing dynamically set content in shared templates (like `<Helper>` dialogs) ensures a consistent multilingual user experience across both visual and non-visual interactions.
+**Action:** Always use explicit matching `for`/`id` labels for complex form controls, place screen-reader-only translated labels inside icon-heavy tags, and pass dynamic descriptions through the `t()` translation dictionary helper before updating modal dialog content.
+
 ## 2026-08-14 - [Completion and Final Screen Programmatic Focus Accessibility]
 
 **Learning:** Upon landing on a workout completion or final feedback page (like `end.astro`), keyboard and screen reader users frequently face focus resets or get stuck at the top-document level, requiring extensive tabbing to reach any actionable control. Automatically and programmatically focusing the primary Call-To-Action (such as "Start Again" / `#startAgain`) during the page load's DOMContentLoaded hook significantly enhances accessibility, allowing immediate keypress action (Space/Enter) to restart workouts without friction.
