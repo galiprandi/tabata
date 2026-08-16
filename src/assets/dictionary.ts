@@ -344,6 +344,22 @@ export const dictionary = {
     en: "Configure routine",
     es: "Configurar rutina",
   },
+  "Configure routine (S)": {
+    en: "Configure routine (S)",
+    es: "Configurar rutina (S)",
+  },
+  "See history (H)": {
+    en: "See history (H)",
+    es: "Ver historial (H)",
+  },
+  "Start Routine (G)": {
+    en: "Start Routine (G)",
+    es: "Iniciar rutina (G)",
+  },
+  "Trainer Mode (T)": {
+    en: "Trainer Mode (T)",
+    es: "Modo Entrenador (T)",
+  },
   "Share this app": {
     en: "Share this app",
     es: "Compartir esta aplicación",
